@@ -1,0 +1,45 @@
+---
+import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'Portfolio de Fabrizio — Desarrollador Full Stack' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es" class="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <title>{title}</title>
+    <ClientRouter />
+
+    <!-- Aplica idioma antes del paint para evitar flash -->
+    <script is:inline>
+      (function () {
+        const lang = localStorage.getItem('fabrizio-lang') || 'es';
+        document.documentElement.setAttribute('data-lang', lang);
+      })();
+    </script>
+  </head>
+  <body class="bg-background text-on-surface selection:bg-primary/30 min-h-screen">
+    <slot />
+
+    <script is:inline src="/scripts/i18n.js"></script>
+    <script is:inline src="/scripts/scroll-reveal.js"></script>
+  </body>
+</html>

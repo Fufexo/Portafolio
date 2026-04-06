@@ -1,0 +1,301 @@
+---
+import Layout from '../layouts/Layout.astro';
+import TopNav from '../components/TopNav.astro';
+import BottomNav from '../components/BottomNav.astro';
+import Footer from '../components/Footer.astro';
+import TechTag from '../components/TechTag.astro';
+import { ui } from '../i18n/ui';
+import { frontendTags, backendTags, databaseTags, cloudTags } from '../data/stack';
+import { timeline } from '../data/timeline';
+
+const es = ui.es;
+const en = ui.en;
+---
+
+<Layout title="Sobre mí | Fabrizio">
+  <TopNav />
+
+  <main class="pt-32 pb-40 px-4 md:px-12 max-w-7xl mx-auto overflow-x-clip">
+    <div class="flex flex-col gap-20 md:gap-40">
+
+    <!-- Hero Narrativo -->
+    <section class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-end">
+      <div class="lg:col-span-8">
+        <span
+          class="text-secondary font-medium text-sm tracking-[0.3em] uppercase mb-6 block"
+          data-i18n data-es={es['about.label']} data-en={en['about.label']}
+        >
+          {es['about.label']}
+        </span>
+
+        <h1
+          class="text-3xl sm:text-5xl md:text-7xl font-black tracking-tighter leading-[0.9] text-on-surface mb-8"
+          data-i18n data-i18n-html
+          data-es={es['about.title.html']}
+          data-en={en['about.title.html']}
+          set:html={es['about.title.html']}
+        />
+
+        <p
+          class="text-xl text-on-surface-variant max-w-2xl leading-relaxed font-light"
+          data-i18n data-es={es['about.bio']} data-en={en['about.bio']}
+        >
+          {es['about.bio']}
+        </p>
+
+        <a
+          href="/resume.pdf"
+          download
+          class="inline-flex items-center gap-2 mt-8 px-6 py-3 rounded-md ghost-border text-on-surface-variant hover:text-primary hover:border-primary/40 transition-all duration-200 text-sm font-bold tracking-wide group"
+        >
+          <span class="material-symbols-outlined text-[18px] group-hover:-translate-y-0.5 transition-transform duration-200">download</span>
+          <span data-i18n data-es={es['resume.download']} data-en={en['resume.download']}>{es['resume.download']}</span>
+        </a>
+      </div>
+
+      <div class="lg:col-span-4 aspect-square rounded-xl overflow-hidden ghost-border relative group">
+        <img
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYZSbk0soO7t2ViAUhSbZqu60thY1kU8qxQFXqLXODSISrphtUQFoxekZNyAGzv95qNfmGVewhvaqFhWdjISz4DL4cbrBVgrBxNXVVAWj6lsYpVypBlFQgH8UBQJEu2lJpsI-8zUe2axFLpU8TnNEayxI649aFAf05Q-hcuwmDGs2_pN40SSh_Uq8SCUikqKJIV8sVC--yp1u-_1_wWJmRFdc_INzmAobPhGyHkq0lgjoqkdQpE_POsNZO2pL19Z7XP00Ibc2bOZw"
+          alt="Fabrizio"
+          loading="lazy"
+          class="w-full h-full object-cover grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700"
+        />
+        <div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
+      </div>
+    </section>
+
+    <!-- Filosofía -->
+    <section>
+      <div class="flex items-center gap-4 mb-10">
+        <span class="w-10 h-[2px] bg-secondary flex-shrink-0"></span>
+        <h2
+          class="text-3xl font-bold tracking-tight"
+          data-i18n data-es={es['about.phil.title']} data-en={en['about.phil.title']}
+        >
+          {es['about.phil.title']}
+        </h2>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6">
+        {[
+          { titleKey: 'about.phil.1.title', descKey: 'about.phil.1.desc', icon: 'lightbulb' },
+          { titleKey: 'about.phil.2.title', descKey: 'about.phil.2.desc', icon: 'speed' },
+        ].map(({ titleKey, descKey, icon }) => (
+          <div class="phil-card rounded-2xl ghost-border bg-surface-container-low">
+            <div class="phil-card-content p-10 flex flex-col justify-between h-full">
+              <div>
+                <h3
+                  class="text-2xl font-bold text-on-surface mb-6"
+                  data-i18n
+                  data-es={es[titleKey as keyof typeof es]}
+                  data-en={en[titleKey as keyof typeof en]}
+                >
+                  {es[titleKey as keyof typeof es]}
+                </h3>
+                <p
+                  class="phil-subtitle text-on-surface-variant text-sm leading-relaxed"
+                  data-es={es[descKey as keyof typeof es]}
+                  data-en={en[descKey as keyof typeof en]}
+                ></p>
+              </div>
+              <span
+                class="material-symbols-outlined phil-icon text-5xl mt-8 block"
+                style="font-variation-settings:'FILL' 1"
+              >{icon}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <script>
+      function initPhilCards(lang?: string) {
+        const l = lang || localStorage.getItem('fabrizio-lang') || 'es';
+        document.querySelectorAll('.phil-subtitle').forEach(el => {
+          const text = el.getAttribute('data-' + l) || el.getAttribute('data-es') || '';
+          el.innerHTML = text.split(' ').map((word: string, i: number) =>
+            `<span class="phil-word" style="--wd:${i * 38}ms">${word} </span>`
+          ).join('');
+        });
+      }
+      document.addEventListener('DOMContentLoaded', () => initPhilCards());
+      document.addEventListener('astro:page-load', () => initPhilCards());
+      document.addEventListener('fabrizio:langchange', (e: Event) => initPhilCards((e as CustomEvent).detail.lang));
+    </script>
+
+    <!-- Stack Técnico (Bento) -->
+    <section class="space-y-8 md:space-y-12">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-2 md:gap-6">
+        <h2
+          class="text-3xl md:text-4xl font-black tracking-tighter uppercase"
+          data-i18n data-es={es['skills.label']} data-en={en['skills.label']}
+        >
+          {es['skills.label']}
+        </h2>
+        <div
+          class="text-xs md:text-sm tracking-widest text-on-surface-variant uppercase border-b border-outline-variant pb-2"
+          data-i18n data-es={es['skills.subtitle']} data-en={en['skills.subtitle']}
+        >
+          {es['skills.subtitle']}
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+
+        <!-- Frontend Architecture (grande) -->
+        <div class="col-span-1 sm:col-span-2 md:col-span-2 md:row-span-2 glass-effect rounded-xl p-6 md:p-8 flex flex-col justify-between ghost-border group hover:shadow-[0_0_30px_rgba(210,187,255,0.08)] transition-all duration-300">
+          <div class="space-y-4">
+            <span class="material-symbols-outlined text-4xl text-primary block" style="font-variation-settings:'FILL' 1">layers</span>
+            <h3
+              class="text-3xl font-bold"
+              data-i18n data-es={es['skills.frontend']} data-en={en['skills.frontend']}
+            >
+              {es['skills.frontend']}
+            </h3>
+            <p
+              class="text-on-surface-variant text-sm leading-relaxed"
+              data-i18n data-es={es['skills.designops.desc']} data-en={en['skills.designops.desc']}
+            >
+              {es['skills.designops.desc']}
+            </p>
+          </div>
+          <div class="flex flex-wrap gap-3 mt-8">
+            {frontendTags.map(tag => <TechTag {...tag} />)}
+          </div>
+        </div>
+
+        <!-- Backend -->
+        <div class="col-span-1 sm:col-span-2 md:col-span-2 glass-effect rounded-xl p-6 md:p-8 flex flex-col justify-between ghost-border group hover:shadow-[0_0_30px_rgba(210,187,255,0.08)] transition-all duration-300">
+          <div class="space-y-3">
+            <span class="material-symbols-outlined text-4xl text-secondary block" style="font-variation-settings:'FILL' 1">terminal</span>
+            <h3
+              class="text-2xl font-bold"
+              data-i18n data-es={es['skills.backend']} data-en={en['skills.backend']}
+            >
+              {es['skills.backend']}
+            </h3>
+            <p
+              class="text-on-surface-variant text-sm leading-relaxed"
+              data-i18n data-es={es['skills.backend.desc']} data-en={en['skills.backend.desc']}
+            >
+              {es['skills.backend.desc']}
+            </p>
+          </div>
+          <div class="flex flex-wrap gap-3 mt-6">
+            {backendTags.map(tag => <TechTag {...tag} />)}
+          </div>
+        </div>
+
+        <!-- Bases de datos -->
+        <div class="col-span-1 glass-effect rounded-xl p-6 flex flex-col justify-between ghost-border group hover:shadow-[0_0_30px_rgba(210,187,255,0.08)] transition-all duration-300 md:min-h-[260px]">
+          <div class="space-y-3">
+            <span class="material-symbols-outlined text-tertiary text-4xl block" style="font-variation-settings:'FILL' 1">database</span>
+            <h4
+              class="text-xl font-bold"
+              data-i18n data-es={es['skills.databases']} data-en={en['skills.databases']}
+            >
+              {es['skills.databases']}
+            </h4>
+          </div>
+          <div class="flex flex-wrap gap-3 mt-6">
+            {databaseTags.map(tag => <TechTag {...tag} />)}
+          </div>
+        </div>
+
+        <!-- Cloud & Tools -->
+        <div class="col-span-1 glass-effect rounded-xl p-6 flex flex-col justify-between ghost-border group hover:shadow-[0_0_30px_rgba(210,187,255,0.08)] transition-all duration-300 md:min-h-[260px]">
+          <div class="space-y-3">
+            <span class="material-symbols-outlined text-primary text-4xl block" style="font-variation-settings:'FILL' 1">cloud</span>
+            <h4
+              class="text-xl font-bold"
+              data-i18n data-es={es['skills.cloud']} data-en={en['skills.cloud']}
+            >
+              {es['skills.cloud']}
+            </h4>
+          </div>
+          <div class="flex flex-wrap gap-3 mt-6">
+            {cloudTags.map(tag => <TechTag {...tag} />)}
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Timeline -->
+    <section class="max-w-3xl mx-auto space-y-12 md:space-y-20">
+      <h2
+        class="text-3xl md:text-4xl font-black tracking-tighter uppercase text-center"
+        data-i18n data-es={es['about.journey.title']} data-en={en['about.journey.title']}
+      >
+        {es['about.journey.title']}
+      </h2>
+
+      <!-- Mobile timeline -->
+      <div class="md:hidden space-y-0">
+        {timeline.map((entry, i) => (
+          <div class="grid grid-cols-[2rem_1fr] gap-0">
+            <div class="flex flex-col items-center">
+              <div class={`w-3 h-3 rounded-full flex-shrink-0 mt-1 ${entry.active ? 'bg-primary shadow-[0_0_10px_rgba(210,187,255,0.6)]' : 'bg-outline-variant'}`}></div>
+              {i < timeline.length - 1 && (
+                <div class="w-px flex-1 bg-gradient-to-b from-primary/60 to-outline-variant/30 mt-1"></div>
+              )}
+            </div>
+            <div class="pb-10 pl-2">
+              <span class="text-secondary font-bold tracking-tighter text-sm">{entry.period}</span>
+              <h4 class="text-xl font-black mt-1 uppercase">{entry.role}</h4>
+              <p class="text-primary text-[10px] font-bold tracking-widest uppercase mt-1 mb-3">{entry.company}</p>
+              <p class="text-on-surface-variant text-sm leading-relaxed">{entry.description}</p>
+              <p class="mt-2 text-on-surface/50 text-xs font-medium tracking-wide">{entry.tech}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- Desktop timeline (zigzag) -->
+      <div class="hidden md:block relative space-y-16">
+        <div class="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-primary via-outline-variant to-transparent -translate-x-1/2"></div>
+
+        {timeline.map((entry, i) => {
+          const isEven = i % 2 === 0;
+          const dotClass = `w-3 h-3 rounded-full flex-shrink-0 ${entry.active ? 'bg-primary shadow-[0_0_10px_rgba(210,187,255,0.6)]' : 'bg-outline-variant'}`;
+          return (
+            <div class="grid grid-cols-[1fr_2rem_1fr] items-start gap-0">
+              {isEven ? (
+                <>
+                  <div class="text-right pr-8">
+                    <span class="text-secondary font-bold tracking-tighter text-lg">{entry.period}</span>
+                    <h4 class="text-2xl font-black mt-2 uppercase">{entry.role}</h4>
+                    <p class="text-primary text-xs font-bold tracking-widest uppercase mt-1">{entry.company}</p>
+                  </div>
+                  <div class="flex justify-center pt-1.5"><div class={dotClass}></div></div>
+                  <div class="text-on-surface-variant leading-relaxed text-sm pl-8">
+                    <p>{entry.description}</p>
+                    <p class="mt-3 text-on-surface/50 text-xs font-medium tracking-wide">{entry.tech}</p>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div class="text-on-surface-variant leading-relaxed text-sm text-right pr-8">
+                    <p>{entry.description}</p>
+                    <p class="mt-3 text-on-surface/50 text-xs font-medium tracking-wide">{entry.tech}</p>
+                  </div>
+                  <div class="flex justify-center pt-1.5"><div class={dotClass}></div></div>
+                  <div class="pl-8">
+                    <span class="text-secondary font-bold tracking-tighter text-lg">{entry.period}</span>
+                    <h4 class="text-2xl font-black mt-2 uppercase">{entry.role}</h4>
+                    <p class="text-primary text-xs font-bold tracking-widest uppercase mt-1">{entry.company}</p>
+                  </div>
+                </>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </section>
+
+    </div>
+  </main>
+
+  <BottomNav />
+  <Footer />
+</Layout>

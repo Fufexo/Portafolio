@@ -1,0 +1,65 @@
+---
+import { ui } from '../i18n/ui';
+const es = ui.es;
+const en = ui.en;
+
+const navLinks = [
+  { keyEs: es['nav.projects'], keyEn: en['nav.projects'], href: '/' },
+  { keyEs: es['nav.about'],    keyEn: en['nav.about'],    href: '/about' },
+  { keyEs: es['nav.contact'],  keyEn: en['nav.contact'],  href: '/contact' },
+];
+---
+
+<header class="fixed top-0 w-full z-50 bg-[#131315]/40 backdrop-blur-xl" transition:persist>
+  <div class="flex justify-between items-center max-w-7xl mx-auto px-4 sm:px-8 py-4 sm:py-6">
+    <a href="/" class="text-lg sm:text-2xl font-black tracking-tighter text-[#E5E1E4] shrink-0">
+      {es.brand}
+    </a>
+
+    <nav class="hidden md:flex items-center space-x-10">
+      {navLinks.map(({ keyEs, keyEn, href }) => (
+        <a
+          href={href}
+          data-nav-link
+          data-nav-href={href}
+          data-i18n
+          data-es={keyEs}
+          data-en={keyEn}
+          class="relative pb-1 text-sm font-medium transition-colors duration-200 group text-[#E5E1E4]/50 hover:text-[#D2BBFF]"
+        >
+          {keyEs}
+          <span
+            data-nav-underline
+            class="absolute bottom-0 left-0 h-[2px] rounded-full transition-all duration-300 w-0 bg-[#D2BBFF]"
+          />
+        </a>
+      ))}
+    </nav>
+
+    <div class="flex items-center gap-2 sm:gap-4">
+      <button
+        data-theme-toggle
+        aria-label="Toggle theme"
+        class="text-[#E5E1E4]/50 hover:text-[#E5E1E4] transition-colors duration-200 flex items-center justify-center"
+      >
+        <span class="material-symbols-outlined text-[20px]" data-theme-icon style="font-variation-settings:'FILL' 1">dark_mode</span>
+      </button>
+      <button
+        data-lang-toggle
+        class="text-[#E5E1E4]/50 hover:text-[#E5E1E4] text-xs sm:text-sm font-bold tracking-widest transition-colors duration-200"
+      >
+        EN
+      </button>
+      <a
+        href="/resume.pdf"
+        download
+        data-i18n
+        data-es={es['nav.resume']}
+        data-en={en['nav.resume']}
+        class="primary-gradient-glow text-on-primary font-bold text-[11px] sm:text-sm px-3 sm:px-6 py-2 rounded-md transition-all duration-300 active:scale-90 shadow-[0_0_20px_rgba(210,187,255,0.2)] whitespace-nowrap"
+      >
+        {es['nav.resume']}
+      </a>
+    </div>
+  </div>
+</header>

@@ -1,0 +1,763 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import TopNav from '../../components/TopNav.astro';
+import BottomNav from '../../components/BottomNav.astro';
+import Footer from '../../components/Footer.astro';
+import FlipCard from '../../components/atelier/FlipCard.astro';
+import { ui } from '../../i18n/ui';
+
+const es = ui.es;
+const en = ui.en;
+
+type StackCard = {
+  name: string;
+  tagline: string;
+  frontIcon: string;
+  frontIconClass: string;
+  frontIconLgClass: string;
+  descKey: keyof typeof es;
+  noteEs: string;
+  noteEn: string;
+  chips: string[];
+  cta?: {
+    href: string;
+    labelEs: string;
+    labelEn: string;
+  };
+};
+
+const stackCards: StackCard[] = [
+  {
+    name: 'Next.js 16',
+    tagline: 'App Router · SSR · Server Components',
+    frontIcon: '▲',
+    frontIconClass: 'stack-symbol select-none',
+    frontIconLgClass: 'stack-symbol select-none',
+    descKey: 'atelier.stack.nextjs.desc',
+    noteEs: 'Server Components en catálogo y producto para carga instantánea. Rutas dinámicas para /producto/[slug]. Panel /admin protegido por Supabase Auth.',
+    noteEn: 'Server Components in catalog and product pages for instant load. Dynamic routes for /producto/[slug]. /admin panel protected by Supabase Auth.',
+    chips: ['App Router', 'Server Components', 'Dynamic Routes'],
+  },
+  {
+    name: 'Supabase',
+    tagline: 'Auth · PostgreSQL · Storage',
+    frontIcon: 'database',
+    frontIconClass: 'material-symbols-outlined stack-mat-icon text-primary',
+    frontIconLgClass: 'material-symbols-outlined stack-mat-icon-lg text-primary',
+    descKey: 'atelier.stack.supabase.desc',
+    noteEs: 'Auth del panel admin, tablas de productos/pedidos/categorías, storage de imágenes de producto y políticas RLS por rol de usuario.',
+    noteEn: 'Admin panel auth, product/order/category tables, product image storage and RLS policies by user role.',
+    chips: ['Auth', 'PostgreSQL', 'Storage', 'RLS'],
+  },
+  {
+    name: 'TypeScript',
+    tagline: 'Strict · Tipado global',
+    frontIcon: 'TS',
+    frontIconClass: 'stack-badge-ts',
+    frontIconLgClass: 'stack-badge-ts stack-badge-ts-lg',
+    descKey: 'atelier.stack.ts.desc',
+    noteEs: 'Tipos globales en lib/types.ts para productos, pedidos y variantes. Tipado completo del contexto del carrito y las respuestas de la API de Culqi.',
+    noteEn: 'Global types in lib/types.ts for products, orders and variants. Full typing of cart context and Culqi API responses.',
+    chips: ['Strict mode', 'lib/types.ts', 'Type-safe API'],
+  },
+  {
+    name: 'Tailwind CSS',
+    tagline: 'v4 · Utility-first · Responsive',
+    frontIcon: '🌊',
+    frontIconClass: 'select-none text-2xl',
+    frontIconLgClass: 'select-none text-4xl',
+    descKey: 'atelier.stack.tailwind.desc',
+    noteEs: 'Sistema de diseño coherente entre tienda pública y panel admin. Modo oscuro nativo en el /admin. Completamente responsive desde mobile.',
+    noteEn: 'Consistent design system across public store and admin panel. Native dark mode in /admin. Fully responsive from mobile up.',
+    chips: ['v4', 'Dark mode', 'Mobile-first'],
+  },
+  {
+    name: 'Culqi',
+    tagline: 'Pagos Perú · PCI-DSS',
+    frontIcon: 'credit_card',
+    frontIconClass: 'material-symbols-outlined stack-mat-icon text-tertiary',
+    frontIconLgClass: 'material-symbols-outlined stack-mat-icon-lg text-tertiary',
+    descKey: 'atelier.stack.culqi.desc',
+    noteEs: 'Único gateway que soporta tarjetas peruanas locales. Culqi.js tokeniza en el navegador — el servidor solo recibe el token y ejecuta el cobro sin tocar datos sensibles.',
+    noteEn: 'Only gateway supporting local Peruvian cards. Culqi.js tokenizes in the browser — the server only receives the token and executes the charge without touching sensitive data.',
+    chips: ['PCI-DSS', 'Tokenización', 'Server-side charge'],
+  },
+  {
+    name: 'Resend',
+    tagline: 'Emails · Templates HTML',
+    frontIcon: 'mail',
+    frontIconClass: 'material-symbols-outlined stack-mat-icon text-secondary',
+    frontIconLgClass: 'material-symbols-outlined stack-mat-icon-lg text-secondary',
+    descKey: 'atelier.stack.resend.desc',
+    noteEs: 'Dos emails por venta: confirmación al cliente con detalle del pedido y notificación al admin. Templates construidos con React Email, disparados desde el servidor tras el cobro.',
+    noteEn: 'Two emails per sale: order confirmation to the customer and admin notification. Templates built with React Email, fired server-side after the charge.',
+    chips: ['React Email', '2 emails/venta', 'Server-side'],
+  },
+  {
+    name: 'Vercel',
+    tagline: 'Deploy · Edge · Previews',
+    frontIcon: '▼',
+    frontIconClass: 'stack-symbol select-none',
+    frontIconLgClass: 'stack-symbol select-none text-4xl',
+    descKey: 'atelier.stack.vercel.desc',
+    noteEs: 'Deploy automático en cada push. Previews por rama para QA antes de producción. Edge network global para tiempos de respuesta mínimos desde Perú.',
+    noteEn: 'Automatic deploy on each push. Branch previews for QA before production. Global edge network for minimal response times from Peru.',
+    chips: ['Auto deploy', 'Branch previews', 'Edge network'],
+    cta: {
+      href: 'https://atelier-ropa.vercel.app/',
+      labelEs: es['atelier.cta.live'],
+      labelEn: en['atelier.cta.live'],
+    },
+  },
+] as const;
+---
+
+<Layout
+  title="Atelier — Case Study | Fabrizio"
+  description="Case study del proyecto Atelier: e-commerce de moda construido con Next.js, TypeScript, Supabase y Tailwind CSS."
+>
+  <TopNav />
+
+  <main class="overflow-x-hidden">
+
+    <!-- ── HERO ──────────────────────────────────────────────────── -->
+    <section class="relative min-h-screen flex flex-col justify-end items-start px-4 sm:px-8 pb-24 sm:pb-32 overflow-hidden">
+
+      <!-- Background image -->
+      <div class="absolute inset-0 z-0">
+        <img
+          src="/images/atelier-hero.png"
+          alt="Atelier — E-Commerce de moda"
+          class="w-full h-full object-cover object-top opacity-40"
+        />
+        <div class="absolute inset-0 bg-linear-to-t from-background via-background/70 to-background/10"></div>
+        <div class="absolute inset-0 bg-linear-to-r from-background via-background/40 to-transparent"></div>
+      </div>
+
+      <!-- Ambient glow -->
+      <div class="absolute top-1/3 left-1/4 w-150 h-150 bg-primary/8 blur-[120px] rounded-full pointer-events-none z-0"></div>
+
+      <div class="relative z-10 max-w-7xl mx-auto w-full pt-32">
+
+        <!-- Badge -->
+        <div class="inline-flex items-center gap-2 mb-6 bg-secondary/10 border border-secondary/30 px-4 py-1.5 rounded-full backdrop-blur-sm shadow-[0_0_16px_rgba(137,206,255,0.25)]">
+          <span class="w-2 h-2 rounded-full bg-secondary shrink-0 shadow-[0_0_6px_rgba(137,206,255,0.8)] animate-pulse"></span>
+          <span
+            class="text-xs uppercase tracking-widest font-bold text-secondary"
+            data-i18n data-es={es['atelier.badge']} data-en={en['atelier.badge']}
+          >
+            {es['atelier.badge']}
+          </span>
+        </div>
+
+        <!-- Title -->
+        <h1 class="text-[clamp(4rem,14vw,9rem)] font-black tracking-tighter leading-none mb-5 text-on-surface"
+            style="text-shadow: 0 0 60px rgba(210,187,255,0.15)">
+          Atelier
+        </h1>
+
+        <!-- Subtitle -->
+        <p
+          class="max-w-xl text-lg sm:text-xl text-on-surface-variant font-light leading-relaxed mb-10"
+          data-i18n data-es={es['atelier.hero.subtitle']} data-en={en['atelier.hero.subtitle']}
+        >
+          {es['atelier.hero.subtitle']}
+        </p>
+
+        <!-- Meta row -->
+        <div class="flex flex-wrap gap-8 sm:gap-12">
+          <div>
+            <span
+              class="block text-[10px] uppercase tracking-widest text-secondary font-bold mb-1"
+              data-i18n data-es={es['atelier.meta.role']} data-en={en['atelier.meta.role']}
+            >
+              {es['atelier.meta.role']}
+            </span>
+            <span
+              class="text-on-surface font-semibold"
+              data-i18n data-es={es['atelier.meta.role.value']} data-en={en['atelier.meta.role.value']}
+            >
+              {es['atelier.meta.role.value']}
+            </span>
+          </div>
+          <div>
+            <span
+              class="block text-[10px] uppercase tracking-widest text-secondary font-bold mb-1"
+              data-i18n data-es={es['atelier.meta.timeline']} data-en={en['atelier.meta.timeline']}
+            >
+              {es['atelier.meta.timeline']}
+            </span>
+            <span
+              class="text-on-surface font-semibold"
+              data-i18n data-es={es['atelier.meta.timeline.value']} data-en={en['atelier.meta.timeline.value']}
+            >
+              {es['atelier.meta.timeline.value']}
+            </span>
+          </div>
+          <div>
+            <span
+              class="block text-[10px] uppercase tracking-widest text-secondary font-bold mb-1"
+              data-i18n data-es={es['atelier.meta.platform']} data-en={en['atelier.meta.platform']}
+            >
+              {es['atelier.meta.platform']}
+            </span>
+            <span
+              class="text-on-surface font-semibold"
+              data-i18n data-es={es['atelier.meta.platform.value']} data-en={en['atelier.meta.platform.value']}
+            >
+              {es['atelier.meta.platform.value']}
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CHALLENGES ────────────────────────────────────────────── -->
+    <section class="bg-surface-container-low py-24 sm:py-32 px-4 sm:px-8">
+      <div class="max-w-7xl mx-auto space-y-10">
+
+        <!-- Header -->
+        <div class="space-y-4 max-w-2xl">
+          <div class="inline-block h-0.5 w-10 bg-secondary"></div>
+          <h2
+            class="text-3xl sm:text-4xl font-bold tracking-tight text-on-surface"
+            data-i18n data-es={es['atelier.challenge.label']} data-en={en['atelier.challenge.label']}
+          >
+            {es['atelier.challenge.label']}
+          </h2>
+          <p
+            class="text-on-surface-variant text-base sm:text-lg leading-relaxed"
+            data-i18n data-es={es['atelier.challenge.body']} data-en={en['atelier.challenge.body']}
+          >
+            {es['atelier.challenge.body']}
+          </p>
+        </div>
+
+        <!-- Grid 2×2 de flip cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+          <FlipCard
+            color="secondary"
+            frontIcon="credit_card"
+            titleEs={es['atelier.challenge.p1.title']}
+            titleEn={en['atelier.challenge.p1.title']}
+            descEs={es['atelier.challenge.p1.desc']}
+            descEn={en['atelier.challenge.p1.desc']}
+            backIcon="verified_user"
+            backDescEs="Culqi.js tokeniza la tarjeta en el navegador. El servidor recibe solo el token y ejecuta el cobro — ningún dato sensible cruza el backend."
+            backDescEn="Culqi.js tokenizes the card in the browser. The server only receives the token and executes the charge — no sensitive data crosses the backend."
+            chips={['PCI-DSS', 'Sin datos en servidor']}
+          />
+
+          <FlipCard
+            color="primary"
+            frontIcon="admin_panel_settings"
+            titleEs={es['atelier.challenge.p2.title']}
+            titleEn={en['atelier.challenge.p2.title']}
+            descEs={es['atelier.challenge.p2.desc']}
+            descEn={en['atelier.challenge.p2.desc']}
+            backIcon="dashboard"
+            backDescEs="Panel /admin completo: dashboard con stats del día, CRUD de productos, gestión de pedidos y alertas de stock bajo (≤ 5 unidades)."
+            backDescEn="Full /admin panel: daily stats dashboard, product CRUD, order management and low-stock alerts (≤ 5 units)."
+            chips={['Dashboard', 'Pedidos', 'Analíticas']}
+          />
+
+          <FlipCard
+            color="secondary"
+            frontIcon="mail"
+            titleEs={es['atelier.challenge.p3.title']}
+            titleEn={en['atelier.challenge.p3.title']}
+            descEs={es['atelier.challenge.p3.desc']}
+            descEn={en['atelier.challenge.p3.desc']}
+            backIcon="mark_email_read"
+            backDescEs="Resend con templates HTML personalizados. Tras el cobro exitoso el servidor dispara dos emails: confirmación al cliente con el detalle del pedido y notificación al admin."
+            backDescEn="Resend with custom HTML templates. After a successful charge, the server fires two emails: order confirmation to the customer and a notification to the admin."
+            chips={['Resend', 'Templates HTML', 'Server-side']}
+          />
+
+          <FlipCard
+            color="primary"
+            frontIcon="shopping_cart"
+            titleEs={es['atelier.challenge.p4.title']}
+            titleEn={en['atelier.challenge.p4.title']}
+            descEs={es['atelier.challenge.p4.desc']}
+            descEn={en['atelier.challenge.p4.desc']}
+            backIcon="inventory_2"
+            backDescEs="React Context como fuente de verdad en memoria + serialización a localStorage en cada cambio. Al iniciar la app se rehidrata el carrito automáticamente."
+            backDescEn="React Context as in-memory source of truth + serialization to localStorage on every change. On app start, the cart is automatically rehydrated."
+            chips={['React Context', 'localStorage', 'Rehidratación']}
+          />
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ── TECH STACK ────────────────────────────────────────────── -->
+    <section class="bg-surface py-24 sm:py-32 px-4 sm:px-8">
+      <div class="max-w-7xl mx-auto">
+
+        <div class="mb-12 sm:mb-16">
+          <p class="text-xs uppercase tracking-[0.3em] font-black text-secondary mb-3"
+            data-i18n data-es={es['atelier.stack.label']} data-en={en['atelier.stack.label']}>
+            {es['atelier.stack.label']}
+          </p>
+          <h3 class="text-4xl sm:text-5xl font-bold tracking-tighter"
+            data-i18n data-es={es['atelier.stack.title']} data-en={en['atelier.stack.title']}>
+            {es['atelier.stack.title']}
+          </h3>
+        </div>
+
+        <div class="stack-grid" id="stack-grid">
+          {stackCards.map((card) => (
+            <div class="stack-card" data-name={card.name}>
+              <div class="stack-collapsed">
+                <div class="stack-icon-wrap">
+                  <span class={card.frontIconClass}>{card.frontIcon}</span>
+                </div>
+                <h4 class="stack-name">{card.name}</h4>
+                <p class="stack-tagline">{card.tagline}</p>
+              </div>
+              <div class="stack-expanded">
+                <div class="stack-exp-left">
+                  <div class="stack-icon-wrap stack-icon-lg">
+                    <span class={card.frontIconLgClass}>{card.frontIcon}</span>
+                  </div>
+                  <h4 class="stack-exp-name">{card.name}</h4>
+                  <p
+                    class="stack-exp-desc"
+                    data-i18n
+                    data-es={es[card.descKey]}
+                    data-en={en[card.descKey]}
+                  >
+                    {es[card.descKey]}
+                  </p>
+                </div>
+                <div class="stack-exp-right">
+                  <p class="stack-exp-label" data-i18n data-es={es['atelier.stack.in-project']} data-en={en['atelier.stack.in-project']}>{es['atelier.stack.in-project']}</p>
+                  <p
+                    class="stack-exp-note"
+                    data-i18n
+                    data-es={card.noteEs}
+                    data-en={card.noteEn}
+                  >
+                    {card.noteEs}
+                  </p>
+                  <div class="stack-chips">
+                    {card.chips.map(chip => (
+                      <span class="stack-chip">{chip}</span>
+                    ))}
+                  </div>
+                  {card.cta && (
+                    <a
+                      href={card.cta.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="inline-flex items-center gap-1.5 mt-4 text-xs font-bold text-primary hover:text-on-surface transition-colors"
+                      data-i18n
+                      data-es={card.cta.labelEs}
+                      data-en={card.cta.labelEn}
+                    >
+                      {card.cta.labelEs}
+                    </a>
+                  )}
+                </div>
+              </div>
+              <button class="stack-close" aria-label="Cerrar">✕</button>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <script>
+      let stackAbort: AbortController | null = null;
+
+      function initStackCards() {
+        // Cancela listeners anteriores antes de re-inicializar
+        if (stackAbort) stackAbort.abort();
+        stackAbort = new AbortController();
+        const { signal } = stackAbort;
+
+        const grid = document.getElementById('stack-grid');
+        if (!grid) return;
+
+        const cards = Array.from(grid.querySelectorAll<HTMLElement>('.stack-card'));
+
+        // Resetea estado y asigna view-transition names
+        cards.forEach((card, i) => {
+          card.classList.remove('featured');
+          card.style.viewTransitionName = `stack-card-${i}`;
+        });
+
+        function activate(card: HTMLElement) {
+          cards.forEach(c => c.classList.remove('featured'));
+          card.classList.add('featured');
+        }
+
+        function deactivate() {
+          cards.forEach(c => c.classList.remove('featured'));
+        }
+
+        function run(fn: () => void) {
+          if (document.startViewTransition) {
+            document.startViewTransition(fn);
+          } else {
+            fn();
+          }
+        }
+
+        cards.forEach(card => {
+          card.addEventListener('click', (e) => {
+            const target = e.target as Element;
+            if (target.closest('.stack-close') || target.closest('a')) return;
+            if (card.classList.contains('featured')) return;
+            run(() => activate(card));
+          }, { signal });
+
+          card.querySelector('.stack-close')?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            run(deactivate);
+          }, { signal });
+        });
+      }
+
+      document.addEventListener('astro:page-load', initStackCards);
+      initStackCards();
+    </script>
+
+    <!-- ── GALLERY ────────────────────────────────────────────────── -->
+    <section class="bg-surface-container-low py-24 sm:py-32 px-4 sm:px-8 overflow-hidden">
+      <div class="max-w-7xl mx-auto">
+
+        <div class="mb-12 sm:mb-16">
+          <p
+            class="text-xs uppercase tracking-[0.3em] font-black text-secondary mb-3"
+            data-i18n data-es={es['atelier.gallery.label']} data-en={en['atelier.gallery.label']}
+          >
+            {es['atelier.gallery.label']}
+          </p>
+          <h3
+            class="text-4xl sm:text-5xl font-bold tracking-tighter"
+            data-i18n data-es={es['atelier.gallery.title']} data-en={en['atelier.gallery.title']}
+          >
+            {es['atelier.gallery.title']}
+          </h3>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+          <!-- Imagen 1: tienda — full width, protagonista -->
+          <div class="md:col-span-2 relative rounded-xl overflow-hidden group cursor-crosshair ghost-border">
+            <img
+              src="/images/atelier-tienda.png"
+              alt="Atelier — Tienda con filtros"
+              loading="lazy"
+              class="w-full aspect-21/9 object-cover object-top transition-transform duration-700 group-hover:scale-105"
+            />
+            <div class="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-8 flex flex-col justify-end">
+              <h5
+                class="font-bold text-lg"
+                data-i18n data-es={es['atelier.gallery.3']} data-en={en['atelier.gallery.3']}
+              >
+                {es['atelier.gallery.3']}
+              </h5>
+              <p
+                class="text-sm text-on-surface-variant"
+                data-i18n data-es={es['atelier.gallery.3.desc']} data-en={en['atelier.gallery.3.desc']}
+              >
+                {es['atelier.gallery.3.desc']}
+              </p>
+            </div>
+          </div>
+
+          <!-- Imagen 2: hero -->
+          <div class="relative rounded-xl overflow-hidden group cursor-crosshair ghost-border">
+            <img
+              src="/images/atelier-hero.png"
+              alt="Atelier — Hero"
+              loading="lazy"
+              class="w-full aspect-16/10 object-cover object-top transition-transform duration-700 group-hover:scale-110"
+            />
+            <div class="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-6 flex flex-col justify-end">
+              <h5
+                class="font-bold text-base"
+                data-i18n data-es={es['atelier.gallery.1']} data-en={en['atelier.gallery.1']}
+              >
+                {es['atelier.gallery.1']}
+              </h5>
+              <p
+                class="text-sm text-on-surface-variant"
+                data-i18n data-es={es['atelier.gallery.1.desc']} data-en={en['atelier.gallery.1.desc']}
+              >
+                {es['atelier.gallery.1.desc']}
+              </p>
+            </div>
+          </div>
+
+          <!-- Imagen 3: nosotros -->
+          <div class="relative rounded-xl overflow-hidden group cursor-crosshair ghost-border">
+            <img
+              src="/images/atelier-nosotros.png"
+              alt="Atelier — Nosotros"
+              loading="lazy"
+              class="w-full aspect-16/10 object-cover object-top transition-transform duration-700 group-hover:scale-110"
+            />
+            <div class="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-6 flex flex-col justify-end">
+              <h5
+                class="font-bold text-base"
+                data-i18n data-es={es['atelier.gallery.2']} data-en={en['atelier.gallery.2']}
+              >
+                {es['atelier.gallery.2']}
+              </h5>
+              <p
+                class="text-sm text-on-surface-variant"
+                data-i18n data-es={es['atelier.gallery.2.desc']} data-en={en['atelier.gallery.2.desc']}
+              >
+                {es['atelier.gallery.2.desc']}
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CTA ───────────────────────────────────────────────────── -->
+    <section class="bg-surface py-28 sm:py-40 px-4 sm:px-8 relative overflow-hidden">
+      <!-- Ambient -->
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-175 h-175 bg-primary/8 blur-[100px] rounded-full pointer-events-none"></div>
+
+      <div class="max-w-3xl mx-auto text-center relative z-10">
+        <h2
+          class="text-[clamp(2rem,7vw,4rem)] font-black tracking-tighter leading-tight mb-10"
+          data-i18n data-es={es['atelier.cta.title']} data-en={en['atelier.cta.title']}
+        >
+          {es['atelier.cta.title']}
+        </h2>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <a
+            href="https://atelier-ropa.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="primary-gradient-glow text-on-primary px-10 py-4 rounded-md font-black text-base tracking-tight shadow-[0_10px_30px_rgba(210,187,255,0.25)] hover:scale-105 active:scale-95 transition-transform"
+          >
+            <span data-i18n data-es={es['atelier.cta.live']} data-en={en['atelier.cta.live']}>{es['atelier.cta.live']}</span>
+          </a>
+          <a
+            href="/"
+            class="cta-back-btn relative overflow-hidden glass-effect text-on-surface px-10 py-4 rounded-md font-bold text-base ghost-border transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_0_24px_rgba(210,187,255,0.12)] active:scale-95"
+            data-i18n data-es={es['atelier.cta.back']} data-en={en['atelier.cta.back']}
+          >
+            {es['atelier.cta.back']}
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <BottomNav active="projects" />
+  <Footer />
+
+  <style>
+    /* ── Stack grid ─────────────────────────────────── */
+    .stack-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
+      gap: 1rem;
+    }
+
+    .stack-card {
+      position: relative;
+      background: #201f22;
+      border-radius: 0.75rem;
+      outline: 1px solid rgba(149,141,161,0.15);
+      padding: 1.5rem;
+      cursor: pointer;
+      overflow: hidden;
+      transition: background 0.25s, outline-color 0.6s ease, box-shadow 0.6s ease;
+    }
+    .stack-card:not(.featured):hover {
+      background: #2a2a2c;
+      outline-color: rgba(210,187,255,0.25);
+      box-shadow: 0 0 28px rgba(210,187,255,0.15);
+    }
+    .stack-card.featured {
+      grid-column: 1 / -1;
+      cursor: default;
+      background: #2a2a2c;
+      outline-color: rgba(210,187,255,0.2);
+    }
+
+    /* Collapsed view */
+    .stack-collapsed {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .stack-card.featured .stack-collapsed { display: none; }
+
+    .stack-icon-wrap {
+      width: 2.5rem;
+      height: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.25rem;
+    }
+    .stack-icon-lg { width: 4rem; height: 4rem; }
+
+    .stack-symbol { font-size: 1.5rem; color: #ccc3d8; }
+    .stack-mat-icon { font-size: 28px; }
+    .stack-mat-icon-lg { font-size: 44px; }
+
+    .stack-badge-ts {
+      display: flex; align-items: center; justify-content: center;
+      width: 2rem; height: 2rem;
+      background: rgba(49,120,198,0.2);
+      border-radius: 0.375rem;
+      font-weight: 900;
+      font-size: 0.7rem;
+      color: #3178c6;
+    }
+    .stack-badge-ts-lg {
+      width: 3rem; height: 3rem;
+      font-size: 1rem;
+      border-radius: 0.5rem;
+    }
+
+    .stack-name {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #e5e1e4;
+      line-height: 1.2;
+    }
+    .stack-tagline {
+      font-size: 0.7rem;
+      color: rgba(204,195,216,0.45);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    /* Expanded view */
+    .stack-expanded {
+      display: none;
+      gap: 2rem;
+    }
+    .stack-card.featured .stack-expanded {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .stack-exp-left {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      min-width: 180px;
+      flex: 0 0 220px;
+    }
+    .stack-exp-right {
+      flex: 1;
+      min-width: 200px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .stack-exp-name {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: #e5e1e4;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    .stack-exp-desc {
+      font-size: 0.82rem;
+      color: rgba(204,195,216,0.7);
+      line-height: 1.6;
+    }
+    .stack-exp-label {
+      font-size: 0.6rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: #d2bbff;
+      margin-bottom: 0.25rem;
+    }
+    .stack-exp-note {
+      font-size: 0.85rem;
+      color: rgba(204,195,216,0.8);
+      line-height: 1.65;
+    }
+
+    .stack-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.375rem;
+      margin-top: 0.75rem;
+    }
+    .stack-chip {
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.65rem;
+      border-radius: 999px;
+      background: rgba(210,187,255,0.08);
+      color: rgba(210,187,255,0.6);
+      border: 1px solid rgba(210,187,255,0.12);
+    }
+
+    /* Close button */
+    .stack-close {
+      display: none;
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      border: none;
+      background: rgba(255,255,255,0.06);
+      color: rgba(229,225,228,0.5);
+      width: 1.75rem;
+      height: 1.75rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      line-height: 1;
+      transition: background 0.2s, color 0.2s;
+    }
+    .stack-close:hover { background: rgba(255,255,255,0.12); color: #e5e1e4; }
+    .stack-card.featured .stack-close { display: flex; align-items: center; justify-content: center; }
+
+    /* View Transition for the expand morph */
+    ::view-transition-old(stack-card-0),
+    ::view-transition-new(stack-card-0),
+    ::view-transition-old(stack-card-1),
+    ::view-transition-new(stack-card-1),
+    ::view-transition-old(stack-card-2),
+    ::view-transition-new(stack-card-2),
+    ::view-transition-old(stack-card-3),
+    ::view-transition-new(stack-card-3),
+    ::view-transition-old(stack-card-4),
+    ::view-transition-new(stack-card-4),
+    ::view-transition-old(stack-card-5),
+    ::view-transition-new(stack-card-5),
+    ::view-transition-old(stack-card-6),
+    ::view-transition-new(stack-card-6) {
+      animation-duration: 0.4s;
+      animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ── CTA back button shine ───────────────────────── */
+    .cta-back-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(105deg, transparent 35%, rgba(210,187,255,0.08) 50%, transparent 65%);
+      transform: translateX(-100%);
+      transition: transform 0.6s ease;
+    }
+    .cta-back-btn:hover::before {
+      transform: translateX(100%);
+    }
+  </style>
+</Layout>

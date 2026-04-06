@@ -1,0 +1,243 @@
+---
+import Layout from '../layouts/Layout.astro';
+import TopNav from '../components/TopNav.astro';
+import BottomNav from '../components/BottomNav.astro';
+import Footer from '../components/Footer.astro';
+import { ui } from '../i18n/ui';
+
+const es = ui.es;
+const en = ui.en;
+
+const atelierTags = ['Next.js', 'TypeScript', 'Supabase', 'Tailwind'];
+
+const filterKeys = [
+  { es: es['home.filter.all'],       en: en['home.filter.all'] },
+  { es: es['home.filter.ecommerce'], en: en['home.filter.ecommerce'] },
+  { es: es['home.filter.saas'],      en: en['home.filter.saas'] },
+  { es: es['home.filter.ai'],        en: en['home.filter.ai'] },
+  { es: es['home.filter.fintech'],   en: en['home.filter.fintech'] },
+];
+---
+
+<Layout title="Fabrizio — Portfolio">
+  <TopNav />
+
+  <main class="pt-28 md:pt-32 pb-40 px-4 sm:px-8 max-w-7xl mx-auto">
+
+    <!-- Header -->
+    <section class="mb-8 md:mb-16">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-8">
+        <div class="max-w-2xl">
+          <h1
+            class="text-3xl sm:text-5xl md:text-7xl font-black tracking-tighter text-on-surface leading-[0.9]"
+            data-i18n
+            data-i18n-html
+            data-es={es['home.title.html']}
+            data-en={en['home.title.html']}
+            set:html={es['home.title.html']}
+          />
+          <p
+            class="text-on-surface-variant text-sm md:text-base mt-4 md:mt-6 leading-relaxed"
+            data-i18n
+            data-es={es['home.subtitle']}
+            data-en={en['home.subtitle']}
+          >
+            {es['home.subtitle']}
+          </p>
+        </div>
+
+        <!-- Filtros desktop: texto plano -->
+        <div class="hidden md:flex flex-wrap gap-3 items-center" id="filter-group-desktop">
+          {filterKeys.map(({ es: labelEs, en: labelEn }, i) => (
+            <button
+              type="button"
+              data-filter
+              data-i18n
+              data-es={labelEs}
+              data-en={labelEn}
+              class={[
+                'px-5 py-2 text-sm font-bold transition-colors duration-200',
+                i === 0 ? 'text-[#D2BBFF]' : 'text-[#E5E1E4]/50 hover:text-[#D2BBFF]',
+              ].join(' ')}
+            >
+              {labelEs}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <!-- Filtros mobile: pills scrollables -->
+      <div class="flex md:hidden gap-2 mt-5 overflow-x-auto pb-1 no-scrollbar" id="filter-group-mobile">
+        {filterKeys.map(({ es: labelEs, en: labelEn }, i) => (
+          <button
+            type="button"
+            data-filter
+            data-i18n
+            data-es={labelEs}
+            data-en={labelEn}
+            class={[
+              'flex-shrink-0 px-4 py-1.5 rounded-full text-xs font-bold transition-all duration-200 whitespace-nowrap',
+              i === 0
+                ? 'bg-primary-container text-on-primary-container'
+                : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high',
+            ].join(' ')}
+          >
+            {labelEs}
+          </button>
+        ))}
+      </div>
+    </section>
+
+    <!-- Mobile: cards verticales -->
+    <div class="flex md:hidden flex-col gap-6">
+
+      <!-- Atelier mobile card -->
+      <a
+        href="/proyectos/atelier"
+        class="group relative bg-surface-container-low rounded-xl overflow-hidden transition-all duration-300 active:scale-[0.98]"
+      >
+        <!-- Línea top animada -->
+        <div class="absolute top-0 left-0 right-0 h-0.5 bg-secondary scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left z-10"></div>
+
+        <!-- Imagen arriba -->
+        <div class="aspect-video relative overflow-hidden">
+          <img
+            src="/images/atelier-hero.png"
+            alt="Atelier — E-Commerce de ropa"
+            class="w-full h-full object-cover object-top grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 scale-105 group-hover:scale-100 transition-all duration-500"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-surface-container-low to-transparent opacity-60"></div>
+        </div>
+
+        <!-- Contenido abajo -->
+        <div class="p-5">
+          <div class="flex flex-wrap gap-2 mb-3">
+            {atelierTags.map(tag => (
+              <span class="text-[9px] px-2 py-0.5 rounded-sm bg-surface-container-highest text-secondary border border-outline-variant/20 uppercase tracking-widest font-bold whitespace-nowrap">
+                {tag}
+              </span>
+            ))}
+          </div>
+          <h2 class="text-2xl font-bold tracking-tight text-on-surface mb-2 group-hover:text-primary transition-colors">Atelier</h2>
+          <p
+            class="text-sm text-on-surface-variant leading-relaxed mb-5"
+            data-i18n
+            data-es={es['atelier.desc']}
+            data-en={en['atelier.desc']}
+          >
+            {es['atelier.desc']}
+          </p>
+          <div class="flex justify-between items-center">
+            <span
+              class="text-[10px] font-bold text-outline uppercase tracking-[0.2em]"
+              data-i18n
+              data-es={es['home.project.view']}
+              data-en={en['home.project.view']}
+            >{es['home.project.view']}</span>
+            <span class="material-symbols-outlined text-primary text-xl">arrow_outward</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Próximos proyectos mobile -->
+      <article class="group relative bg-surface-container-low rounded-xl overflow-hidden min-h-[120px]">
+        <div class="p-8 h-full flex flex-col items-center justify-center gap-3 text-center">
+          <span class="material-symbols-outlined text-on-surface/20 text-4xl">add_circle</span>
+          <p class="text-on-surface/30 text-sm font-medium tracking-wide" data-i18n data-es={es['home.coming-soon']} data-en={en['home.coming-soon']}>{es['home.coming-soon']}</p>
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Desktop: Bento Grid -->
+    <div class="hidden md:grid grid-cols-1 md:grid-cols-12 gap-8">
+
+      <!-- Atelier (col-span-8) -->
+      <a
+        href="/proyectos/atelier"
+        class="md:col-span-8 group relative overflow-hidden rounded-xl bg-surface-container-low transition-all duration-500 hover:bg-surface-container-highest hover:-translate-y-1 no-underline outline-none"
+      >
+        <div class="p-12 h-full flex flex-col">
+          <div class="flex justify-between items-start mb-12">
+            <div class="min-w-0 flex-1">
+              <div class="flex flex-wrap gap-2 mb-4">
+                {atelierTags.map(tag => (
+                  <span class="text-[10px] px-2 py-0.5 rounded-sm bg-surface-container text-on-surface-variant font-bold tracking-widest uppercase whitespace-nowrap">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              <h2 class="text-4xl font-bold tracking-tight text-on-surface">Atelier</h2>
+              <p
+                class="text-on-surface-variant text-sm mt-2"
+                data-i18n
+                data-es={es['atelier.desc']}
+                data-en={en['atelier.desc']}
+              >
+                {es['atelier.desc']}
+              </p>
+            </div>
+            <span class="material-symbols-outlined text-primary text-4xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              arrow_outward
+            </span>
+          </div>
+          <div class="mt-auto overflow-hidden rounded-lg aspect-[21/9]">
+            <img
+              src="/images/atelier-hero.png"
+              alt="Atelier — E-Commerce de ropa"
+              class="w-full h-full object-cover object-top grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
+            />
+          </div>
+        </div>
+      </a>
+
+      <!-- Placeholder: col-span-4 -->
+      <article class="md:col-span-4 group relative overflow-hidden rounded-xl bg-surface-container-low transition-all duration-500 hover:bg-surface-container-highest hover:-translate-y-1">
+        <div class="p-10 h-full flex flex-col items-center justify-center gap-4 text-center">
+          <span class="material-symbols-outlined text-on-surface/20 text-5xl">add_circle</span>
+          <p class="text-on-surface/30 text-sm font-medium tracking-wide" data-i18n data-es={es['home.coming-soon']} data-en={en['home.coming-soon']}>{es['home.coming-soon']}</p>
+        </div>
+      </article>
+
+      <!-- Placeholder: col-span-4 -->
+      <article class="md:col-span-4 group relative overflow-hidden rounded-xl bg-surface-container-low transition-all duration-500 hover:bg-surface-container-highest hover:-translate-y-1">
+        <div class="p-10 h-full flex flex-col items-center justify-center gap-4 text-center">
+          <span class="material-symbols-outlined text-on-surface/20 text-5xl">add_circle</span>
+          <p class="text-on-surface/30 text-sm font-medium tracking-wide" data-i18n data-es={es['home.coming-soon']} data-en={en['home.coming-soon']}>{es['home.coming-soon']}</p>
+        </div>
+      </article>
+
+      <!-- Placeholder: col-span-8 -->
+      <article class="md:col-span-8 group relative overflow-hidden rounded-xl bg-surface-container-low transition-all duration-500 hover:bg-surface-container-highest hover:-translate-y-1">
+        <div class="p-12 h-full flex flex-col items-center justify-center gap-4 text-center min-h-[200px]">
+          <span class="material-symbols-outlined text-on-surface/20 text-5xl">add_circle</span>
+          <p class="text-on-surface/30 text-sm font-medium tracking-wide" data-i18n data-es={es['home.coming-soon']} data-en={en['home.coming-soon']}>{es['home.coming-soon']}</p>
+        </div>
+      </article>
+
+    </div>
+  </main>
+
+  <BottomNav active="projects" />
+  <Footer />
+
+  <script is:inline>
+    [
+      { id: 'filter-group-desktop', active: ['text-[#D2BBFF]'],                                     inactive: ['text-[#E5E1E4]/50'] },
+      { id: 'filter-group-mobile',  active: ['bg-primary-container', 'text-on-primary-container'],  inactive: ['bg-surface-container-low', 'text-on-surface-variant'] },
+    ].forEach(function (group) {
+      var el = document.getElementById(group.id);
+      if (!el) return;
+      el.addEventListener('click', function (e) {
+        var btn = e.target.closest('[data-filter]');
+        if (!btn || !el.contains(btn)) return;
+        el.querySelectorAll('[data-filter]').forEach(function (b) {
+          b.classList.remove.apply(b.classList, group.active);
+          b.classList.add.apply(b.classList, group.inactive);
+        });
+        btn.classList.remove.apply(btn.classList, group.inactive);
+        btn.classList.add.apply(btn.classList, group.active);
+      });
+    });
+  </script>
+</Layout>

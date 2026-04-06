@@ -1,0 +1,37 @@
+---
+import { ui } from '../i18n/ui';
+const es = ui.es;
+const en = ui.en;
+
+const socialLinks = [
+  { label: 'GitHub',    href: 'https://github.com/Fufexo' },
+  { label: 'LinkedIn',  href: 'https://www.linkedin.com/in/fabrizio-fournier/' },
+  { label: 'WhatsApp',  href: 'https://wa.me/51988998500' },
+];
+---
+
+<footer class="w-full border-t border-[#2A2A2C]/20 bg-[#131315]">
+  <div class="max-w-7xl mx-auto px-8 py-12 flex flex-col md:flex-row justify-between items-center">
+    <div class="text-lg font-bold text-[#E5E1E4] mb-4 md:mb-0">{es.brand}</div>
+    <div
+      class="text-[#E5E1E4]/40 text-sm mb-8 md:mb-0"
+      data-i18n
+      data-es={es['footer.copy']}
+      data-en={en['footer.copy']}
+    >
+      {es['footer.copy']}
+    </div>
+    <div class="flex space-x-8">
+      {socialLinks.map(({ label, href }) => (
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-[#E5E1E4]/40 hover:text-[#D2BBFF] underline-offset-4 hover:underline transition-opacity duration-300"
+        >
+          {label}
+        </a>
+      ))}
+    </div>
+  </div>
+</footer>

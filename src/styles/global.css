@@ -1,0 +1,266 @@
+@import "tailwindcss";
+
+@theme {
+  /* Colors */
+  --color-background: #131315;
+  --color-surface: #131315;
+  --color-surface-dim: #131315;
+  --color-surface-container-lowest: #0e0e10;
+  --color-surface-container-low: #1c1b1d;
+  --color-surface-container: #201f22;
+  --color-surface-container-high: #2a2a2c;
+  --color-surface-container-highest: #353437;
+  --color-surface-bright: #39393b;
+  --color-surface-variant: #353437;
+  --color-surface-tint: #d2bbff;
+
+  --color-on-background: #e5e1e4;
+  --color-on-surface: #e5e1e4;
+  --color-on-surface-variant: #ccc3d8;
+  --color-inverse-surface: #e5e1e4;
+  --color-inverse-on-surface: #313032;
+
+  --color-primary: #d2bbff;
+  --color-primary-container: #7c3aed;
+  --color-primary-fixed: #eaddff;
+  --color-primary-fixed-dim: #d2bbff;
+  --color-on-primary: #3f008e;
+  --color-on-primary-container: #ede0ff;
+  --color-on-primary-fixed: #25005a;
+  --color-on-primary-fixed-variant: #5a00c6;
+  --color-inverse-primary: #732ee4;
+
+  --color-secondary: #89ceff;
+  --color-secondary-container: #00a2e6;
+  --color-secondary-fixed: #c9e6ff;
+  --color-secondary-fixed-dim: #89ceff;
+  --color-on-secondary: #00344d;
+  --color-on-secondary-container: #00344e;
+  --color-on-secondary-fixed: #001e2f;
+  --color-on-secondary-fixed-variant: #004c6e;
+
+  --color-tertiary: #ffb2b7;
+  --color-tertiary-container: #c81a42;
+  --color-tertiary-fixed: #ffdadb;
+  --color-tertiary-fixed-dim: #ffb2b7;
+  --color-on-tertiary: #67001b;
+  --color-on-tertiary-container: #ffdedf;
+  --color-on-tertiary-fixed: #40000d;
+  --color-on-tertiary-fixed-variant: #92002a;
+
+  --color-error: #ffb4ab;
+  --color-error-container: #93000a;
+  --color-on-error: #690005;
+  --color-on-error-container: #ffdad6;
+
+  --color-outline: #958da1;
+  --color-outline-variant: #4a4455;
+
+  /* Border radius */
+  --radius: 0.125rem;
+  --radius-lg: 0.25rem;
+  --radius-xl: 0.5rem;
+  --radius-full: 0.75rem;
+
+  /* Fonts */
+  --font-sans: 'Inter', sans-serif;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #131315;
+  color: #e5e1e4;
+}
+
+
+a {
+  text-decoration: none;
+  outline: none;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.glass-effect {
+  background: rgba(19, 19, 21, 0.4);
+  backdrop-filter: blur(20px);
+}
+
+.primary-gradient-glow {
+  background: linear-gradient(135deg, #d2bbff 0%, #7c3aed 100%);
+}
+
+.ghost-border {
+  outline: 1px solid rgba(149, 141, 161, 0.15);
+}
+
+/* Philosophy cards */
+.phil-card {
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+  min-height: 280px;
+}
+
+.phil-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    130deg,
+    transparent 0% 33%,
+    rgba(210, 187, 255, 0.12) 66%,
+    rgba(124, 58, 237, 0.20) 83.5%,
+    rgba(137, 206, 255, 0.08) 100%
+  );
+  background-size: 300% 300%;
+  background-position: 0% 0%;
+  transition: background-position 350ms ease, transform 350ms ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.phil-card:hover::before {
+  background-position: 100% 100%;
+  transform: scale(1.08, 1.03);
+}
+
+.phil-card-content {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  background-image: radial-gradient(rgba(255,255,255,0.05) 8%, transparent 8%);
+  background-size: 24px 24px;
+  background-position: 0% 0%;
+  transition: background-position 350ms ease;
+}
+
+.phil-card:hover .phil-card-content {
+  background-position: -10% 0%;
+}
+
+.phil-icon {
+  color: rgba(255, 255, 255, 0.2);
+  transition: color 250ms ease;
+}
+
+.phil-card:hover .phil-icon {
+  color: rgba(210, 187, 255, 0.9);
+}
+
+.phil-word {
+  display: inline-block;
+  margin: 0 1px;
+  opacity: 0;
+  transform: translateY(40%);
+  transition: none;
+}
+
+.phil-card:hover .phil-word {
+  opacity: 1;
+  transform: translateY(0%);
+  transition:
+    opacity 0ms var(--wd, 0ms),
+    transform 200ms cubic-bezier(0.9, 0.06, 0.15, 0.9) var(--wd, 0ms);
+}
+
+/* Tech tags */
+@keyframes tagIn {
+  from { opacity: 0; transform: translateY(10px) scale(0.92); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+@keyframes tagFloat {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-4px); }
+}
+
+.tech-tag {
+  animation: tagIn 0.4s ease both, tagFloat 3s ease-in-out infinite;
+  animation-delay: var(--delay, 0s), calc(var(--delay, 0s) + 0.4s);
+}
+
+.tech-tag:hover {
+  background: rgba(210, 187, 255, 0.15);
+  color: #d2bbff;
+  box-shadow: 0 0 12px rgba(210, 187, 255, 0.2);
+  transform: scale(1.08) translateY(-2px);
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
+/* Hero title hover — secuencial:
+   entrada:  accent → blanco (0.5s), luego word → gradiente (0.5s con delay)
+   salida:   word   → blanco (0.4s), luego accent → gradiente (0.4s con delay) */
+.hero-word {
+  filter: saturate(0) brightness(6);
+  transition: filter 0.3s ease 0s;       /* salida: word vuelve a blanco rápido */
+}
+
+.hero-accent {
+  transition: filter 0.3s ease 0.26s;    /* salida: accent vuelve al gradiente con delay */
+}
+
+h1:has(.hero-word):hover .hero-accent {
+  filter: saturate(0) brightness(5);
+  transition: filter 0.35s ease 0s;      /* entrada: accent se pone blanco primero */
+}
+
+h1:has(.hero-word):hover .hero-word {
+  filter: none;
+  transition: filter 0.35s ease 0.32s;   /* entrada: word toma gradiente después */
+}
+
+/* Hide scrollbar for filter pills */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Terminal cursor blink */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* Joke toast */
+@keyframes toastIn {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+  to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+@keyframes toastOut {
+  from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  to   { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+}
+
+.joke-toast {
+  animation: toastIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.joke-toast.hide {
+  animation: toastOut 0.25s ease forwards;
+}
+
+/* Scroll reveal */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity  0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.scroll-reveal.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Social icon buttons */
+.social-icon {
+  transition: color 0.2s ease, background 0.2s ease, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+}
+
+.social-icon:hover {
+  color: #d2bbff;
+  background: rgba(210, 187, 255, 0.1);
+  transform: translateY(-4px) scale(1.12);
+  box-shadow: 0 8px 20px rgba(210, 187, 255, 0.2);
+}

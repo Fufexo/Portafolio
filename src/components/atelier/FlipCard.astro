@@ -1,0 +1,160 @@
+---
+import { ui } from '../../i18n/ui';
+
+interface Props {
+  color?: 'primary' | 'secondary';
+  frontIcon: string;
+  titleEs: string;
+  titleEn: string;
+  descEs: string;
+  descEn: string;
+  backIcon: string;
+  backDescEs: string;
+  backDescEn: string;
+  chips: string[];
+}
+
+const {
+  color = 'secondary',
+  frontIcon, titleEs, titleEn, descEs, descEn,
+  backIcon, backDescEs, backDescEn, chips,
+} = Astro.props;
+
+const es = ui.es;
+const en = ui.en;
+
+const backBg =
+  color === 'secondary'
+    ? 'bg-secondary/5 border border-secondary/20'
+    : 'bg-primary/5 border border-primary/20';
+const colorText = color === 'secondary' ? 'text-secondary' : 'text-primary';
+---
+
+<div
+  class={`flip-card flip-card--${color}`}
+  onclick="this.classList.toggle('flipped')"
+  role="button"
+  tabindex="0"
+  aria-label={titleEs}
+>
+  <div class="flip-card-inner">
+
+    <!-- Front -->
+    <div class="flip-card-face flip-card-front bg-surface-container rounded-xl p-6 ghost-border flex flex-col">
+      <span
+        class={`material-symbols-outlined text-secondary mb-3 block`}
+        style="font-variation-settings:'FILL' 1"
+      >{frontIcon}</span>
+      <h4
+        class="font-bold text-sm uppercase tracking-widest mb-2 text-on-surface"
+        data-i18n data-es={titleEs} data-en={titleEn}
+      >{titleEs}</h4>
+      <p
+        class="text-sm text-on-surface-variant flex-1"
+        data-i18n data-es={descEs} data-en={descEn}
+      >{descEs}</p>
+      <span
+        class="flip-hint mt-4"
+        data-i18n data-es={es['atelier.flip.hint']} data-en={en['atelier.flip.hint']}
+      >{es['atelier.flip.hint']}</span>
+    </div>
+
+    <!-- Back -->
+    <div class={`flip-card-face flip-card-back ${backBg} rounded-xl p-6 flex flex-col`}>
+      <span
+        class={`material-symbols-outlined ${colorText} mb-3 block`}
+        style="font-variation-settings:'FILL' 1"
+      >{backIcon}</span>
+      <h4
+        class={`font-bold text-xs uppercase tracking-widest mb-3 ${colorText}`}
+        data-i18n data-es={es['atelier.flip.back.title']} data-en={en['atelier.flip.back.title']}
+      >{es['atelier.flip.back.title']}</h4>
+      <p
+        class="text-sm text-on-surface-variant flex-1 leading-relaxed"
+        data-i18n data-es={backDescEs} data-en={backDescEn}
+      >{backDescEs}</p>
+      <div class="flex flex-wrap gap-1.5 mt-4">
+        {chips.map(chip => <span class="flip-chip">{chip}</span>)}
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function handleFlipKeydown(this: HTMLElement, e: KeyboardEvent) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      (e.currentTarget as HTMLElement).classList.toggle('flipped');
+    }
+  }
+
+  function initFlipCards() {
+    document.querySelectorAll<HTMLElement>('.flip-card').forEach(card => {
+      card.removeEventListener('keydown', handleFlipKeydown);
+      card.addEventListener('keydown', handleFlipKeydown);
+    });
+  }
+
+  document.addEventListener('astro:page-load', initFlipCards);
+  initFlipCards();
+</script>
+
+<style>
+  .flip-card {
+    perspective: 1000px;
+    cursor: pointer;
+    outline: none;
+  }
+  .flip-card-inner {
+    display: grid;
+    transform-style: preserve-3d;
+    transition: transform 0.85s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .flip-card.flipped .flip-card-inner {
+    transform: rotateY(180deg);
+  }
+  .flip-card-face {
+    grid-area: 1 / 1;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  .flip-card-back {
+    transform: rotateY(180deg);
+  }
+  .flip-card-front {
+    transition: box-shadow 0.6s ease, outline-color 0.6s ease;
+    outline: 1px solid transparent;
+  }
+  .flip-card--secondary:not(.flipped):hover .flip-card-front {
+    box-shadow: 0 0 28px rgba(137, 206, 255, 0.18);
+    outline-color: rgba(137, 206, 255, 0.25);
+  }
+  .flip-card--primary:not(.flipped):hover .flip-card-front {
+    box-shadow: 0 0 28px rgba(210, 187, 255, 0.18);
+    outline-color: rgba(210, 187, 255, 0.25);
+  }
+  .flip-hint {
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(204, 195, 216, 0.35);
+    transition: color 0.2s;
+  }
+  .flip-card:not(.flipped):hover .flip-hint {
+    color: rgba(204, 195, 216, 0.7);
+  }
+  .flip-chip {
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(229, 225, 228, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+</style>
