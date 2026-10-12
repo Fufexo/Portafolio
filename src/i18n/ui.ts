@@ -68,7 +68,7 @@ export const ui = {
     'about.label': 'Desarrollador Full Stack · Angular',
     'about.headline.lead': 'Diseño y desarrollo',
     'about.bio':
-      'Soy Fabrizio, desarrollador full stack especializado en Angular. En Sip, una fintech, construyo aplicaciones empresariales y participé en su migración de Angular 11 a Angular 20 con Standalone Components y Signals. Complemento el frontend con backend en NestJS y despliegues en Azure y AWS, y llevo cada proyecto de la idea al despliegue con atención al detalle.',
+      'Soy Fabrizio Fournier, desarrollador full stack especializado en Angular. En Sip, una fintech, desarrollo aplicaciones empresariales y participé en su modernización de Angular 11 a 20. En mis proyectos propios uso Next.js, y en el backend trabajo con Java y NestJS.',
 
     // Skills page
     'skills.label': 'Stack técnico',
@@ -205,7 +205,7 @@ export const ui = {
     'about.label': 'Full Stack Developer · Angular',
     'about.headline.lead': 'I design and build',
     'about.bio':
-      "I'm Fabrizio, a full stack developer specialized in Angular. At Sip, a fintech company, I build enterprise applications and took part in their migration from Angular 11 to Angular 20 with Standalone Components and Signals. I complement the frontend with NestJS on the backend and deployments on Azure and AWS, taking every project from idea to deployment with attention to detail.",
+      "I'm Fabrizio Fournier, a full stack developer specialized in Angular. At Sip, a fintech company, I build enterprise applications and took part in their modernization from Angular 11 to 20. In my own projects I use Next.js, and on the backend I work with Java and NestJS.",
 
     // Skills page
     'skills.label': 'Technical Stack',
