@@ -68,7 +68,7 @@ export const ui = {
     'about.label': 'Desarrollador Full Stack · Angular',
     'about.headline.lead': 'Diseño y desarrollo',
     'about.bio':
-      'Soy Fabrizio, desarrollador full stack especializado en Angular. Lo uso en producción en el sector financiero: construyo aplicaciones con TypeScript y SCSS (BEM), integro APIs y mantengo interfaces escalables y fáciles de mantener. Complemento el frontend con backend en NestJS y despliegues en Azure y AWS, y llevo cada proyecto de la idea al despliegue con atención al detalle.',
+      'Soy Fabrizio, desarrollador full stack especializado en Angular. En Sip, una fintech, construyo aplicaciones empresariales y participé en su migración de Angular 11 a Angular 20 con Standalone Components y Signals. Complemento el frontend con backend en NestJS y despliegues en Azure y AWS, y llevo cada proyecto de la idea al despliegue con atención al detalle.',
 
     // Skills page
     'skills.label': 'Stack técnico',
@@ -79,7 +79,7 @@ export const ui = {
     'skills.backend.desc': 'Java, C#, NestJS, Spring Boot, Node.js y WordPress con ACF para exponer endpoints REST.',
     'skills.databases': 'Bases de datos',
     'skills.cloud': 'Cloud y herramientas',
-    'skills.databases.desc': 'Modelado relacional y NoSQL con MySQL, SQL Server, DynamoDB y Supabase.',
+    'skills.databases.desc': 'Modelado relacional y NoSQL con MySQL, SQL Server, MongoDB, DynamoDB y Supabase.',
     'skills.cloud.desc': 'Despliegues en Azure, AWS y Vercel, con Git, Postman y Figma en el día a día.',
 
     // About — filosofía
@@ -205,7 +205,7 @@ export const ui = {
     'about.label': 'Full Stack Developer · Angular',
     'about.headline.lead': 'I design and build',
     'about.bio':
-      "I'm Fabrizio, a full stack developer specialized in Angular. I use it in production in the financial sector: I build applications with TypeScript and SCSS (BEM), integrate APIs and keep interfaces scalable and easy to maintain. I complement the frontend with NestJS on the backend and deployments on Azure and AWS, taking every project from idea to deployment with attention to detail.",
+      "I'm Fabrizio, a full stack developer specialized in Angular. At Sip, a fintech company, I build enterprise applications and took part in their migration from Angular 11 to Angular 20 with Standalone Components and Signals. I complement the frontend with NestJS on the backend and deployments on Azure and AWS, taking every project from idea to deployment with attention to detail.",
 
     // Skills page
     'skills.label': 'Technical Stack',
@@ -216,7 +216,7 @@ export const ui = {
     'skills.backend.desc': 'Java, C#, NestJS, Spring Boot, Node.js and WordPress with ACF to expose REST endpoints.',
     'skills.databases': 'Databases',
     'skills.cloud': 'Cloud & tools',
-    'skills.databases.desc': 'Relational and NoSQL modeling with MySQL, SQL Server, DynamoDB and Supabase.',
+    'skills.databases.desc': 'Relational and NoSQL modeling with MySQL, SQL Server, MongoDB, DynamoDB and Supabase.',
     'skills.cloud.desc': 'Deployments on Azure, AWS and Vercel, with Git, Postman and Figma in my daily workflow.',
 
     // About — philosophy

@@ -8,6 +8,7 @@ export const frontendTags: TechTagData[] = [
   { label: 'Angular',      icon: '🔴', delay: '0s'    },
   { label: 'TypeScript',   icon: 'TS', delay: '0.08s' },
   { label: 'SCSS (BEM)',   icon: '🎨', delay: '0.16s' },
+  { label: 'Angular Material', icon: '🧩', delay: '0.20s' },
   { label: 'React',        icon: '⚛',  delay: '0.24s' },
   { label: 'Next.js',      icon: '▲',  delay: '0.28s' },
   { label: 'Tailwind CSS', icon: '🌊', delay: '0.32s' },
@@ -28,7 +29,7 @@ export const databaseTags: TechTagData[] = [
   { label: 'MySQL',      icon: '🐬', delay: '0.05s' },
   { label: 'SQL Server', icon: '🏢', delay: '0.13s' },
   { label: 'DynamoDB',   icon: '⚡', delay: '0.21s' },
-  { label: 'NoSQL',      icon: '📦', delay: '0.29s' },
+  { label: 'MongoDB',    icon: '🍃', delay: '0.29s' },
   { label: 'Supabase',   icon: '🐘', delay: '0.37s' },
 ];
 
