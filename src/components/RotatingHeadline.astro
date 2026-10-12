@@ -6,39 +6,37 @@
  *   reservar la altura de la más larga (sin saltos de layout al cambiar).
  * - Lectores de pantalla leen una frase estable (sr-only), no la animación.
  */
+import { getLang, type Localized } from '../i18n/ui';
+
 interface Props {
-  leadEs: string;
-  leadEn: string;
-  wordsEs: string[];
-  wordsEn: string[];
+  lead: Localized;
+  words: Localized<string[]>;
   class?: string;
 }
 
-const { leadEs, leadEn, wordsEs, wordsEn, class: className = '' } = Astro.props;
-
-// Para lectores de pantalla: frase fija con la primera palabra (p. ej. "Construyamos algo juntos.")
-const srEs = `${leadEs} ${wordsEs[0]}`;
-const srEn = `${leadEn} ${wordsEn[0]}`;
+const { lead, words, class: className = '' } = Astro.props;
+const lang = getLang(Astro.currentLocale);
+const leadText = lead[lang];
+const wordList = words[lang];
 ---
 
 <h1
   data-rotating-headline
-  data-words-es={JSON.stringify(wordsEs)}
-  data-words-en={JSON.stringify(wordsEn)}
+  data-words={JSON.stringify(wordList)}
   class:list={['font-black tracking-tight leading-[1.05] text-on-surface', className]}
 >
-  <span class="sr-only" data-i18n data-es={srEs} data-en={srEn}>{srEs}</span>
+  <span class="sr-only">{`${leadText} ${wordList[0]}`}</span>
 
   <span aria-hidden="true" class="block">
-    <span class="block" data-i18n data-es={leadEs} data-en={leadEn}>{leadEs}</span>
+    <span class="block">{leadText}</span>
 
     <span class="grid">
       <!-- Reserva de altura: todas las palabras, invisibles, en la misma celda -->
-      {[...wordsEs, ...wordsEn].map((word) => (
+      {wordList.map((word) => (
         <span class="invisible col-start-1 row-start-1 pr-[0.6em]">{word}</span>
       ))}
       <span class="col-start-1 row-start-1 text-primary">
-        <span data-rotating-word>{wordsEs[0]}</span><span
+        <span data-rotating-word>{wordList[0]}</span><span
           class="rotating-caret inline-block w-[0.08em] h-[0.85em] ml-[0.06em] -mb-[0.06em] bg-primary align-baseline"
         ></span>
       </span>
@@ -46,98 +44,89 @@ const srEn = `${leadEn} ${wordsEn[0]}`;
   </span>
 </h1>
 
-<script is:inline>
-  (function () {
-    var TYPE_MS = 70;
-    var DELETE_MS = 35;
-    var HOLD_MS = 2200;
-    var GAP_MS = 350;
+<script>
+  import { onPageLoad } from '../scripts/lifecycle';
+  const TYPE_MS = 70;
+  const DELETE_MS = 35;
+  const HOLD_MS = 2200;
+  const GAP_MS = 350;
 
-    function getLang() {
-      try { return localStorage.getItem('fabrizio-lang') || 'es'; } catch (e) { return 'es'; }
+  type Rotator = { stop: () => void };
+  const active = new Map<HTMLElement, Rotator>();
+
+  function start(h1: HTMLElement): Rotator | undefined {
+    const target = h1.querySelector<HTMLElement>('[data-rotating-word]');
+    let words: string[] = [];
+    try {
+      words = JSON.parse(h1.dataset.words ?? '[]');
+    } catch {
+      return;
+    }
+    if (!target || words.length < 2) return;
+
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let index = 0;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let stopped = false;
+    target.textContent = words[0];
+
+    const schedule = (fn: () => void, ms: number) => {
+      if (!stopped) timer = setTimeout(fn, ms);
+    };
+
+    // Con movimiento reducido: cambio directo de palabra, sin tipeo
+    function swap() {
+      index = (index + 1) % words.length;
+      target!.textContent = words[index];
+      schedule(swap, HOLD_MS + 1500);
     }
 
-    function start(h1) {
-      if (h1._rotStop) h1._rotStop();
-
-      var target = h1.querySelector('[data-rotating-word]');
-      if (!target) return;
-      var lang = getLang();
-      var words;
-      try { words = JSON.parse(h1.getAttribute('data-words-' + lang) || '[]'); } catch (e) { words = []; }
-      if (!words.length) return;
-
-      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      var index = 0;
-      var timer = null;
-      var stopped = false;
-
-      target.textContent = words[0];
-      h1._rotStop = function () { stopped = true; clearTimeout(timer); };
-
-      // Con movimiento reducido: cambio directo de palabra, sin tipeo
-      if (reduce) {
-        (function swap() {
-          timer = setTimeout(function () {
-            if (stopped) return;
-            index = (index + 1) % words.length;
-            target.textContent = words[index];
-            swap();
-          }, HOLD_MS + 1500);
-        })();
-        return;
+    function erase() {
+      const text = target!.textContent ?? '';
+      if (text.length > 0) {
+        target!.textContent = text.slice(0, -1);
+        schedule(erase, DELETE_MS);
+      } else {
+        index = (index + 1) % words.length;
+        schedule(type, GAP_MS);
       }
+    }
 
-      function erase() {
-        if (stopped) return;
-        var text = target.textContent;
-        if (text.length > 0) {
-          target.textContent = text.slice(0, -1);
-          timer = setTimeout(erase, DELETE_MS);
-        } else {
-          index = (index + 1) % words.length;
-          timer = setTimeout(type, GAP_MS);
-        }
+    function type() {
+      const word = words[index];
+      const current = target!.textContent ?? '';
+      if (current.length < word.length) {
+        target!.textContent = word.slice(0, current.length + 1);
+        schedule(type, TYPE_MS);
+      } else {
+        schedule(erase, HOLD_MS);
       }
-
-      function type() {
-        if (stopped) return;
-        var word = words[index];
-        var current = target.textContent;
-        if (current.length < word.length) {
-          target.textContent = word.slice(0, current.length + 1);
-          timer = setTimeout(type, TYPE_MS);
-        } else {
-          timer = setTimeout(erase, HOLD_MS);
-        }
-      }
-
-      timer = setTimeout(erase, HOLD_MS);
     }
 
-    function initAll() {
-      document.querySelectorAll('[data-rotating-headline]').forEach(start);
-    }
+    schedule(reduce ? swap : erase, reduce ? HOLD_MS + 1500 : HOLD_MS);
+    return {
+      stop: () => {
+        stopped = true;
+        clearTimeout(timer);
+      },
+    };
+  }
 
-    // Pausa cuando la pestaña no está visible (ahorra CPU/batería)
-    function onVisibility() {
-      document.querySelectorAll('[data-rotating-headline]').forEach(function (h1) {
-        if (document.hidden) { if (h1._rotStop) h1._rotStop(); }
-        else start(h1);
-      });
-    }
+  function stopAll() {
+    active.forEach((r) => r.stop());
+    active.clear();
+  }
 
-    if (!window.__rotatingHeadlineBound) {
-      window.__rotatingHeadlineBound = true;
-      document.addEventListener('astro:page-load', initAll);
-      document.addEventListener('fabrizio:langchange', initAll);
-      document.addEventListener('visibilitychange', onVisibility);
-      document.addEventListener('astro:before-swap', function () {
-        document.querySelectorAll('[data-rotating-headline]').forEach(function (h1) {
-          if (h1._rotStop) h1._rotStop();
-        });
-      });
-    }
-    initAll();
-  })();
+  function initAll() {
+    stopAll();
+    document.querySelectorAll<HTMLElement>('[data-rotating-headline]').forEach((h1) => {
+      const rotator = start(h1);
+      if (rotator) active.set(h1, rotator);
+    });
+  }
+
+  onPageLoad(initAll);
+  document.addEventListener('astro:before-swap', stopAll);
+  // Pausa cuando la pestaña no está visible (ahorra CPU/batería)
+  document.addEventListener('visibilitychange', () => (document.hidden ? stopAll() : initAll()));
 </script>

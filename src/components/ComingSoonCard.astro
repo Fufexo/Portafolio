@@ -1,26 +1,25 @@
 ---
+import { getLang, useTranslations } from '../i18n/ui';
+
 interface Props {
   articleClass: string;
   contentClass?: string;
-  textEs: string;
-  textEn: string;
   iconSize?: 'md' | 'lg';
 }
 
 const {
   articleClass,
   contentClass = 'p-8 h-full flex flex-col items-center justify-center gap-3 text-center',
-  textEs,
-  textEn,
   iconSize = 'md',
 } = Astro.props;
 
+const tr = useTranslations(getLang(Astro.currentLocale));
 const iconSizeClass = iconSize === 'lg' ? 'text-5xl' : 'text-4xl';
 ---
 
 <article class={`${articleClass} border border-dashed border-outline-variant/40`}>
   <div class={contentClass}>
     <span class={`material-symbols-outlined text-outline ${iconSizeClass}`} aria-hidden="true">hourglass_empty</span>
-    <p class="text-on-surface-variant text-sm font-medium tracking-wide" data-i18n data-es={textEs} data-en={textEn}>{textEs}</p>
+    <p class="text-on-surface-variant text-sm font-medium tracking-wide">{tr('home.coming-soon')}</p>
   </div>
 </article>

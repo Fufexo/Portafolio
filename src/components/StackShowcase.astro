@@ -8,7 +8,7 @@
  */
 import type { CollectionEntry } from 'astro:content';
 import LocalizedText from './LocalizedText.astro';
-import { t } from '../i18n/ui';
+import { t, getLang, useTranslations, pick } from '../i18n/ui';
 
 type StackItem = CollectionEntry<'projects'>['data']['stack'][number];
 
@@ -40,7 +40,8 @@ function iconClass(icon: StackItem['icon'], large = false) {
 }
 
 const hint = t('stack.hint');
-const tablistLabel = t('stack.tablist.label');
+const lang = getLang(Astro.currentLocale);
+const tr = useTranslations(lang);
 ---
 
 <div class="stack-showcase" data-stack-showcase>
@@ -48,9 +49,7 @@ const tablistLabel = t('stack.tablist.label');
 
   <div
     role="tablist"
-    aria-label={tablistLabel.es}
-    data-aria-es={tablistLabel.es}
-    data-aria-en={tablistLabel.en}
+    aria-label={tr('stack.tablist.label')}
     class="stack-tabs no-scrollbar"
   >
     {items.map((item, i) => (
@@ -67,7 +66,7 @@ const tablistLabel = t('stack.tablist.label');
           <span class={iconClass(item.icon)}>{item.icon.value}</span>
         </span>
         <span class="stack-name">{item.name}</span>
-        <span class="stack-tagline">{item.tagline}</span>
+        <span class="stack-tagline">{pick(item.tagline, lang)}</span>
       </button>
     ))}
   </div>
@@ -93,7 +92,7 @@ const tablistLabel = t('stack.tablist.label');
           <LocalizedText as="p" text={t('project.stack.in-project')} class="stack-exp-label" />
           <LocalizedText as="p" text={item.note} class="stack-exp-note" />
           <div class="stack-chips">
-            {item.chips.map((chip) => <span class="stack-chip">{chip}</span>)}
+            {item.chips.map((chip) => <span class="stack-chip">{pick(chip, lang)}</span>)}
           </div>
           {item.showLiveLink && (
             <a
@@ -112,58 +111,55 @@ const tablistLabel = t('stack.tablist.label');
   </div>
 </div>
 
-<script is:inline>
-  (function () {
-    function select(root, tab, focus) {
-      var tabs = Array.prototype.slice.call(root.querySelectorAll('[role="tab"]'));
-      tabs.forEach(function (t) {
-        var on = t === tab;
-        t.setAttribute('aria-selected', on ? 'true' : 'false');
-        t.tabIndex = on ? 0 : -1;
-        var panel = document.getElementById(t.getAttribute('aria-controls'));
-        if (!panel) return;
-        panel.setAttribute('data-active', on ? 'true' : 'false');
-        if (on) panel.removeAttribute('inert');
-        else panel.setAttribute('inert', '');
+<script>
+  import { onPageLoad } from '../scripts/lifecycle';
+  function select(root: HTMLElement, tab: HTMLElement, focus: boolean) {
+    root.querySelectorAll<HTMLElement>('[role="tab"]').forEach((t) => {
+      const on = t === tab;
+      t.setAttribute('aria-selected', String(on));
+      t.tabIndex = on ? 0 : -1;
+      const panel = document.getElementById(t.getAttribute('aria-controls') ?? '');
+      if (!panel) return;
+      panel.dataset.active = String(on);
+      panel.toggleAttribute('inert', !on);
+    });
+    if (focus) tab.focus();
+    // En móvil, acerca la pestaña elegida dentro de la fila deslizable
+    tab.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
+  }
+
+  function init() {
+    document.querySelectorAll<HTMLElement>('[data-stack-showcase]').forEach((root) => {
+      if (root.dataset.bound) return;
+      root.dataset.bound = 'true';
+      const list = root.querySelector<HTMLElement>('[role="tablist"]');
+      if (!list) return;
+
+      list.addEventListener('click', (e) => {
+        const tab = (e.target as Element).closest<HTMLElement>('[role="tab"]');
+        if (tab) select(root, tab, false);
       });
-      if (focus) tab.focus();
-      // En móvil, centra la pestaña elegida dentro de la fila deslizable
-      tab.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
-    }
 
-    function init() {
-      document.querySelectorAll('[data-stack-showcase]').forEach(function (root) {
-        if (root.dataset.bound === '1') return;
-        root.dataset.bound = '1';
-        var list = root.querySelector('[role="tablist"]');
-
-        list.addEventListener('click', function (e) {
-          var tab = e.target.closest('[role="tab"]');
-          if (tab) select(root, tab, false);
-        });
-
-        list.addEventListener('keydown', function (e) {
-          var tabs = Array.prototype.slice.call(list.querySelectorAll('[role="tab"]'));
-          var i = tabs.indexOf(document.activeElement);
-          if (i < 0) return;
-          var next = null;
-          if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next = tabs[(i + 1) % tabs.length];
-          else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') next = tabs[(i - 1 + tabs.length) % tabs.length];
-          else if (e.key === 'Home') next = tabs[0];
-          else if (e.key === 'End') next = tabs[tabs.length - 1];
-          if (!next) return;
-          e.preventDefault();
-          select(root, next, true);
-        });
+      list.addEventListener('keydown', (e) => {
+        const tabs = Array.from(list.querySelectorAll<HTMLElement>('[role="tab"]'));
+        const i = tabs.indexOf(document.activeElement as HTMLElement);
+        if (i < 0) return;
+        const moves: Record<string, number> = {
+          ArrowRight: (i + 1) % tabs.length,
+          ArrowDown: (i + 1) % tabs.length,
+          ArrowLeft: (i - 1 + tabs.length) % tabs.length,
+          ArrowUp: (i - 1 + tabs.length) % tabs.length,
+          Home: 0,
+          End: tabs.length - 1,
+        };
+        if (!(e.key in moves)) return;
+        e.preventDefault();
+        select(root, tabs[moves[e.key]], true);
       });
-    }
+    });
+  }
 
-    if (!window.__stackShowcaseBound) {
-      window.__stackShowcaseBound = true;
-      document.addEventListener('astro:page-load', init);
-    }
-    init();
-  })();
+  onPageLoad(init);
 </script>
 
 <style>

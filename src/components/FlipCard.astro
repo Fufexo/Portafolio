@@ -6,7 +6,7 @@
  *   pasa al botón de la cara visible al girar.
  */
 import LocalizedText from './LocalizedText.astro';
-import { t } from '../i18n/ui';
+import { t, getLang, pick, type Localized as LocalizedValue } from '../i18n/ui';
 
 type Localized = { es: string; en: string };
 
@@ -18,11 +18,12 @@ interface Props {
   description: Localized;
   solutionIcon: string;
   solution: Localized;
-  chips: string[];
+  chips: (string | LocalizedValue)[];
 }
 
 const { id, tone = 'secondary', icon, title, description, solutionIcon, solution, chips } = Astro.props;
 const toneText = tone === 'secondary' ? 'text-secondary' : 'text-primary';
+const lang = getLang(Astro.currentLocale);
 ---
 
 <div class={`flip-card flip-card--${tone}`} data-flip-card>
@@ -45,7 +46,7 @@ const toneText = tone === 'secondary' ? 'text-secondary' : 'text-primary';
       <LocalizedText as="h4" text={t('project.flip.back.title')} class={`font-bold text-xs uppercase tracking-widest mb-3 ${toneText}`} />
       <LocalizedText as="p" text={solution} class="text-sm text-on-surface-variant flex-1 leading-relaxed" />
       <div class="flex flex-wrap gap-1.5 mt-4">
-        {chips.map((chip) => <span class="flip-chip">{chip}</span>)}
+        {chips.map((chip) => <span class="flip-chip">{pick(chip, lang)}</span>)}
       </div>
       <button type="button" class="flip-toggle mt-4" data-flip-toggle>
         <span class="material-symbols-outlined text-[16px]" aria-hidden="true">undo</span>
@@ -56,36 +57,30 @@ const toneText = tone === 'secondary' ? 'text-secondary' : 'text-primary';
   </div>
 </div>
 
-<script is:inline>
-  (function () {
-    function flip(card) {
-      var flipped = card.classList.toggle('flipped');
-      var front = card.querySelector('[data-face="front"]');
-      var back = card.querySelector('[data-face="back"]');
-      if (flipped) { front.setAttribute('inert', ''); back.removeAttribute('inert'); }
-      else { back.setAttribute('inert', ''); front.removeAttribute('inert'); }
-      // Mueve el foco solo si ya estaba dentro de la tarjeta (navegación con teclado)
-      if (card.contains(document.activeElement)) {
-        var visible = flipped ? back : front;
-        var btn = visible.querySelector('[data-flip-toggle]');
-        if (btn) setTimeout(function () { btn.focus({ preventScroll: true }); }, 50);
-      }
+<script>
+  function flip(card: HTMLElement) {
+    const flipped = card.classList.toggle('flipped');
+    const front = card.querySelector<HTMLElement>('[data-face="front"]');
+    const back = card.querySelector<HTMLElement>('[data-face="back"]');
+    if (!front || !back) return;
+    front.toggleAttribute('inert', flipped);
+    back.toggleAttribute('inert', !flipped);
+    // Mueve el foco solo si ya estaba dentro de la tarjeta (navegación con teclado)
+    if (card.contains(document.activeElement)) {
+      const btn = (flipped ? back : front).querySelector<HTMLElement>('[data-flip-toggle]');
+      setTimeout(() => btn?.focus({ preventScroll: true }), 50);
     }
+  }
 
-    function onClick(e) {
-      var card = e.target.closest('[data-flip-card]');
-      if (!card) return;
-      // Ignora clics en enlaces o selección de texto dentro de la tarjeta
-      if (e.target.closest('a')) return;
-      if (window.getSelection && String(window.getSelection()).length > 0) return;
-      flip(card);
-    }
-
-    if (!window.__flipCardBound) {
-      window.__flipCardBound = true;
-      document.addEventListener('click', onClick);
-    }
-  })();
+  // Delegación en document: un solo listener para todas las tarjetas y navegaciones
+  document.addEventListener('click', (e) => {
+    const target = e.target as Element;
+    const card = target.closest<HTMLElement>('[data-flip-card]');
+    if (!card || target.closest('a')) return;
+    // No gira si el usuario está seleccionando texto
+    if (String(window.getSelection() ?? '').length > 0) return;
+    flip(card);
+  });
 </script>
 
 <style>

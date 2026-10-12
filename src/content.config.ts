@@ -5,6 +5,9 @@ import { z } from 'astro/zod';
 /** Texto en los dos idiomas del sitio. */
 const localized = z.object({ es: z.string(), en: z.string() });
 
+/** Texto fijo (igual en ambos idiomas, p. ej. "PCI-DSS") o traducido. */
+const text = z.union([z.string(), localized]);
+
 const tone = z.enum(['primary', 'secondary', 'tertiary']);
 
 /**
@@ -42,7 +45,7 @@ const projects = defineCollection({
         description: localized,
         tags: z.array(z.string()).max(5),
         image: image(),
-        imageAlt: z.string(),
+        imageAlt: localized,
         imagePosition: z.string().default('object-top'),
         size: z.enum(['large', 'small']).default('small'),
       }),
@@ -51,7 +54,7 @@ const projects = defineCollection({
         badge: localized,
         subtitle: localized,
         image: image(),
-        imageAlt: z.string(),
+        imageAlt: localized,
         role: localized,
         year: z.string(),
         platform: localized,
@@ -67,7 +70,7 @@ const projects = defineCollection({
               description: localized,
               solutionIcon: z.string(),
               solution: localized,
-              chips: z.array(z.string()),
+              chips: z.array(text),
             }),
           )
           .min(1),
@@ -77,11 +80,11 @@ const projects = defineCollection({
         .array(
           z.object({
             name: z.string(),
-            tagline: z.string(),
+            tagline: text,
             icon,
             description: localized,
             note: localized,
-            chips: z.array(z.string()),
+            chips: z.array(text),
             showLiveLink: z.boolean().default(false),
           }),
         )
@@ -91,7 +94,7 @@ const projects = defineCollection({
         .array(
           z.object({
             image: image(),
-            alt: z.string(),
+            alt: localized,
             /** Ancho en la cuadrícula de 6 columnas: full=6, half=3, wide=4, narrow=2 */
             span: z.enum(['full', 'half', 'wide', 'narrow']),
             title: localized,

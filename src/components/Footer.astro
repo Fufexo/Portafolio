@@ -1,7 +1,7 @@
 ---
-import { ui } from '../i18n/ui';
-const es = ui.es;
-const en = ui.en;
+import { getLang, useTranslations } from '../i18n/ui';
+
+const tr = useTranslations(getLang(Astro.currentLocale));
 
 const socialLinks = [
   { label: 'GitHub',    href: 'https://github.com/Fufexo' },
@@ -12,15 +12,8 @@ const socialLinks = [
 
 <footer class="w-full border-t border-outline-variant/20 bg-background">
   <div class="max-w-7xl mx-auto px-4 sm:px-8 py-10 md:py-12 flex flex-col md:flex-row justify-between items-center gap-4 md:gap-8 text-center md:text-left">
-    <div class="text-lg font-bold text-on-surface">{es.brand}</div>
-    <div
-      class="text-on-surface-variant text-sm"
-      data-i18n
-      data-es={es['footer.copy']}
-      data-en={en['footer.copy']}
-    >
-      {es['footer.copy']}
-    </div>
+    <div class="text-lg font-bold text-on-surface">{tr('brand')}</div>
+    <div class="text-on-surface-variant text-sm">{tr('footer.copy')}</div>
     <div class="flex gap-2 sm:gap-6">
       {socialLinks.map(({ label, href }) => (
         <a

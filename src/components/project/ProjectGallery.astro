@@ -3,7 +3,7 @@ import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import LocalizedText from '../LocalizedText.astro';
 import SectionHeading from './SectionHeading.astro';
-import { t } from '../../i18n/ui';
+import { t, getLang } from '../../i18n/ui';
 
 type GalleryItem = CollectionEntry<'projects'>['data']['gallery'][number];
 
@@ -12,6 +12,7 @@ interface Props {
 }
 
 const { items } = Astro.props;
+const lang = getLang(Astro.currentLocale);
 
 /**
  * Cuadrícula de 6 columnas desde tablet:
@@ -36,7 +37,7 @@ const layout = {
         <figure class={`gallery-item relative rounded-xl overflow-hidden group ghost-border ${layout[item.span].col}`}>
           <Image
             src={item.image}
-            alt={item.alt}
+            alt={item.alt[lang]}
             widths={[640, 1024, 1600]}
             sizes={layout[item.span].sizes}
             class={`block w-full min-h-45 object-cover object-top transition-transform duration-700 group-hover:scale-105 ${layout[item.span].img}`}

@@ -12,10 +12,10 @@ Personal portfolio built with Astro and Tailwind CSS v4. Dark bento-grid layout,
 
 ## Features
 
-- Bilingual UI (Spanish / English) with `localStorage` persistence
+- Bilingual site with real URLs per language: Spanish at `/`, English at `/en/` (static HTML in both, indexable by search engines)
 - Project case studies generated from a content collection (one page template for every project)
 - Optimized, responsive images (WebP + `srcset`) generated at build time
-- Social share previews (Open Graph / Twitter), canonical URLs, sitemap and `robots.txt`
+- Social share previews (Open Graph / Twitter), canonical URLs, `hreflang` alternates, i18n sitemap and `robots.txt`
 - Accessible components: keyboard-navigable tabs, real buttons, skip link, reduced-motion support
 - Fully responsive (mobile-first) with touch-friendly targets
 
@@ -23,40 +23,30 @@ Personal portfolio built with Astro and Tailwind CSS v4. Dark bento-grid layout,
 
 ```
 src/
-├── assets/
-│   └── og-default.png             # Default share image (1200×630)
+├── assets/og-default.png          # Default share image (1200×630)
 ├── components/
-│   ├── project/                   # Case study sections
-│   │   ├── ProjectHero.astro
-│   │   ├── ProjectChallenges.astro
-│   │   ├── ProjectGallery.astro
-│   │   ├── ProjectCta.astro
-│   │   └── SectionHeading.astro
-│   ├── LocalizedText.astro        # Bilingual text (data-i18n contract in one place)
+│   ├── project/                   # Case study sections (Hero, Challenges, Gallery, CTA, SectionHeading)
+│   ├── LocalizedText.astro        # Renders a { es, en } text in the current page language
 │   ├── StackShowcase.astro        # Tech stack tabs + detail panel
 │   ├── FlipCard.astro             # Challenge card (problem / solution)
 │   ├── ProjectCard.astro          # Home page project card
 │   ├── RotatingHeadline.astro     # Typewriter headline
-│   ├── TopNav.astro / BottomNav.astro / Footer.astro
-│   └── ...
-├── content/
-│   └── projects/<slug>/           # One folder per project
-│       ├── data.json              # All project content (ES + EN)
-│       └── *.png                  # Source images (optimized at build time)
+│   └── TopNav / BottomNav / Footer / ...
+├── content/projects/<slug>/       # One folder per project: data.json + source images
 ├── content.config.ts              # Collection schema (validated with Zod)
 ├── data/                          # nav, stack, timeline
-├── i18n/ui.ts                     # UI translations (ES + EN) + t() helper
+├── i18n/ui.ts                     # UI translations + helpers (getLang, useTranslations, localizePath)
 ├── layouts/Layout.astro           # HTML shell + SEO meta
-├── pages/
-│   ├── proyectos/[slug].astro     # Case study template (one page per project)
-│   ├── index.astro / about.astro / contact.astro
+├── lib/projects.ts                # Project queries and static paths
+├── pages/                         # Routes only: each file renders a view
+│   ├── index / about / contact    # Spanish (/)
+│   ├── proyectos/[slug].astro
+│   ├── en/...                     # English (/en/), same views
 │   └── robots.txt.ts
-└── styles/global.css              # Tailwind @theme tokens + global styles
-
-public/
-├── scripts/                       # i18n, nav state, scroll reveal
-├── favicon.svg
-└── resume.pdf
+├── scripts/                       # Client modules (TypeScript, bundled by Astro)
+├── styles/global.css              # Tailwind @theme tokens + global styles
+└── views/                         # Page content shared by both languages
+    ├── HomePage / AboutPage / ContactPage / ProjectPage
 ```
 
 ## Getting Started
@@ -89,15 +79,22 @@ The project automatically appears on the home page (sorted by `order`) and gets 
 
 ## I18N System
 
-UI strings live in `src/i18n/ui.ts`; project content lives in each `data.json` as `{ "es": "...", "en": "..." }`. The page renders Spanish, and `public/scripts/i18n.js` swaps text using `data-i18n`, `data-es` and `data-en` attributes.
+Routing uses Astro's built-in i18n (`astro.config.mjs`): Spanish is the default locale without prefix and English lives under `/en/`. Pages in `src/pages` and `src/pages/en` are thin wrappers around the same view in `src/views`, and every component reads the language from `Astro.currentLocale`, so each URL is rendered server-side in its own language (no client-side text swapping).
 
-Prefer the `LocalizedText` component over writing the attributes by hand:
+- **UI strings:** add the key to both `es` and `en` in `src/i18n/ui.ts`, then use it:
 
-```astro
----
-import LocalizedText from '../components/LocalizedText.astro';
-import { t } from '../i18n/ui';
----
-<LocalizedText as="h2" text={t('project.gallery.title')} class="text-4xl" />
-<LocalizedText as="p" text={{ es: 'Hola', en: 'Hello' }} />
-```
+  ```astro
+  ---
+  import { getLang, useTranslations, localizePath } from '../i18n/ui';
+  const lang = getLang(Astro.currentLocale);
+  const tr = useTranslations(lang);
+  ---
+  <h2>{tr('project.gallery.title')}</h2>
+  <a href={localizePath('/contact/', lang)}>{tr('nav.contact')}</a>
+  ```
+
+- **Content with both languages** (project data, timeline): store `{ "es": "...", "en": "..." }` and render it with `LocalizedText` or `value[lang]`. Short technical labels can stay as plain strings.
+
+- **Client scripts** live in `<script>` tags (processed by Astro). Initialize them with `onPageLoad()` from `src/scripts/lifecycle.ts` so they run on the first load and after every View Transition.
+
+- **New page:** create the view in `src/views/`, then add a wrapper in both `src/pages/` and `src/pages/en/`.

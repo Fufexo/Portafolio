@@ -4,12 +4,8 @@ interface Props {
   iconColorClass: string;
   hoverBgClass?: string;
   href?: string;
-  labelText?: string;
-  labelEs?: string;
-  labelEn?: string;
-  valueText?: string;
-  valueEs?: string;
-  valueEn?: string;
+  label: string;
+  value: string;
   rootClass?: string;
   valueClass?: string;
 }
@@ -19,12 +15,8 @@ const {
   iconColorClass,
   hoverBgClass = '',
   href,
-  labelText,
-  labelEs,
-  labelEn,
-  valueText,
-  valueEs,
-  valueEn,
+  label,
+  value,
   rootClass,
   valueClass = 'text-on-surface font-bold',
 } = Astro.props;
@@ -36,29 +28,14 @@ const iconClass = [
   iconColorClass,
   hoverBgClass,
 ].filter(Boolean).join(' ');
-const showTranslatedLabel = Boolean(labelEs && labelEn);
-const showTranslatedValue = Boolean(valueEs && valueEn);
 ---
 
 <Tag href={href} target={href ? '_blank' : undefined} rel={href ? 'noopener noreferrer' : undefined} class={resolvedRootClass}>
   <div class={iconClass}>
-    <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">{icon}</span>
+    <span class="material-symbols-outlined" aria-hidden="true" style="font-variation-settings:'FILL' 1">{icon}</span>
   </div>
   <div class={href ? 'min-w-0' : ''}>
-    {showTranslatedLabel ? (
-      <p class="text-xs text-on-surface-variant font-medium uppercase tracking-wider" data-i18n data-es={labelEs} data-en={labelEn}>
-        {labelEs}
-      </p>
-    ) : (
-      <p class="text-xs text-on-surface-variant font-medium uppercase tracking-wider">{labelText}</p>
-    )}
-
-    {showTranslatedValue ? (
-      <p class={valueClass} data-i18n data-es={valueEs} data-en={valueEn}>
-        {valueEs}
-      </p>
-    ) : (
-      <p class={valueClass}>{valueText}</p>
-    )}
+    <p class="text-xs text-on-surface-variant font-medium uppercase tracking-wider">{label}</p>
+    <p class={valueClass}>{value}</p>
   </div>
 </Tag>

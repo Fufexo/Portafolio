@@ -20,7 +20,10 @@
       "Tailwind"
     ],
     "image": "./portada.png",
-    "imageAlt": "FridgeChef — Recetas con IA",
+    "imageAlt": {
+      "es": "FridgeChef — Recetas con IA",
+      "en": "FridgeChef — AI recipes"
+    },
     "imagePosition": "object-top",
     "size": "small"
   },
@@ -34,7 +37,10 @@
       "en": "Web app that analyzes your available ingredients and instantly generates AI-ranked recipes, with detailed steps, estimated calories and automatic images."
     },
     "image": "./hero.png",
-    "imageAlt": "FridgeChef — Recetas con IA",
+    "imageAlt": {
+      "es": "FridgeChef — Recetas con IA",
+      "en": "FridgeChef — AI recipes"
+    },
     "role": {
       "es": "Full Stack Developer",
       "en": "Full Stack Developer"
@@ -132,7 +138,10 @@
         "chips": [
           "sessionStorage",
           "Server Map cache",
-          "Deduplicación"
+          {
+            "es": "Deduplicación",
+            "en": "Deduplication"
+          }
         ]
       }
     ]
@@ -161,7 +170,10 @@
     },
     {
       "name": "Google Gemini",
-      "tagline": "gemini-1.5-flash · Prompts estructurados",
+      "tagline": {
+        "es": "gemini-1.5-flash · Prompts estructurados",
+        "en": "gemini-1.5-flash · Structured prompts"
+      },
       "icon": {
         "kind": "material",
         "value": "auto_awesome",
@@ -178,12 +190,18 @@
       "chips": [
         "gemini-1.5-flash",
         "JSON output",
-        "Ranking por %"
+        {
+          "es": "Ranking por %",
+          "en": "Ranked by %"
+        }
       ]
     },
     {
       "name": "Zustand",
-      "tagline": "Estado global · Sin boilerplate",
+      "tagline": {
+        "es": "Estado global · Sin boilerplate",
+        "en": "Global state · No boilerplate"
+      },
       "icon": {
         "kind": "material",
         "value": "hub",
@@ -198,9 +216,15 @@
         "en": "A single store centralizes ingredients, active recipes, selected recipe and shopping list. Selective persistence with Zustand persist middleware for ingredients and shopping."
       },
       "chips": [
-        "Store único",
+        {
+          "es": "Store único",
+          "en": "Single store"
+        },
         "Persist middleware",
-        "Sin Context"
+        {
+          "es": "Sin Context",
+          "en": "No Context"
+        }
       ]
     },
     {
@@ -221,12 +245,18 @@
       "chips": [
         "Framer Motion",
         "Skeletons",
-        "Filtros animados"
+        {
+          "es": "Filtros animados",
+          "en": "Animated filters"
+        }
       ]
     },
     {
       "name": "Pexels + Openverse",
-      "tagline": "Imágenes · Paralelo · Scoring",
+      "tagline": {
+        "es": "Imágenes · Paralelo · Scoring",
+        "en": "Images · Parallel · Scoring"
+      },
       "icon": {
         "kind": "material",
         "value": "image_search",
@@ -272,7 +302,10 @@
   "gallery": [
     {
       "image": "./hero.png",
-      "alt": "FridgeChef — Generador de recetas",
+      "alt": {
+        "es": "FridgeChef — Generador de recetas",
+        "en": "FridgeChef — Recipe generator"
+      },
       "span": "full",
       "title": {
         "es": "Home — Generador de recetas",
@@ -285,7 +318,10 @@
     },
     {
       "image": "./platos.png",
-      "alt": "FridgeChef — Platos sugeridos",
+      "alt": {
+        "es": "FridgeChef — Platos sugeridos",
+        "en": "FridgeChef — Suggested dishes"
+      },
       "span": "wide",
       "title": {
         "es": "Platos sugeridos",
@@ -298,7 +334,10 @@
     },
     {
       "image": "./pasos.png",
-      "alt": "FridgeChef — Pasos de preparación",
+      "alt": {
+        "es": "FridgeChef — Pasos de preparación",
+        "en": "FridgeChef — Preparation steps"
+      },
       "span": "narrow",
       "title": {
         "es": "Pasos de preparación",

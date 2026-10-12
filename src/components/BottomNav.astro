@@ -1,69 +1,61 @@
 ---
-import { ui } from '../i18n/ui';
-import { navItems } from '../data/nav';
-const es = ui.es;
-const en = ui.en;
+import { navItems, isNavActive } from '../data/nav';
+import { getLang, useTranslations, localizePath, stripLangPrefix } from '../i18n/ui';
+
+const lang = getLang(Astro.currentLocale);
+const tr = useTranslations(lang);
+const basePath = stripLangPrefix(Astro.url.pathname);
 ---
 
 <!-- Solo en móvil/tablet: en desktop ya está la navegación superior -->
 <nav
   id="bottom-nav"
-  aria-label={es['nav.main.label']}
-  data-aria-es={es['nav.main.label']}
-  data-aria-en={en['nav.main.label']}
+  aria-label={tr('nav.main.label')}
   class="md:hidden fixed left-1/2 -translate-x-1/2 z-50 flex items-center gap-1 bg-surface-container/80 backdrop-blur-lg rounded-full px-2 py-1.5 shadow-elevated ghost-border transition-[opacity,transform] duration-300"
   style="bottom: max(1rem, env(safe-area-inset-bottom));"
-  transition:persist
 >
-  {navItems.map(({ labelKey, icon, href }) => (
-    <a
-      href={href}
-      data-bottom-link
-      data-nav-href={href}
-      class="min-w-18 min-h-14 px-3 py-1.5 rounded-full active:scale-95 flex flex-col items-center justify-center transition-colors duration-200 text-on-surface-variant hover:text-primary"
-    >
-      <span class="material-symbols-outlined" aria-hidden="true" data-nav-icon>
-        {icon}
-      </span>
-      <span
-        class="text-[11px] font-medium mt-0.5"
-        data-i18n
-        data-es={es[labelKey as keyof typeof es]}
-        data-en={en[labelKey as keyof typeof en]}
+  {navItems.map(({ labelKey, icon, href }) => {
+    const active = isNavActive(href, basePath);
+    return (
+      <a
+        href={localizePath(href, lang)}
+        aria-current={active ? 'page' : undefined}
+        class:list={[
+          'min-w-18 min-h-14 px-3 py-1.5 rounded-full active:scale-95 flex flex-col items-center justify-center transition-colors duration-200 hover:text-primary',
+          active ? 'text-primary' : 'text-on-surface-variant',
+        ]}
       >
-        {es[labelKey as keyof typeof es]}
-      </span>
-      <span
-        data-nav-dot
-        aria-hidden="true"
-        class="w-4 h-0.5 bg-primary rounded-full mt-1 shadow-glow-dot hidden"
-      ></span>
-    </a>
-  ))}
+        <span
+          class="material-symbols-outlined"
+          aria-hidden="true"
+          style={`font-variation-settings:'FILL' ${active ? 1 : 0}`}
+        >
+          {icon}
+        </span>
+        <span class="text-[11px] font-medium mt-0.5">{tr(labelKey)}</span>
+        <span
+          aria-hidden="true"
+          class:list={['w-4 h-0.5 bg-primary rounded-full mt-1 shadow-glow-dot', { hidden: !active }]}
+        ></span>
+      </a>
+    );
+  })}
 </nav>
 
-<script is:inline>
-  (function () {
-    // Oculta la barra al llegar al footer para que no tape sus enlaces
-    function checkScroll() {
-      var nav = document.getElementById('bottom-nav');
-      if (!nav) return;
-      var scrollBottom = document.documentElement.scrollHeight - window.scrollY - window.innerHeight;
-      var hide = scrollBottom < 120;
-      nav.style.opacity = hide ? '0' : '1';
-      nav.style.pointerEvents = hide ? 'none' : '';
-      nav.style.transform = hide ? 'translateY(20px)' : '';
-      if (hide) nav.setAttribute('inert', '');
-      else nav.removeAttribute('inert');
-    }
+<script>
+  import { onPageLoad } from '../scripts/lifecycle';
+  // Oculta la barra al llegar al footer para que no tape sus enlaces
+  function checkScroll() {
+    const nav = document.getElementById('bottom-nav');
+    if (!nav) return;
+    const scrollBottom = document.documentElement.scrollHeight - window.scrollY - window.innerHeight;
+    const hide = scrollBottom < 120;
+    nav.style.opacity = hide ? '0' : '1';
+    nav.style.pointerEvents = hide ? 'none' : '';
+    nav.style.transform = hide ? 'translateY(20px)' : '';
+    nav.toggleAttribute('inert', hide);
+  }
 
-    function init() {
-      window.removeEventListener('scroll', checkScroll);
-      window.addEventListener('scroll', checkScroll, { passive: true });
-      checkScroll();
-    }
-
-    document.addEventListener('DOMContentLoaded', init);
-    document.addEventListener('astro:page-load', init);
-  })();
+  window.addEventListener('scroll', checkScroll, { passive: true });
+  onPageLoad(checkScroll);
 </script>

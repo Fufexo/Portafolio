@@ -1,73 +1,114 @@
 ---
-import { ui } from '../i18n/ui';
-import { navItems } from '../data/nav';
-const es = ui.es;
-const en = ui.en;
+import { navItems, isNavActive } from '../data/nav';
+import { getLang, useTranslations, localizePath, stripLangPrefix } from '../i18n/ui';
+
+const lang = getLang(Astro.currentLocale);
+const tr = useTranslations(lang);
+const otherLang = lang === 'es' ? 'en' : 'es';
+
+// Misma página en el otro idioma: '/about' ↔ '/en/about'
+const basePath = stripLangPrefix(Astro.url.pathname);
+const switchHref = localizePath(basePath, otherLang);
 ---
 
-<header class="fixed top-0 w-full z-50 bg-background/70 backdrop-blur-xl border-b border-outline-variant/10" transition:persist>
+<header class="fixed top-0 w-full z-50 bg-background/70 backdrop-blur-xl border-b border-outline-variant/10">
   <div class="flex justify-between items-center max-w-7xl mx-auto px-4 sm:px-8 py-2 sm:py-4">
-    <a href="/" class="flex items-center min-h-11 text-lg sm:text-2xl font-black tracking-tighter text-on-surface shrink-0">
-      {es.brand}
+    <a href={localizePath('/', lang)} class="flex items-center min-h-11 text-lg sm:text-2xl font-black tracking-tighter text-on-surface shrink-0">
+      {tr('brand')}
     </a>
 
-    <nav
-      class="hidden md:flex items-center gap-8"
-      aria-label={es['nav.main.label']}
-      data-aria-es={es['nav.main.label']}
-      data-aria-en={en['nav.main.label']}
-    >
-      {navItems.map(({ labelKey, href }) => (
-        <a
-          href={href}
-          data-nav-link
-          data-nav-href={href}
-          class="relative py-2 text-sm font-medium transition-colors duration-200 text-on-surface-variant hover:text-primary"
-        >
-          <span
-            data-i18n
-            data-es={es[labelKey as keyof typeof es]}
-            data-en={en[labelKey as keyof typeof en]}
-          >{es[labelKey as keyof typeof es]}</span>
-          <span
-            data-nav-underline
-            class="absolute bottom-0 left-0 h-0.5 rounded-full transition-all duration-300 w-0 bg-primary"
-          />
-        </a>
-      ))}
+    <nav class="hidden md:flex items-center gap-8" aria-label={tr('nav.main.label')}>
+      {navItems.map(({ labelKey, href }) => {
+        const active = isNavActive(href, basePath);
+        return (
+          <a
+            href={localizePath(href, lang)}
+            aria-current={active ? 'page' : undefined}
+            class:list={[
+              'relative py-2 text-sm font-medium transition-colors duration-200 hover:text-primary',
+              active ? 'text-primary' : 'text-on-surface-variant',
+            ]}
+          >
+            {tr(labelKey)}
+            <span
+              aria-hidden="true"
+              class:list={[
+                'absolute bottom-0 left-0 h-0.5 rounded-full bg-primary transition-all duration-300',
+                active ? 'w-full shadow-glow-dot' : 'w-0',
+              ]}
+            />
+          </a>
+        );
+      })}
     </nav>
 
     <div class="flex items-center gap-1 sm:gap-2">
       <button
         type="button"
         data-theme-toggle
-        aria-label={es['nav.theme.label']}
-        data-aria-es={es['nav.theme.label']}
-        data-aria-en={en['nav.theme.label']}
+        data-joke={tr('nav.theme.joke')}
+        aria-label={tr('nav.theme.label')}
         class="w-11 h-11 rounded-full text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors duration-200 flex items-center justify-center"
       >
-        <span class="material-symbols-outlined text-[20px]" aria-hidden="true" data-theme-icon style="font-variation-settings:'FILL' 1">dark_mode</span>
+        <span class="material-symbols-outlined text-[20px]" aria-hidden="true" style="font-variation-settings:'FILL' 1">dark_mode</span>
       </button>
-      <button
-        type="button"
-        data-lang-toggle
-        aria-label={es['nav.lang.label']}
-        data-aria-es={es['nav.lang.label']}
-        data-aria-en={en['nav.lang.label']}
-        class="w-11 h-11 rounded-full text-on-surface-variant hover:text-on-surface hover:bg-surface-container text-xs sm:text-sm font-bold tracking-widest transition-colors duration-200"
+      <a
+        href={switchHref}
+        hreflang={otherLang}
+        lang={otherLang}
+        aria-label={tr('nav.lang.label')}
+        class="w-11 h-11 rounded-full inline-flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container text-xs sm:text-sm font-bold tracking-widest transition-colors duration-200"
       >
-        EN
-      </button>
+        {tr('nav.lang.short')}
+      </a>
       <a
         href="/resume.pdf"
         download
-        data-i18n
-        data-es={es['nav.resume']}
-        data-en={en['nav.resume']}
         class="ml-1 primary-gradient-glow text-on-primary font-bold text-xs sm:text-sm px-4 sm:px-6 min-h-11 inline-flex items-center rounded-md transition-all duration-300 active:scale-95 shadow-glow whitespace-nowrap"
       >
-        {es['nav.resume']}
+        {tr('nav.resume')}
       </a>
     </div>
   </div>
 </header>
+
+<script>
+  // El botón de tema muestra un chiste en vez de cambiar de tema (intencional)
+  function showJokeToast(message: string) {
+    document.getElementById('joke-toast')?.remove();
+
+    const toast = document.createElement('div');
+    toast.id = 'joke-toast';
+    toast.className =
+      'joke-toast fixed z-[9999] flex items-center gap-3 px-5 py-3.5 rounded-xl bg-surface-container-highest text-on-surface text-sm font-semibold shadow-toast';
+    Object.assign(toast.style, {
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      maxWidth: 'calc(100vw - 2rem)',
+    });
+    toast.setAttribute('role', 'status');
+    toast.setAttribute('aria-live', 'polite');
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') dismiss();
+    };
+    function dismiss() {
+      toast.classList.add('hide');
+      setTimeout(() => toast.remove(), 250);
+      document.removeEventListener('keydown', onKey);
+    }
+
+    toast.addEventListener('click', dismiss);
+    document.addEventListener('keydown', onKey);
+    setTimeout(dismiss, 3000);
+  }
+
+  // Delegación en document: sobrevive a las navegaciones del ClientRouter
+  document.addEventListener('click', (e) => {
+    const btn = (e.target as Element).closest<HTMLElement>('[data-theme-toggle]');
+    if (btn) showJokeToast(btn.dataset.joke ?? '');
+  });
+</script>

@@ -20,7 +20,10 @@
       "Tailwind"
     ],
     "image": "./hero.png",
-    "imageAlt": "Atelier — E-Commerce de ropa",
+    "imageAlt": {
+      "es": "Atelier — E-Commerce de ropa",
+      "en": "Atelier — Clothing e-commerce"
+    },
     "imagePosition": "object-left-top",
     "size": "large"
   },
@@ -34,7 +37,10 @@
       "en": "Fashion e-commerce for the Peruvian market with real payments via Culqi, a full admin panel and automatic transactional emails."
     },
     "image": "./hero.png",
-    "imageAlt": "Atelier — E-Commerce de moda",
+    "imageAlt": {
+      "es": "Atelier — E-Commerce de moda",
+      "en": "Atelier — Fashion e-commerce"
+    },
     "role": {
       "es": "Full Stack Developer",
       "en": "Full Stack Developer"
@@ -68,7 +74,10 @@
         },
         "chips": [
           "PCI-DSS",
-          "Sin datos en servidor"
+          {
+            "es": "Sin datos en servidor",
+            "en": "No card data on server"
+          }
         ]
       },
       {
@@ -88,8 +97,14 @@
         },
         "chips": [
           "Dashboard",
-          "Pedidos",
-          "Analíticas"
+          {
+            "es": "Pedidos",
+            "en": "Orders"
+          },
+          {
+            "es": "Analíticas",
+            "en": "Analytics"
+          }
         ]
       },
       {
@@ -131,7 +146,10 @@
         "chips": [
           "React Context",
           "localStorage",
-          "Rehidratación"
+          {
+            "es": "Rehidratación",
+            "en": "Rehydration"
+          }
         ]
       }
     ]
@@ -183,7 +201,10 @@
     },
     {
       "name": "TypeScript",
-      "tagline": "Strict · Tipado global",
+      "tagline": {
+        "es": "Strict · Tipado global",
+        "en": "Strict · Global typing"
+      },
       "icon": {
         "kind": "badge",
         "value": "TS"
@@ -225,7 +246,10 @@
     },
     {
       "name": "Culqi",
-      "tagline": "Pagos Perú · PCI-DSS",
+      "tagline": {
+        "es": "Pagos Perú · PCI-DSS",
+        "en": "Peru payments · PCI-DSS"
+      },
       "icon": {
         "kind": "material",
         "value": "credit_card",
@@ -241,7 +265,10 @@
       },
       "chips": [
         "PCI-DSS",
-        "Tokenización",
+        {
+          "es": "Tokenización",
+          "en": "Tokenization"
+        },
         "Server-side charge"
       ]
     },
@@ -263,7 +290,10 @@
       },
       "chips": [
         "React Email",
-        "2 emails/venta",
+        {
+          "es": "2 emails/venta",
+          "en": "2 emails/sale"
+        },
         "Server-side"
       ]
     },
@@ -293,7 +323,10 @@
   "gallery": [
     {
       "image": "./tienda.png",
-      "alt": "Atelier — Tienda con filtros",
+      "alt": {
+        "es": "Atelier — Tienda con filtros",
+        "en": "Atelier — Store with filters"
+      },
       "span": "full",
       "title": {
         "es": "Tienda — Catálogo con filtros",
@@ -306,7 +339,10 @@
     },
     {
       "image": "./hero.png",
-      "alt": "Atelier — Hero",
+      "alt": {
+        "es": "Atelier — Hero",
+        "en": "Atelier — Hero section"
+      },
       "span": "half",
       "title": {
         "es": "Hero — Primera impresión",
@@ -319,7 +355,10 @@
     },
     {
       "image": "./nosotros.png",
-      "alt": "Atelier — Nosotros",
+      "alt": {
+        "es": "Atelier — Nosotros",
+        "en": "Atelier — About page"
+      },
       "span": "half",
       "title": {
         "es": "Nosotros — La identidad de marca",

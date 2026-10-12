@@ -7,7 +7,7 @@
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import LocalizedText from './LocalizedText.astro';
-import { t } from '../i18n/ui';
+import { getLang, useTranslations, localizePath } from '../i18n/ui';
 
 interface Props {
   project: CollectionEntry<'projects'>;
@@ -18,10 +18,11 @@ interface Props {
 
 const { project, variant, eager = false } = Astro.props;
 const { title, category, card } = project.data;
-const href = `/proyectos/${project.id}/`;
+const lang = getLang(Astro.currentLocale);
+const tr = useTranslations(lang);
+const href = localizePath(`/proyectos/${project.id}/`, lang);
 const loading = eager ? 'eager' : 'lazy';
 const colClass = card.size === 'large' ? 'md:col-span-8' : 'md:col-span-4';
-const viewLabel = t('home.project.view');
 ---
 
 {variant === 'mobile' ? (
@@ -34,7 +35,7 @@ const viewLabel = t('home.project.view');
     <div class="aspect-video relative overflow-hidden">
       <Image
         src={card.image}
-        alt={card.imageAlt}
+        alt={card.imageAlt[lang]}
         widths={[400, 800]}
         sizes="100vw"
         loading={loading}
@@ -54,7 +55,7 @@ const viewLabel = t('home.project.view');
       <h2 class="text-2xl font-bold tracking-tight text-on-surface mb-2">{title}</h2>
       <LocalizedText as="p" text={card.description} class="text-sm text-on-surface-variant leading-relaxed mb-5" />
       <div class="flex justify-between items-center min-h-11 -mb-2">
-        <LocalizedText text={viewLabel} class="text-xs font-bold text-primary uppercase tracking-[0.2em]" />
+        <span class="text-xs font-bold text-primary uppercase tracking-[0.2em]">{tr('home.project.view')}</span>
         <span class="material-symbols-outlined text-primary text-xl" aria-hidden="true">arrow_outward</span>
       </div>
     </div>
@@ -89,7 +90,7 @@ const viewLabel = t('home.project.view');
       <div class="flex-1 min-h-64 overflow-hidden rounded-lg">
         <Image
           src={card.image}
-          alt={card.imageAlt}
+          alt={card.imageAlt[lang]}
           widths={card.size === 'large' ? [800, 1200] : [400, 800]}
           sizes={card.size === 'large' ? '(min-width: 1280px) 800px, 66vw' : '(min-width: 1280px) 400px, 33vw'}
           loading={loading}

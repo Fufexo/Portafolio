@@ -15,6 +15,17 @@ export const ui = {
     'nav.theme.label': 'Cambiar tema',
     'nav.main.label': 'Navegación principal',
     'a11y.skip': 'Saltar al contenido',
+    'nav.lang.short': 'EN',
+    'nav.theme.joke': 'No no no. Esto es un portfolio, no una hoja de Excel. 🤚',
+
+    // Metadatos por página (título de pestaña y descripción para buscadores)
+    'meta.default.description': 'Portafolio de Fabrizio Fournier, desarrollador full stack especializado en Angular.',
+    'meta.home.title': 'Fabrizio Fournier — Desarrollador Full Stack',
+    'meta.home.description': 'Proyectos de Fabrizio Fournier, desarrollador full stack: e-commerce con pagos reales, apps con IA y productos web de punta a punta.',
+    'meta.about.title': 'Sobre mí | Fabrizio Fournier',
+    'meta.about.description': 'Fabrizio Fournier, desarrollador full stack especializado en Angular, con experiencia construyendo productos en el sector financiero.',
+    'meta.contact.title': 'Contacto | Fabrizio Fournier',
+    'meta.contact.description': 'Contacta a Fabrizio Fournier para tu próximo proyecto web: páginas, tiendas online, aplicaciones a medida y más.',
     'stack.hint': 'Selecciona una tecnología para ver cómo la usé en este proyecto.',
     'stack.tablist.label': 'Tecnologías del proyecto',
 
@@ -118,6 +129,11 @@ export const ui = {
     'contact.form.success.sub': 'Te responderé lo antes posible.',
     'contact.form.error': 'Hubo un error. Inténtalo de nuevo.',
     'contact.form.error.connection': 'Hubo un error de conexión. Inténtalo de nuevo.',
+    'contact.form.retry': 'Intentar de nuevo',
+    'contact.form.sending': 'Enviando…',
+    'contact.terminal.status': 'disponible',
+    'contact.terminal.location': 'Lima, Perú 🇵🇪',
+    'contact.terminal.comment': 'listo para tu próximo proyecto',
 
     // Footer
     'footer.copy': '© 2026 Fabrizio. Diseñado con precisión.',
@@ -136,6 +152,17 @@ export const ui = {
     'nav.theme.label': 'Toggle theme',
     'nav.main.label': 'Main navigation',
     'a11y.skip': 'Skip to content',
+    'nav.lang.short': 'ES',
+    'nav.theme.joke': 'No no no. This is a portfolio, not an Excel spreadsheet. 🤚',
+
+    // Page metadata (tab title and search description)
+    'meta.default.description': 'Portfolio of Fabrizio Fournier, a full stack developer specialized in Angular.',
+    'meta.home.title': 'Fabrizio Fournier — Full Stack Developer',
+    'meta.home.description': 'Projects by Fabrizio Fournier, full stack developer: e-commerce with real payments, AI-powered apps and end-to-end web products.',
+    'meta.about.title': 'About | Fabrizio Fournier',
+    'meta.about.description': 'Fabrizio Fournier, a full stack developer specialized in Angular, with experience building products in the financial sector.',
+    'meta.contact.title': 'Contact | Fabrizio Fournier',
+    'meta.contact.description': 'Get in touch with Fabrizio Fournier for your next web project: websites, online stores, custom applications and more.',
     'stack.hint': 'Select a technology to see how I used it in this project.',
     'stack.tablist.label': 'Project technologies',
 
@@ -239,6 +266,11 @@ export const ui = {
     'contact.form.success.sub': "I'll get back to you as soon as possible.",
     'contact.form.error': 'Something went wrong. Please try again.',
     'contact.form.error.connection': 'Connection error. Please try again.',
+    'contact.form.retry': 'Try again',
+    'contact.form.sending': 'Sending…',
+    'contact.terminal.status': 'available',
+    'contact.terminal.location': 'Lima, Peru 🇵🇪',
+    'contact.terminal.comment': 'ready for your next project',
 
     // Footer
     'footer.copy': '© 2026 Fabrizio. Designed with precision.',
@@ -247,9 +279,41 @@ export const ui = {
 
 export type UiKey = keyof typeof ui.es;
 
+/** Texto en los dos idiomas del sitio. */
+export type Localized<T = string> = Record<Lang, T>;
+
+/** Idioma de la página a partir de Astro.currentLocale (español por defecto). */
+export function getLang(locale: string | undefined): Lang {
+  return locale === 'en' ? 'en' : 'es';
+}
+
+/** Traductor de claves de la interfaz para un idioma: `const tr = useTranslations(lang)`. */
+export function useTranslations(lang: Lang) {
+  return (key: UiKey): string => ui[lang][key];
+}
+
 /** Devuelve una clave de traducción en ambos idiomas: { es, en }. */
-export function t(key: UiKey): { es: string; en: string } {
+export function t(key: UiKey): Localized {
   return { es: ui.es[key], en: ui.en[key] };
+}
+
+/** Resuelve un texto que puede ser fijo ("PCI-DSS") o traducido ({ es, en }). */
+export function pick(value: string | Localized, lang: Lang): string {
+  return typeof value === 'string' ? value : value[lang];
+}
+
+/** Ruta de una página en el idioma dado, siempre con barra final: '/about' → '/en/about/'. */
+export function localizePath(path: string, lang: Lang): string {
+  let clean = path.startsWith('/') ? path : `/${path}`;
+  if (!clean.endsWith('/')) clean += '/';
+  if (lang === defaultLang) return clean;
+  return clean === '/' ? '/en/' : `/en${clean}`;
+}
+
+/** Quita el prefijo de idioma de una ruta: '/en/about' → '/about'. */
+export function stripLangPrefix(pathname: string): string {
+  if (pathname === '/en' || pathname === '/en/') return '/';
+  return pathname.startsWith('/en/') ? pathname.slice(3) : pathname;
 }
 
 // Palabras que rotan en el titular de cada página (RotatingHeadline).

@@ -1,0 +1,150 @@
+---
+/** Portada (se renderiza en el idioma de la URL: / o /en/). */
+import Layout from '../layouts/Layout.astro';
+import TopNav from '../components/TopNav.astro';
+import BottomNav from '../components/BottomNav.astro';
+import Footer from '../components/Footer.astro';
+import ComingSoonCard from '../components/ComingSoonCard.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import RotatingHeadline from '../components/RotatingHeadline.astro';
+import { getLang, useTranslations, t, headlineWords } from '../i18n/ui';
+import { getProjects } from '../lib/projects';
+
+const tr = useTranslations(getLang(Astro.currentLocale));
+
+const filters = [
+  { value: 'all',       label: tr('home.filter.all') },
+  { value: 'ecommerce', label: tr('home.filter.ecommerce') },
+  { value: 'saas',      label: tr('home.filter.saas') },
+  { value: 'ai',        label: tr('home.filter.ai') },
+  { value: 'fintech',   label: tr('home.filter.fintech') },
+];
+
+// Proyectos desde la colección (src/content/projects), ordenados por `order`
+const projects = await getProjects();
+
+// Espacios "Próximo proyecto" en desktop: completan la cuadrícula hasta 5 elementos
+const placeholderCount = Math.max(0, 5 - projects.length);
+---
+
+<Layout title={tr('meta.home.title')} description={tr('meta.home.description')}>
+  <TopNav />
+
+  <main id="main" tabindex="-1" class="pt-28 md:pt-36 pb-36 md:pb-24 px-4 sm:px-8 max-w-7xl mx-auto">
+
+    <!-- Header -->
+    <section class="mb-8 md:mb-16">
+      <div class="flex flex-col xl:flex-row xl:items-end justify-between gap-6 xl:gap-8">
+        <div class="max-w-2xl">
+          <p class="text-secondary font-semibold text-xs sm:text-sm tracking-[0.2em] uppercase mb-4 md:mb-6">
+            {tr('home.eyebrow')}
+          </p>
+          <RotatingHeadline
+            lead={t('home.headline.lead')}
+            words={headlineWords.home}
+            class="text-4xl sm:text-5xl md:text-6xl xl:text-7xl"
+          />
+          <p class="text-on-surface-variant text-base mt-4 md:mt-6 leading-relaxed">
+            {tr('home.subtitle')}
+          </p>
+        </div>
+
+        <!-- Filtros: pills con scroll horizontal en móvil, texto en desktop -->
+        <div
+          id="project-filters"
+          role="group"
+          aria-label={tr('home.filter.label')}
+          class="flex gap-2 xl:gap-1 overflow-x-auto no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 xl:justify-end xl:shrink-0"
+        >
+          {filters.map(({ value, label }, i) => (
+            <button
+              type="button"
+              data-filter={value}
+              aria-pressed={i === 0 ? 'true' : 'false'}
+              class="shrink-0 min-h-11 px-4 rounded-full text-sm font-bold whitespace-nowrap transition-colors duration-200
+                     bg-surface-container-low text-on-surface-variant hover:text-primary
+                     aria-pressed:bg-primary-container aria-pressed:text-on-primary-container
+                     xl:bg-transparent xl:aria-pressed:bg-surface-container-high xl:aria-pressed:text-primary"
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <p
+      id="filter-empty"
+      hidden
+      role="status"
+      class="rounded-xl ghost-border bg-surface-container-low px-6 py-12 text-center text-on-surface-variant mb-6"
+    >
+      {tr('home.filter.empty')}
+    </p>
+
+    <!-- Mobile: cards verticales -->
+    <div class="flex md:hidden flex-col gap-6">
+      {projects.map((project, i) => (
+        <ProjectCard project={project} variant="mobile" eager={i === 0} />
+      ))}
+      <div data-coming-soon>
+        <ComingSoonCard articleClass="relative bg-surface-container-low rounded-xl overflow-hidden min-h-30" />
+      </div>
+    </div>
+
+    <!-- Desktop: Bento Grid -->
+    <div class="hidden md:grid grid-cols-12 gap-6 lg:gap-8">
+      {projects.map((project, i) => (
+        <ProjectCard project={project} variant="desktop" eager={i === 0} />
+      ))}
+      {Array.from({ length: placeholderCount }).map(() => (
+        <div data-coming-soon class="md:col-span-4">
+          <ComingSoonCard
+            articleClass="h-full relative overflow-hidden rounded-xl bg-surface-container-low"
+            contentClass="p-10 h-full flex flex-col items-center justify-center gap-4 text-center"
+            iconSize="lg"
+          />
+        </div>
+      ))}
+    </div>
+  </main>
+
+  <BottomNav />
+  <Footer />
+</Layout>
+
+<script>
+  import { onPageLoad } from '../scripts/lifecycle';
+  function initFilters() {
+    const group = document.getElementById('project-filters');
+    if (!group || group.dataset.bound) return;
+    group.dataset.bound = 'true';
+
+    group.addEventListener('click', (e) => {
+      const btn = (e.target as Element).closest<HTMLElement>('[data-filter]');
+      if (!btn) return;
+      const value = btn.dataset.filter;
+
+      group.querySelectorAll<HTMLElement>('[data-filter]').forEach((b) => {
+        b.setAttribute('aria-pressed', String(b === btn));
+      });
+
+      let visible = 0;
+      document.querySelectorAll<HTMLElement>('[data-project-card]').forEach((card) => {
+        const show = value === 'all' || card.dataset.category === value;
+        card.hidden = !show;
+        // Cuenta solo la variante (mobile/desktop) que está en pantalla
+        if (show && card.offsetParent !== null) visible++;
+      });
+
+      document.querySelectorAll<HTMLElement>('[data-coming-soon]').forEach((el) => {
+        el.hidden = value !== 'all';
+      });
+
+      const empty = document.getElementById('filter-empty');
+      if (empty) empty.hidden = visible > 0;
+    });
+  }
+
+  onPageLoad(initFilters);
+</script>

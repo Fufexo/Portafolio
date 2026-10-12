@@ -2,7 +2,7 @@
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import LocalizedText from '../LocalizedText.astro';
-import { t } from '../../i18n/ui';
+import { t, getLang } from '../../i18n/ui';
 
 interface Props {
   project: CollectionEntry<'projects'>['data'];
@@ -10,6 +10,7 @@ interface Props {
 
 const { project } = Astro.props;
 const { hero, accent, title } = project;
+const lang = getLang(Astro.currentLocale);
 
 // Clases literales para que Tailwind las detecte
 const glowClass = accent === 'secondary' ? 'bg-secondary/8' : 'bg-primary/8';
@@ -26,7 +27,7 @@ const meta = [
   <div class="absolute inset-0 z-0">
     <Image
       src={hero.image}
-      alt={hero.imageAlt}
+      alt={hero.imageAlt[lang]}
       widths={[768, 1280, 1920]}
       sizes="100vw"
       loading="eager"

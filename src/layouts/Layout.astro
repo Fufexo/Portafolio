@@ -3,7 +3,7 @@ import '../styles/global.css';
 import { ClientRouter } from 'astro:transitions';
 import { getImage } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
-import { ui } from '../i18n/ui';
+import { getLang, useTranslations, localizePath, stripLangPrefix } from '../i18n/ui';
 import defaultShareImage from '../assets/og-default.png';
 
 interface Props {
@@ -14,17 +14,29 @@ interface Props {
   type?: 'website' | 'article';
 }
 
+const lang = getLang(Astro.currentLocale);
+const tr = useTranslations(lang);
+
 const {
   title,
-  description = 'Portafolio de Fabrizio Fournier, desarrollador full stack especializado en Angular.',
+  description = tr('meta.default.description'),
   image = defaultShareImage,
   type = 'website',
 } = Astro.props;
 
-// La URL canónica y la imagen absoluta necesitan el dominio (`site` en astro.config,
-// tomado de la variable SITE_URL). Sin dominio se omiten en vez de generar URLs rotas.
+// La URL canónica, las alternativas por idioma y la imagen absoluta necesitan el dominio
+// (`site` en astro.config, tomado de SITE_URL). Sin dominio se omiten en vez de generar URLs rotas.
 const site = Astro.site;
-const canonicalUrl = site ? new URL(Astro.url.pathname, site).href : undefined;
+const basePath = stripLangPrefix(Astro.url.pathname);
+const absolute = (path: string) => (site ? new URL(path, site).href : undefined);
+const canonicalUrl = absolute(localizePath(basePath, lang));
+const alternates = [
+  { hreflang: 'es', href: absolute(localizePath(basePath, 'es')) },
+  { hreflang: 'en', href: absolute(localizePath(basePath, 'en')) },
+  { hreflang: 'x-default', href: absolute(localizePath(basePath, 'es')) },
+];
+const ogLocale = lang === 'en' ? 'en_US' : 'es_PE';
+const ogLocaleAlternate = lang === 'en' ? 'es_PE' : 'en_US';
 const shareImage = await getImage({ src: image, width: 1200, height: 630, fit: 'cover', format: 'jpg' });
 const shareImageUrl = site ? new URL(shareImage.src, site).href : undefined;
 
@@ -44,20 +56,21 @@ const materialIconsHref =
 ---
 
 <!doctype html>
-<html lang="es" class="dark">
+<html lang={lang} class="dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="description" content={description} />
     {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+    {site && alternates.map(({ hreflang, href }) => <link rel="alternate" hreflang={hreflang} href={href} />)}
 
     <!-- Vista previa al compartir (Open Graph / Twitter) -->
     <meta property="og:type" content={type} />
     <meta property="og:site_name" content="Fabrizio Fournier" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:locale" content="es_PE" />
-    <meta property="og:locale:alternate" content="en_US" />
+    <meta property="og:locale" content={ogLocale} />
+    <meta property="og:locale:alternate" content={ogLocaleAlternate} />
     {canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
     {shareImageUrl && <meta property="og:image" content={shareImageUrl} />}
     {shareImageUrl && <meta property="og:image:width" content="1200" />}
@@ -80,29 +93,18 @@ const materialIconsHref =
     <link href={materialIconsHref} rel="stylesheet" />
     <title>{title}</title>
     <ClientRouter />
-
-    <!-- Aplica idioma antes del paint para evitar flash -->
-    <script is:inline>
-      (function () {
-        var lang = 'es';
-        try { lang = localStorage.getItem('fabrizio-lang') || 'es'; } catch (e) {}
-        document.documentElement.setAttribute('data-lang', lang);
-        document.documentElement.setAttribute('lang', lang);
-      })();
-    </script>
   </head>
   <body class="bg-background text-on-surface selection:bg-primary/30 min-h-screen">
     <a
       href="#main"
       class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-100 focus:px-4 focus:py-3 focus:rounded-md focus:bg-primary focus:text-on-primary focus:font-bold"
-      data-i18n
-      data-es={ui.es['a11y.skip']}
-      data-en={ui.en['a11y.skip']}
-    >{ui.es['a11y.skip']}</a>
+    >{tr('a11y.skip')}</a>
     <slot />
 
-    <script is:inline src="/scripts/i18n.js"></script>
-    <script is:inline src="/scripts/site-shell.js"></script>
-    <script is:inline src="/scripts/scroll-reveal.js"></script>
+    <script>
+      import { initScrollReveal } from '../scripts/scroll-reveal';
+      import { onPageLoad } from '../scripts/lifecycle';
+      onPageLoad(initScrollReveal);
+    </script>
   </body>
 </html>

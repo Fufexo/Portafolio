@@ -1,6 +1,6 @@
 ---
 import LocalizedText from '../LocalizedText.astro';
-import { t } from '../../i18n/ui';
+import { t, getLang, localizePath } from '../../i18n/ui';
 
 interface Props {
   liveUrl: string;
@@ -9,6 +9,7 @@ interface Props {
 
 const { liveUrl, accent } = Astro.props;
 const glowClass = accent === 'secondary' ? 'bg-secondary/8' : 'bg-primary/8';
+const homeHref = localizePath('/', getLang(Astro.currentLocale));
 ---
 
 <section class="bg-surface py-28 sm:py-40 px-4 sm:px-8 relative overflow-hidden">
@@ -31,7 +32,7 @@ const glowClass = accent === 'secondary' ? 'bg-secondary/8' : 'bg-primary/8';
         <span class="material-symbols-outlined text-[20px]" aria-hidden="true">arrow_outward</span>
       </a>
       <a
-        href="/"
+        href={homeHref}
         class="cta-back-btn relative inline-flex items-center min-h-12 overflow-hidden glass-effect text-on-surface px-10 rounded-md font-bold text-base ghost-border transition-all duration-300 hover:scale-[1.03] hover:shadow-glow active:scale-95"
       >
         <LocalizedText text={t('project.cta.back')} />

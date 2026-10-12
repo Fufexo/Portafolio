@@ -1,0 +1,219 @@
+---
+/** Sobre mí (se renderiza en el idioma de la URL: /about o /en/about). */
+import Layout from '../layouts/Layout.astro';
+import TopNav from '../components/TopNav.astro';
+import BottomNav from '../components/BottomNav.astro';
+import Footer from '../components/Footer.astro';
+import TechTag from '../components/TechTag.astro';
+import RotatingHeadline from '../components/RotatingHeadline.astro';
+import { getLang, useTranslations, t, headlineWords, type UiKey } from '../i18n/ui';
+import { frontendTags, backendTags, databaseTags, cloudTags } from '../data/stack';
+import { timeline } from '../data/timeline';
+
+const lang = getLang(Astro.currentLocale);
+const tr = useTranslations(lang);
+
+const philosophy: { titleKey: UiKey; descKey: UiKey; icon: string }[] = [
+  { titleKey: 'about.phil.1.title', descKey: 'about.phil.1.desc', icon: 'lightbulb' },
+  { titleKey: 'about.phil.2.title', descKey: 'about.phil.2.desc', icon: 'speed' },
+];
+
+const skillGroups: { icon: string; iconClass: string; titleKey: UiKey; descKey: UiKey; tags: typeof frontendTags }[] = [
+  { icon: 'layers',   iconClass: 'text-primary',   titleKey: 'skills.frontend',  descKey: 'skills.designops.desc', tags: frontendTags },
+  { icon: 'terminal', iconClass: 'text-secondary', titleKey: 'skills.backend',   descKey: 'skills.backend.desc',   tags: backendTags },
+  { icon: 'database', iconClass: 'text-tertiary',  titleKey: 'skills.databases', descKey: 'skills.databases.desc', tags: databaseTags },
+  { icon: 'cloud',    iconClass: 'text-primary',   titleKey: 'skills.cloud',     descKey: 'skills.cloud.desc',     tags: cloudTags },
+];
+---
+
+<Layout title={tr('meta.about.title')} description={tr('meta.about.description')}>
+  <TopNav />
+
+  <main id="main" tabindex="-1" class="pt-28 md:pt-36 pb-36 md:pb-24 px-4 md:px-12 max-w-7xl mx-auto overflow-x-clip">
+    <div class="flex flex-col gap-20 md:gap-40">
+
+    <!-- Hero narrativo -->
+    <section class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-end">
+      <div class="lg:col-span-8">
+        <span class="text-secondary font-medium text-sm tracking-[0.3em] uppercase mb-6 block">
+          {tr('about.label')}
+        </span>
+
+        <RotatingHeadline
+          lead={t('about.headline.lead')}
+          words={headlineWords.about}
+          class="text-4xl sm:text-5xl md:text-6xl xl:text-7xl mb-8"
+        />
+
+        <p class="text-lg md:text-xl text-on-surface-variant max-w-2xl leading-relaxed">
+          {tr('about.bio')}
+        </p>
+
+        <a
+          href="/resume.pdf"
+          download
+          class="inline-flex items-center gap-2 mt-8 px-6 min-h-12 rounded-md ghost-border text-on-surface hover:text-primary transition-all duration-200 text-sm font-bold tracking-wide group"
+        >
+          <span class="material-symbols-outlined text-[18px] group-hover:translate-y-0.5 transition-transform duration-200" aria-hidden="true">download</span>
+          <span>{tr('resume.download')}</span>
+        </a>
+      </div>
+
+      <div class="lg:col-span-4 aspect-square rounded-xl overflow-hidden ghost-border relative group">
+        <img
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYZSbk0soO7t2ViAUhSbZqu60thY1kU8qxQFXqLXODSISrphtUQFoxekZNyAGzv95qNfmGVewhvaqFhWdjISz4DL4cbrBVgrBxNXVVAWj6lsYpVypBlFQgH8UBQJEu2lJpsI-8zUe2axFLpU8TnNEayxI649aFAf05Q-hcuwmDGs2_pN40SSh_Uq8SCUikqKJIV8sVC--yp1u-_1_wWJmRFdc_INzmAobPhGyHkq0lgjoqkdQpE_POsNZO2pL19Z7XP00Ibc2bOZw"
+          alt="Fabrizio"
+          loading="lazy"
+          class="w-full h-full object-cover grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700"
+        />
+        <div class="absolute inset-0 bg-linear-to-t from-background via-transparent to-transparent"></div>
+      </div>
+    </section>
+
+    <!-- Filosofía -->
+    <section>
+      <div class="flex items-center gap-4 mb-10">
+        <span class="w-10 h-0.5 bg-secondary shrink-0" aria-hidden="true"></span>
+        <h2 class="text-3xl font-bold tracking-tight">{tr('about.phil.title')}</h2>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6">
+        {philosophy.map(({ titleKey, descKey, icon }) => (
+          <div class="phil-card rounded-2xl ghost-border bg-surface-container-low">
+            <div class="phil-card-content p-6 sm:p-10 flex flex-col justify-between h-full">
+              <div>
+                <h3 class="text-2xl font-bold text-on-surface mb-6">{tr(titleKey)}</h3>
+                <p class="phil-subtitle text-on-surface-variant text-base leading-relaxed">{tr(descKey)}</p>
+              </div>
+              <span
+                class="material-symbols-outlined phil-icon text-5xl mt-8 block"
+                aria-hidden="true"
+                style="font-variation-settings:'FILL' 1"
+              >{icon}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Stack técnico -->
+    <section class="space-y-8 md:space-y-12">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-2 md:gap-6">
+        <h2 class="text-3xl md:text-4xl font-black tracking-tighter uppercase">{tr('skills.label')}</h2>
+        <div class="text-xs md:text-sm tracking-widest text-on-surface-variant uppercase border-b border-outline-variant pb-2">
+          {tr('skills.subtitle')}
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {skillGroups.map(({ icon, iconClass, titleKey, descKey, tags }) => (
+          <div class="glass-effect rounded-xl p-6 md:p-8 flex flex-col justify-between ghost-border group hover:shadow-glow-soft transition-all duration-300">
+            <div class="space-y-3">
+              <span class={`material-symbols-outlined text-4xl block ${iconClass}`} aria-hidden="true" style="font-variation-settings:'FILL' 1">{icon}</span>
+              <h3 class="text-2xl font-bold">{tr(titleKey)}</h3>
+              <p class="text-on-surface-variant text-sm leading-relaxed">{tr(descKey)}</p>
+            </div>
+            <ul class="flex flex-wrap gap-3 mt-6">
+              {tags.map((tag) => <li><TechTag {...tag} /></li>)}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Experiencia -->
+    <section class="max-w-3xl mx-auto space-y-12 md:space-y-20">
+      <h2 class="text-3xl md:text-4xl font-black tracking-tighter uppercase text-center">{tr('about.journey.title')}</h2>
+
+      <!-- Mobile timeline -->
+      <ol class="md:hidden">
+        {timeline.map((entry, i) => (
+          <li class="grid grid-cols-[2rem_1fr]">
+            <div class="flex flex-col items-center">
+              <div class={`w-3 h-3 rounded-full shrink-0 mt-1.5 ${entry.active ? 'bg-primary shadow-glow-point' : 'bg-outline-variant'}`}></div>
+              {i < timeline.length - 1 && (
+                <div class="w-px flex-1 bg-linear-to-b from-primary/60 to-outline-variant/30 mt-1"></div>
+              )}
+            </div>
+            <div class="pb-10 pl-2">
+              <span class="text-secondary font-bold text-sm">{entry.period[lang]}</span>
+              <h3 class="text-xl font-black mt-1 uppercase">{entry.role}</h3>
+              <p class="text-primary text-xs font-bold tracking-wider uppercase mt-1 mb-3">{entry.company[lang]}</p>
+              <p class="text-on-surface-variant text-base leading-relaxed">{entry.description[lang]}</p>
+              <p class="mt-3 text-on-surface-variant text-xs font-medium tracking-wide">{entry.tech}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+
+      <!-- Desktop timeline (zigzag) -->
+      <div class="hidden md:block relative">
+        <div aria-hidden="true" class="absolute left-1/2 top-0 bottom-0 w-px bg-linear-to-b from-primary via-outline-variant to-transparent -translate-x-1/2"></div>
+        <ol class="space-y-16">
+          {timeline.map((entry, i) => {
+            const isEven = i % 2 === 0;
+            const dotClass = `w-3 h-3 rounded-full shrink-0 ${entry.active ? 'bg-primary shadow-glow-point' : 'bg-outline-variant'}`;
+            const metaBlock = (
+              <div class={isEven ? 'text-right pr-8' : 'pl-8'}>
+                <span class="text-secondary font-bold text-lg">{entry.period[lang]}</span>
+                <h3 class="text-2xl font-black mt-2 uppercase">{entry.role}</h3>
+                <p class="text-primary text-xs font-bold tracking-wider uppercase mt-1">{entry.company[lang]}</p>
+              </div>
+            );
+            const detailsBlock = (
+              <div class={isEven ? 'text-on-surface-variant leading-relaxed text-base pl-8' : 'text-on-surface-variant leading-relaxed text-base text-right pr-8'}>
+                <p>{entry.description[lang]}</p>
+                <p class="mt-3 text-on-surface-variant text-xs font-medium tracking-wide">{entry.tech}</p>
+              </div>
+            );
+            return (
+              <li class="grid grid-cols-[1fr_2rem_1fr] items-start">
+                {isEven ? (
+                  <>
+                    {metaBlock}
+                    <div class="flex justify-center pt-2"><div class={dotClass}></div></div>
+                    {detailsBlock}
+                  </>
+                ) : (
+                  <>
+                    {detailsBlock}
+                    <div class="flex justify-center pt-2"><div class={dotClass}></div></div>
+                    {metaBlock}
+                  </>
+                )}
+              </li>
+            );
+          })}
+        </ol>
+      </div>
+    </section>
+
+    </div>
+  </main>
+
+  <BottomNav />
+  <Footer />
+</Layout>
+
+<script>
+  import { onPageLoad } from '../scripts/lifecycle';
+  // Tarjetas de filosofía: parte el texto en palabras para animarlas una a una al hover
+  function initPhilCards() {
+    document.querySelectorAll<HTMLElement>('.phil-subtitle:not([data-split])').forEach((el) => {
+      const words = (el.textContent ?? '').trim().split(/\s+/);
+      // El espacio va fuera del span: dentro de un inline-block se recorta
+      el.replaceChildren(
+        ...words.flatMap((word, i) => {
+          const span = document.createElement('span');
+          span.className = 'phil-word';
+          span.style.setProperty('--wd', `${i * 38}ms`);
+          span.textContent = word;
+          return i === 0 ? [span] : [document.createTextNode(' '), span];
+        }),
+      );
+      el.dataset.split = 'true';
+    });
+  }
+
+  onPageLoad(initPhilCards);
+</script>

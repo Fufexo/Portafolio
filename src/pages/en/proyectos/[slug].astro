@@ -1,0 +1,13 @@
+---
+import type { GetStaticPaths } from 'astro';
+import ProjectPage from '../../../views/ProjectPage.astro';
+import { getProjectPaths, type Project } from '../../../lib/projects';
+
+export const getStaticPaths = (() => getProjectPaths()) satisfies GetStaticPaths;
+
+interface Props {
+  project: Project;
+}
+---
+
+<ProjectPage project={Astro.props.project} />
