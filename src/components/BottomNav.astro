@@ -1,61 +1,60 @@
 ---
 import { ui } from '../i18n/ui';
+import { navItems } from '../data/nav';
 const es = ui.es;
 const en = ui.en;
-
-const navItems = [
-  { labelEs: es['nav.projects'], labelEn: en['nav.projects'], icon: 'grid_view', href: '/' },
-  { labelEs: es['nav.about'],    labelEn: en['nav.about'],    icon: 'person',    href: '/about' },
-  { labelEs: es['nav.contact'],  labelEn: en['nav.contact'],  icon: 'mail',      href: '/contact' },
-];
 ---
 
+<!-- Solo en móvil/tablet: en desktop ya está la navegación superior -->
 <nav
   id="bottom-nav"
-  class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center space-x-2 bg-[#201F22]/60 backdrop-blur-lg rounded-full px-4 sm:px-6 py-2 sm:py-3 shadow-[0_20px_40px_rgba(0,0,0,0.4)] ghost-border transition-all duration-300"
+  aria-label={es['nav.main.label']}
+  data-aria-es={es['nav.main.label']}
+  data-aria-en={en['nav.main.label']}
+  class="md:hidden fixed left-1/2 -translate-x-1/2 z-50 flex items-center gap-1 bg-surface-container/80 backdrop-blur-lg rounded-full px-2 py-1.5 shadow-elevated ghost-border transition-[opacity,transform] duration-300"
+  style="bottom: max(1rem, env(safe-area-inset-bottom));"
   transition:persist
 >
-  {navItems.map(({ labelEs, labelEn, icon, href }) => (
+  {navItems.map(({ labelKey, icon, href }) => (
     <a
       href={href}
       data-bottom-link
       data-nav-href={href}
-      class="px-4 py-2 active:scale-95 duration-300 flex flex-col items-center transition-colors text-[#E5E1E4]/50 hover:text-[#D2BBFF]"
+      class="min-w-18 min-h-14 px-3 py-1.5 rounded-full active:scale-95 flex flex-col items-center justify-center transition-colors duration-200 text-on-surface-variant hover:text-primary"
     >
-      <span class="material-symbols-outlined" data-nav-icon>
+      <span class="material-symbols-outlined" aria-hidden="true" data-nav-icon>
         {icon}
       </span>
       <span
-        class="text-[10px] font-medium mt-1"
+        class="text-[11px] font-medium mt-0.5"
         data-i18n
-        data-es={labelEs}
-        data-en={labelEn}
+        data-es={es[labelKey as keyof typeof es]}
+        data-en={en[labelKey as keyof typeof en]}
       >
-        {labelEs}
+        {es[labelKey as keyof typeof es]}
       </span>
       <span
         data-nav-dot
-        class="block w-4 h-[2px] bg-[#D2BBFF] rounded-full mt-1 shadow-[0_0_6px_#D2BBFF] hidden"
-      />
+        aria-hidden="true"
+        class="w-4 h-0.5 bg-primary rounded-full mt-1 shadow-glow-dot hidden"
+      ></span>
     </a>
   ))}
 </nav>
 
 <script is:inline>
   (function () {
+    // Oculta la barra al llegar al footer para que no tape sus enlaces
     function checkScroll() {
       var nav = document.getElementById('bottom-nav');
       if (!nav) return;
       var scrollBottom = document.documentElement.scrollHeight - window.scrollY - window.innerHeight;
-      if (scrollBottom < 120) {
-        nav.style.opacity = '0';
-        nav.style.pointerEvents = 'none';
-        nav.style.marginBottom = '-20px';
-      } else {
-        nav.style.opacity = '1';
-        nav.style.pointerEvents = '';
-        nav.style.marginBottom = '0px';
-      }
+      var hide = scrollBottom < 120;
+      nav.style.opacity = hide ? '0' : '1';
+      nav.style.pointerEvents = hide ? 'none' : '';
+      nav.style.transform = hide ? 'translateY(20px)' : '';
+      if (hide) nav.setAttribute('inert', '');
+      else nav.removeAttribute('inert');
     }
 
     function init() {

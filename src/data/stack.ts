@@ -5,10 +5,11 @@ export interface TechTagData {
 }
 
 export const frontendTags: TechTagData[] = [
-  { label: 'Next.js',      icon: '▲',  delay: '0s'    },
-  { label: 'React',        icon: '⚛',  delay: '0.08s' },
-  { label: 'Angular',      icon: '🔴', delay: '0.16s' },
-  { label: 'TypeScript',   icon: 'TS', delay: '0.24s' },
+  { label: 'Angular',      icon: '🔴', delay: '0s'    },
+  { label: 'TypeScript',   icon: 'TS', delay: '0.08s' },
+  { label: 'SCSS (BEM)',   icon: '🎨', delay: '0.16s' },
+  { label: 'React',        icon: '⚛',  delay: '0.24s' },
+  { label: 'Next.js',      icon: '▲',  delay: '0.28s' },
   { label: 'Tailwind CSS', icon: '🌊', delay: '0.32s' },
   { label: 'Astro',        icon: '🚀', delay: '0.40s' },
   { label: 'HTML & CSS',   icon: '🌐', delay: '0.48s' },

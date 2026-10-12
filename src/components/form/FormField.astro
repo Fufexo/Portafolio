@@ -1,0 +1,23 @@
+---
+interface Props {
+  id: string;
+  labelEs: string;
+  labelEn: string;
+  wrapperClass?: string;
+}
+
+const { id, labelEs, labelEn, wrapperClass = 'flex flex-col gap-3 group' } = Astro.props;
+---
+
+<div class={wrapperClass}>
+  <label
+    class="text-xs font-bold uppercase tracking-wider text-on-surface-variant group-focus-within:text-primary transition-colors"
+    for={id}
+    data-i18n
+    data-es={labelEs}
+    data-en={labelEn}
+  >
+    {labelEs}
+  </label>
+  <slot />
+</div>

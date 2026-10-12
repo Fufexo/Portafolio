@@ -30,7 +30,8 @@
 
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
+        // También revela lo que quedó por encima del viewport (scroll rápido, anclas, volver atrás)
+        if (entry.isIntersecting || entry.boundingClientRect.top < 0) {
           entry.target.classList.add('in-view');
           observer.unobserve(entry.target);
         }

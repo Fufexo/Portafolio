@@ -10,24 +10,24 @@ const socialLinks = [
 ];
 ---
 
-<footer class="w-full border-t border-[#2A2A2C]/20 bg-[#131315]">
-  <div class="max-w-7xl mx-auto px-8 py-12 flex flex-col md:flex-row justify-between items-center">
-    <div class="text-lg font-bold text-[#E5E1E4] mb-4 md:mb-0">{es.brand}</div>
+<footer class="w-full border-t border-outline-variant/20 bg-background">
+  <div class="max-w-7xl mx-auto px-4 sm:px-8 py-10 md:py-12 flex flex-col md:flex-row justify-between items-center gap-4 md:gap-8 text-center md:text-left">
+    <div class="text-lg font-bold text-on-surface">{es.brand}</div>
     <div
-      class="text-[#E5E1E4]/40 text-sm mb-8 md:mb-0"
+      class="text-on-surface-variant text-sm"
       data-i18n
       data-es={es['footer.copy']}
       data-en={en['footer.copy']}
     >
       {es['footer.copy']}
     </div>
-    <div class="flex space-x-8">
+    <div class="flex gap-2 sm:gap-6">
       {socialLinks.map(({ label, href }) => (
         <a
           href={href}
           target="_blank"
           rel="noopener noreferrer"
-          class="text-[#E5E1E4]/40 hover:text-[#D2BBFF] underline-offset-4 hover:underline transition-opacity duration-300"
+          class="inline-flex items-center min-h-11 px-2 text-on-surface-variant hover:text-primary underline-offset-4 hover:underline transition-colors duration-300"
         >
           {label}
         </a>

@@ -1,0 +1,38 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import FlipCard from '../FlipCard.astro';
+import LocalizedText from '../LocalizedText.astro';
+import { t } from '../../i18n/ui';
+
+interface Props {
+  slug: string;
+  challenge: CollectionEntry<'projects'>['data']['challenge'];
+}
+
+const { slug, challenge } = Astro.props;
+---
+
+<section class="bg-surface-container-low py-24 sm:py-32 px-4 sm:px-8">
+  <div class="max-w-7xl mx-auto space-y-10">
+    <div class="space-y-4 max-w-2xl">
+      <div class="inline-block h-0.5 w-10 bg-secondary" aria-hidden="true"></div>
+      <LocalizedText as="h2" text={t('project.challenge.label')} class="text-3xl sm:text-4xl font-bold tracking-tight text-on-surface" />
+      <LocalizedText as="p" text={challenge.body} class="text-on-surface-variant text-base sm:text-lg leading-relaxed" />
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {challenge.items.map((item, i) => (
+        <FlipCard
+          id={`${slug}-challenge-${i}`}
+          tone={i % 2 === 0 ? 'secondary' : 'primary'}
+          icon={item.icon}
+          title={item.title}
+          description={item.description}
+          solutionIcon={item.solutionIcon}
+          solution={item.solution}
+          chips={item.chips}
+        />
+      ))}
+    </div>
+  </div>
+</section>

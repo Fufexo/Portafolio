@@ -1,0 +1,334 @@
+{
+  "title": "Atelier",
+  "order": 1,
+  "category": "ecommerce",
+  "accent": "primary",
+  "liveUrl": "https://atelier-ropa.vercel.app/",
+  "seoDescription": {
+    "es": "Caso de estudio de Atelier: e-commerce de moda construido con Next.js, TypeScript, Supabase y Tailwind CSS.",
+    "en": "Atelier case study: a fashion e-commerce store built with Next.js, TypeScript, Supabase and Tailwind CSS."
+  },
+  "card": {
+    "description": {
+      "es": "Moda contemporánea con esencia atemporal. Calidad y diseño en cada prenda.",
+      "en": "Contemporary fashion with timeless essence. Quality and design in every garment."
+    },
+    "tags": [
+      "Next.js",
+      "TypeScript",
+      "Supabase",
+      "Tailwind"
+    ],
+    "image": "./hero.png",
+    "imageAlt": "Atelier — E-Commerce de ropa",
+    "imagePosition": "object-left-top",
+    "size": "large"
+  },
+  "hero": {
+    "badge": {
+      "es": "E-Commerce",
+      "en": "E-Commerce"
+    },
+    "subtitle": {
+      "es": "E-commerce de moda para el mercado peruano con pagos reales vía Culqi, panel de administración completo y emails transaccionales automáticos.",
+      "en": "Fashion e-commerce for the Peruvian market with real payments via Culqi, a full admin panel and automatic transactional emails."
+    },
+    "image": "./hero.png",
+    "imageAlt": "Atelier — E-Commerce de moda",
+    "role": {
+      "es": "Full Stack Developer",
+      "en": "Full Stack Developer"
+    },
+    "year": "2026",
+    "platform": {
+      "es": "Web",
+      "en": "Web"
+    }
+  },
+  "challenge": {
+    "body": {
+      "es": "Construir una tienda online completa (catálogo, carrito, checkout con pago real y panel admin) orientada al mercado local con integración de pasarela de pago peruana y gestión operacional desde el día uno.",
+      "en": "Build a complete online store — catalog, cart, checkout with real payments and admin panel — tailored to the local market with a Peruvian payment gateway and operational management from day one."
+    },
+    "items": [
+      {
+        "icon": "credit_card",
+        "title": {
+          "es": "Pagos locales",
+          "en": "Local payments"
+        },
+        "description": {
+          "es": "Integrar Culqi (tarjetas peruanas) con tokenización segura y descuento de stock automático tras cada cobro exitoso.",
+          "en": "Integrate Culqi (Peruvian cards) with secure tokenization and automatic stock deduction after each successful charge."
+        },
+        "solutionIcon": "verified_user",
+        "solution": {
+          "es": "Culqi.js tokeniza la tarjeta en el navegador. El servidor recibe solo el token y ejecuta el cobro — ningún dato sensible cruza el backend.",
+          "en": "Culqi.js tokenizes the card in the browser. The server only receives the token and executes the charge — no sensitive data crosses the backend."
+        },
+        "chips": [
+          "PCI-DSS",
+          "Sin datos en servidor"
+        ]
+      },
+      {
+        "icon": "admin_panel_settings",
+        "title": {
+          "es": "Operación autónoma",
+          "en": "Autonomous operation"
+        },
+        "description": {
+          "es": "El negocio necesitaba gestionar productos, pedidos y analíticas sin depender de un desarrollador para el día a día.",
+          "en": "The business needed to manage products, orders and analytics without relying on a developer day-to-day."
+        },
+        "solutionIcon": "dashboard",
+        "solution": {
+          "es": "Panel /admin completo: dashboard con stats del día, CRUD de productos, gestión de pedidos y alertas de stock bajo (≤ 5 unidades).",
+          "en": "Full /admin panel: daily stats dashboard, product CRUD, order management and low-stock alerts (≤ 5 units)."
+        },
+        "chips": [
+          "Dashboard",
+          "Pedidos",
+          "Analíticas"
+        ]
+      },
+      {
+        "icon": "mail",
+        "title": {
+          "es": "Emails transaccionales",
+          "en": "Transactional emails"
+        },
+        "description": {
+          "es": "Cada venta debía disparar automáticamente un email de confirmación al cliente y una notificación al administrador.",
+          "en": "Every sale needed to automatically trigger a confirmation email to the customer and a notification to the admin."
+        },
+        "solutionIcon": "mark_email_read",
+        "solution": {
+          "es": "Resend con templates HTML personalizados. Tras el cobro exitoso el servidor dispara dos emails: confirmación al cliente con el detalle del pedido y notificación al admin.",
+          "en": "Resend with custom HTML templates. After a successful charge, the server fires two emails: order confirmation to the customer and a notification to the admin."
+        },
+        "chips": [
+          "Resend",
+          "Templates HTML",
+          "Server-side"
+        ]
+      },
+      {
+        "icon": "shopping_cart",
+        "title": {
+          "es": "Carrito persistente",
+          "en": "Persistent cart"
+        },
+        "description": {
+          "es": "El carrito tenía que sobrevivir recargas y cierres de pestaña sin perder los productos seleccionados.",
+          "en": "The cart had to survive page reloads and closed tabs without losing the selected products."
+        },
+        "solutionIcon": "inventory_2",
+        "solution": {
+          "es": "React Context como fuente de verdad en memoria + serialización a localStorage en cada cambio. Al iniciar la app se rehidrata el carrito automáticamente.",
+          "en": "React Context as in-memory source of truth + serialization to localStorage on every change. On app start, the cart is automatically rehydrated."
+        },
+        "chips": [
+          "React Context",
+          "localStorage",
+          "Rehidratación"
+        ]
+      }
+    ]
+  },
+  "stack": [
+    {
+      "name": "Next.js 16",
+      "tagline": "App Router · SSR · Server Components",
+      "icon": {
+        "kind": "text",
+        "value": "▲"
+      },
+      "description": {
+        "es": "App Router con Server Components, rutas dinámicas y optimización automática de imágenes.",
+        "en": "App Router with Server Components, dynamic routes and automatic image optimization."
+      },
+      "note": {
+        "es": "Server Components en catálogo y producto para carga instantánea. Rutas dinámicas para /producto/[slug]. Panel /admin protegido por Supabase Auth.",
+        "en": "Server Components in catalog and product pages for instant load. Dynamic routes for /producto/[slug]. /admin panel protected by Supabase Auth."
+      },
+      "chips": [
+        "App Router",
+        "Server Components",
+        "Dynamic Routes"
+      ]
+    },
+    {
+      "name": "Supabase",
+      "tagline": "Auth · PostgreSQL · Storage",
+      "icon": {
+        "kind": "material",
+        "value": "database",
+        "tone": "primary"
+      },
+      "description": {
+        "es": "Auth, base de datos PostgreSQL, storage de imágenes y políticas RLS por rol.",
+        "en": "Auth, PostgreSQL database, image storage and RLS policies by role."
+      },
+      "note": {
+        "es": "Auth del panel admin, tablas de productos/pedidos/categorías, storage de imágenes de producto y políticas RLS por rol de usuario.",
+        "en": "Admin panel auth, product/order/category tables, product image storage and RLS policies by user role."
+      },
+      "chips": [
+        "Auth",
+        "PostgreSQL",
+        "Storage",
+        "RLS"
+      ]
+    },
+    {
+      "name": "TypeScript",
+      "tagline": "Strict · Tipado global",
+      "icon": {
+        "kind": "badge",
+        "value": "TS"
+      },
+      "description": {
+        "es": "Tipado estricto en todo el código: tipos globales, helpers y contextos completamente tipados.",
+        "en": "Strict typing across the entire codebase — global types, helpers and fully typed contexts."
+      },
+      "note": {
+        "es": "Tipos globales en lib/types.ts para productos, pedidos y variantes. Tipado completo del contexto del carrito y las respuestas de la API de Culqi.",
+        "en": "Global types in lib/types.ts for products, orders and variants. Full typing of cart context and Culqi API responses."
+      },
+      "chips": [
+        "Strict mode",
+        "lib/types.ts",
+        "Type-safe API"
+      ]
+    },
+    {
+      "name": "Tailwind CSS",
+      "tagline": "v4 · Utility-first · Responsive",
+      "icon": {
+        "kind": "text",
+        "value": "🌊"
+      },
+      "description": {
+        "es": "Tailwind v4 con sistema de diseño coherente y completamente responsive.",
+        "en": "Tailwind v4 with a coherent and fully responsive design system."
+      },
+      "note": {
+        "es": "Sistema de diseño coherente entre tienda pública y panel admin. Modo oscuro nativo en el /admin. Completamente responsive, pensado primero para móvil.",
+        "en": "Consistent design system across public store and admin panel. Native dark mode in /admin. Fully responsive from mobile up."
+      },
+      "chips": [
+        "v4",
+        "Dark mode",
+        "Mobile-first"
+      ]
+    },
+    {
+      "name": "Culqi",
+      "tagline": "Pagos Perú · PCI-DSS",
+      "icon": {
+        "kind": "material",
+        "value": "credit_card",
+        "tone": "tertiary"
+      },
+      "description": {
+        "es": "Pasarela de pago peruana: tokenización de tarjetas y cobro seguro en el servidor.",
+        "en": "Peruvian payment gateway: card tokenization and secure server-side charging."
+      },
+      "note": {
+        "es": "Pasarela peruana con soporte para tarjetas locales. Culqi.js tokeniza en el navegador — el servidor solo recibe el token y ejecuta el cobro sin tocar datos sensibles.",
+        "en": "Peruvian payment gateway with support for local cards. Culqi.js tokenizes in the browser — the server only receives the token and executes the charge without touching sensitive data."
+      },
+      "chips": [
+        "PCI-DSS",
+        "Tokenización",
+        "Server-side charge"
+      ]
+    },
+    {
+      "name": "Resend",
+      "tagline": "Emails · Templates HTML",
+      "icon": {
+        "kind": "material",
+        "value": "mail",
+        "tone": "secondary"
+      },
+      "description": {
+        "es": "Emails transaccionales: confirmación al cliente y notificación al admin tras cada venta.",
+        "en": "Transactional emails: customer confirmation and admin notification after each sale."
+      },
+      "note": {
+        "es": "Dos emails por venta: confirmación al cliente con detalle del pedido y notificación al admin. Templates construidos con React Email, disparados desde el servidor tras el cobro.",
+        "en": "Two emails per sale: order confirmation to the customer and admin notification. Templates built with React Email, fired server-side after the charge."
+      },
+      "chips": [
+        "React Email",
+        "2 emails/venta",
+        "Server-side"
+      ]
+    },
+    {
+      "name": "Vercel",
+      "tagline": "Deploy · Edge · Previews",
+      "icon": {
+        "kind": "text",
+        "value": "▼"
+      },
+      "description": {
+        "es": "Despliegue automático con edge network global y previews por rama.",
+        "en": "Automatic deployment with global edge network and branch previews."
+      },
+      "note": {
+        "es": "Despliegue automático en cada push. Previews por rama para QA antes de producción. Edge network global para tiempos de respuesta mínimos desde Perú.",
+        "en": "Automatic deploy on each push. Branch previews for QA before production. Global edge network for minimal response times from Peru."
+      },
+      "chips": [
+        "Auto deploy",
+        "Branch previews",
+        "Edge network"
+      ],
+      "showLiveLink": true
+    }
+  ],
+  "gallery": [
+    {
+      "image": "./tienda.png",
+      "alt": "Atelier — Tienda con filtros",
+      "span": "full",
+      "title": {
+        "es": "Tienda — Catálogo con filtros",
+        "en": "Store — Catalog with Filters"
+      },
+      "description": {
+        "es": "Cuadrícula de productos con filtros por género, categoría y búsqueda en tiempo real.",
+        "en": "Product grid with gender, category and real-time search filters."
+      }
+    },
+    {
+      "image": "./hero.png",
+      "alt": "Atelier — Hero",
+      "span": "half",
+      "title": {
+        "es": "Hero — Primera impresión",
+        "en": "Hero — First Impression"
+      },
+      "description": {
+        "es": "El inicio de la tienda: visual de impacto y llamada a la acción directa.",
+        "en": "The storefront: a bold visual and a direct call to action."
+      }
+    },
+    {
+      "image": "./nosotros.png",
+      "alt": "Atelier — Nosotros",
+      "span": "half",
+      "title": {
+        "es": "Nosotros — La identidad de marca",
+        "en": "About — Brand Identity"
+      },
+      "description": {
+        "es": "Página editorial que comunica los valores: diseño, calidad y atemporalidad.",
+        "en": "Editorial page communicating core values: design, quality and timelessness."
+      }
+    }
+  ]
+}

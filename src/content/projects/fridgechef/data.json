@@ -1,0 +1,313 @@
+{
+  "title": "FridgeChef",
+  "order": 2,
+  "category": "ai",
+  "accent": "secondary",
+  "liveUrl": "https://fridgechef-olive.vercel.app/",
+  "seoDescription": {
+    "es": "Caso de estudio de FridgeChef: app de recetas generadas por IA construida con Next.js, Google Gemini, Zustand y Tailwind CSS.",
+    "en": "FridgeChef case study: an AI recipe app built with Next.js, Google Gemini, Zustand and Tailwind CSS."
+  },
+  "card": {
+    "description": {
+      "es": "Convierte los ingredientes de tu refrigerador en recetas ordenadas por IA, con instrucciones, calorías y lista de compras.",
+      "en": "Turns the ingredients in your fridge into AI-ranked recipes with step-by-step instructions, calories and a shopping list."
+    },
+    "tags": [
+      "Next.js",
+      "TypeScript",
+      "Gemini",
+      "Tailwind"
+    ],
+    "image": "./portada.png",
+    "imageAlt": "FridgeChef — Recetas con IA",
+    "imagePosition": "object-top",
+    "size": "small"
+  },
+  "hero": {
+    "badge": {
+      "es": "IA & ML",
+      "en": "AI & ML"
+    },
+    "subtitle": {
+      "es": "App web que analiza los ingredientes disponibles y genera al instante recetas ordenadas por IA, con pasos detallados, calorías estimadas e imágenes automáticas.",
+      "en": "Web app that analyzes your available ingredients and instantly generates AI-ranked recipes, with detailed steps, estimated calories and automatic images."
+    },
+    "image": "./hero.png",
+    "imageAlt": "FridgeChef — Recetas con IA",
+    "role": {
+      "es": "Full Stack Developer",
+      "en": "Full Stack Developer"
+    },
+    "year": "2026",
+    "platform": {
+      "es": "Web",
+      "en": "Web"
+    }
+  },
+  "challenge": {
+    "body": {
+      "es": "Construir una app de recetas útil de verdad: una que no solo genere resultados aleatorios, sino recetas realistas ordenadas según lo que realmente tienes, con imágenes reales y sin latencia percibida.",
+      "en": "Build a genuinely useful recipe app: one that doesn't just generate random results, but realistic recipes ranked by what you actually have, with real images and no perceived latency."
+    },
+    "items": [
+      {
+        "icon": "auto_awesome",
+        "title": {
+          "es": "Recetas coherentes y ordenadas",
+          "en": "Coherent ranked recipes"
+        },
+        "description": {
+          "es": "Gemini debía devolver recetas ordenadas por porcentaje de coincidencia con los ingredientes disponibles, con un formato estructurado y consistente.",
+          "en": "Gemini had to return recipes sorted by ingredient match percentage, with consistent structured output every time."
+        },
+        "solutionIcon": "format_list_numbered",
+        "solution": {
+          "es": "Prompt con rol de chef experto + esquema JSON explícito. Gemini devuelve un array de 4 recetas con ingredientes usados, faltantes y porcentaje de coincidencia. El frontend ordena y renderiza sin reprocesar.",
+          "en": "Prompt with expert chef role + explicit JSON schema. Gemini returns an array of 4 recipes with used, missing ingredients and match percentage. The frontend sorts and renders without reprocessing."
+        },
+        "chips": [
+          "Structured output",
+          "JSON schema",
+          "Ranking 0–100%"
+        ]
+      },
+      {
+        "icon": "filter_list",
+        "title": {
+          "es": "Filtros sin IA extra",
+          "en": "Filters without extra AI calls"
+        },
+        "description": {
+          "es": "Filtrar por tiempo, dificultad y dieta sin volver a llamar a Gemini en cada interacción: latencia cero en los filtros.",
+          "en": "Filter by time, difficulty and diet without re-calling Gemini on each interaction — zero latency on filters."
+        },
+        "solutionIcon": "bolt",
+        "solution": {
+          "es": "Gemini devuelve metadatos completos (tiempo, dificultad, etiquetas) junto con la receta. Los filtros operan sobre el array en memoria vía Zustand — sin red, sin re-render costoso.",
+          "en": "Gemini returns complete metadata (time, difficulty, tags) alongside the recipe. Filters operate on the in-memory array via Zustand — no network, no costly re-render."
+        },
+        "chips": [
+          "Zustand",
+          "Client-side filters",
+          "Zero latency"
+        ]
+      },
+      {
+        "icon": "image_search",
+        "title": {
+          "es": "Imágenes automáticas relevantes",
+          "en": "Automatic relevant images"
+        },
+        "description": {
+          "es": "Obtener imágenes reales de platos desde múltiples fuentes con scoring de relevancia, de forma paralela y sin bloquear la UI.",
+          "en": "Fetch real dish images from multiple sources with relevance scoring, in parallel and without blocking the UI."
+        },
+        "solutionIcon": "check_circle",
+        "solution": {
+          "es": "Promise.all lanza Pexels y Openverse en paralelo. Cada resultado se puntúa por coincidencia con el nombre de la receta. El servidor mantiene un Map de caché que evita búsquedas repetidas en la misma sesión del servidor.",
+          "en": "Promise.all launches Pexels and Openverse in parallel. Each result is scored by match with the recipe name. The server maintains a cache Map that avoids repeated searches in the same server session."
+        },
+        "chips": [
+          "Promise.all",
+          "Pexels + Openverse",
+          "Relevance score"
+        ]
+      },
+      {
+        "icon": "cached",
+        "title": {
+          "es": "Caché sin redundancia",
+          "en": "Cache without redundancy"
+        },
+        "description": {
+          "es": "Evitar llamadas duplicadas a Gemini y a las APIs de imágenes para el mismo conjunto de ingredientes, dentro de una sesión y entre sesiones.",
+          "en": "Avoid duplicate calls to Gemini and image APIs for the same ingredient set within and across sessions."
+        },
+        "solutionIcon": "storage",
+        "solution": {
+          "es": "sessionStorage en el cliente guarda el resultado de Gemini por combinación de ingredientes. El servidor usa un Map en memoria para imágenes. Juntos eliminan el 90% de las llamadas redundantes en sesión.",
+          "en": "sessionStorage on the client saves Gemini's result per ingredient combination. The server uses an in-memory Map for images. Together they eliminate 90% of redundant calls per session."
+        },
+        "chips": [
+          "sessionStorage",
+          "Server Map cache",
+          "Deduplicación"
+        ]
+      }
+    ]
+  },
+  "stack": [
+    {
+      "name": "Next.js 16",
+      "tagline": "App Router · Server Components · API Routes",
+      "icon": {
+        "kind": "text",
+        "value": "▲"
+      },
+      "description": {
+        "es": "App Router con Server Components para el servidor de recetas, rutas dinámicas por ID de receta y optimización automática de imágenes.",
+        "en": "App Router with Server Components for the recipe server, dynamic routes per recipe ID and automatic image optimization."
+      },
+      "note": {
+        "es": "API Routes en /api/recipes y /api/recipe-detail reciben POST con ingredientes y devuelven JSON estructurado desde Gemini. Server Components en las páginas de detalle y lista de compras.",
+        "en": "API Routes at /api/recipes and /api/recipe-detail receive POST with ingredients and return structured JSON from Gemini. Server Components on detail and shopping list pages."
+      },
+      "chips": [
+        "App Router",
+        "API Routes",
+        "Server Components"
+      ]
+    },
+    {
+      "name": "Google Gemini",
+      "tagline": "gemini-1.5-flash · Prompts estructurados",
+      "icon": {
+        "kind": "material",
+        "value": "auto_awesome",
+        "tone": "secondary"
+      },
+      "description": {
+        "es": "gemini-1.5-flash como motor de recetas: prompts estructurados que devuelven JSON con orden de coincidencia, pasos, calorías y etiquetas dietéticas.",
+        "en": "gemini-1.5-flash as the recipe engine: structured prompts to return JSON with ranking, steps, calories and dietary tags."
+      },
+      "note": {
+        "es": "Prompts con instrucciones explícitas de formato JSON y rol de chef experto. La respuesta incluye nombre, ingredientes usados/faltantes, porcentaje de coincidencia, pasos, tiempo, dificultad y calorías.",
+        "en": "Prompts with explicit JSON format instructions and expert chef role. The response includes name, used/missing ingredients, match percentage, steps, time, difficulty and calories."
+      },
+      "chips": [
+        "gemini-1.5-flash",
+        "JSON output",
+        "Ranking por %"
+      ]
+    },
+    {
+      "name": "Zustand",
+      "tagline": "Estado global · Sin boilerplate",
+      "icon": {
+        "kind": "material",
+        "value": "hub",
+        "tone": "primary"
+      },
+      "description": {
+        "es": "Estado global de ingredientes, recetas activas y lista de compras sin prop drilling ni el código repetitivo de Context.",
+        "en": "Global state for ingredients, active recipes and shopping list without prop drilling or Context boilerplate."
+      },
+      "note": {
+        "es": "Un único store centraliza ingredientes, recetas activas, receta seleccionada y lista de compras. Persistencia selectiva con middleware persist de Zustand para ingredientes y compras.",
+        "en": "A single store centralizes ingredients, active recipes, selected recipe and shopping list. Selective persistence with Zustand persist middleware for ingredients and shopping."
+      },
+      "chips": [
+        "Store único",
+        "Persist middleware",
+        "Sin Context"
+      ]
+    },
+    {
+      "name": "Tailwind + Framer",
+      "tagline": "v4 · Motion · Skeletons",
+      "icon": {
+        "kind": "text",
+        "value": "🌊"
+      },
+      "description": {
+        "es": "Tailwind v4 con Framer Motion para animaciones de entrada, skeletons de carga y transiciones de filtro.",
+        "en": "Tailwind v4 with Framer Motion for entry animations, loading skeletons and filter transitions."
+      },
+      "note": {
+        "es": "Animaciones de entrada con Framer Motion en las tarjetas de receta y la cuadrícula. Skeletons de carga durante la llamada a Gemini. Transiciones de filtro sin rerender completo.",
+        "en": "Entry animations with Framer Motion on recipe cards and grid. Loading skeletons during the Gemini call. Filter transitions without full rerender."
+      },
+      "chips": [
+        "Framer Motion",
+        "Skeletons",
+        "Filtros animados"
+      ]
+    },
+    {
+      "name": "Pexels + Openverse",
+      "tagline": "Imágenes · Paralelo · Scoring",
+      "icon": {
+        "kind": "material",
+        "value": "image_search",
+        "tone": "tertiary"
+      },
+      "description": {
+        "es": "Búsqueda paralela en Pexels y Openverse con scoring de relevancia por título de receta. Caché en memoria en el servidor.",
+        "en": "Parallel search across Pexels and Openverse with relevance scoring by recipe title. Server-side in-memory cache."
+      },
+      "note": {
+        "es": "Promise.all() lanza búsquedas simultáneas en Pexels y Openverse. Cada resultado se puntúa por relevancia del título. Caché Map en memoria del servidor evita búsquedas repetidas.",
+        "en": "Promise.all() launches simultaneous searches on Pexels and Openverse. Each result is scored by title relevance. Server in-memory Map cache avoids repeated searches."
+      },
+      "chips": [
+        "Promise.all",
+        "Relevance scoring",
+        "Server cache"
+      ]
+    },
+    {
+      "name": "Vercel",
+      "tagline": "Deploy · Edge · Variables",
+      "icon": {
+        "kind": "text",
+        "value": "▼"
+      },
+      "description": {
+        "es": "Despliegue automático en cada push con edge network global. Variables de entorno gestionadas desde el panel de Vercel.",
+        "en": "Automatic deployment on every push with global edge network. Environment variables managed from the dashboard."
+      },
+      "note": {
+        "es": "Despliegue automático desde GitHub. GEMINI_API_KEY y PEXELS_API_KEY configuradas como variables de entorno en Vercel. Edge network para latencia mínima en las API routes.",
+        "en": "Automatic deploy from GitHub. GEMINI_API_KEY and PEXELS_API_KEY configured as environment variables in Vercel. Edge network for minimal latency in API routes."
+      },
+      "chips": [
+        "Auto deploy",
+        "Env variables",
+        "Edge network"
+      ],
+      "showLiveLink": true
+    }
+  ],
+  "gallery": [
+    {
+      "image": "./hero.png",
+      "alt": "FridgeChef — Generador de recetas",
+      "span": "full",
+      "title": {
+        "es": "Home — Generador de recetas",
+        "en": "Home — Recipe Generator"
+      },
+      "description": {
+        "es": "Interfaz principal: agrega ingredientes y obtén 4 recetas ordenadas por porcentaje de coincidencia.",
+        "en": "Main interface: add ingredients, get 4 recipes ranked by ingredient match percentage."
+      }
+    },
+    {
+      "image": "./platos.png",
+      "alt": "FridgeChef — Platos sugeridos",
+      "span": "wide",
+      "title": {
+        "es": "Platos sugeridos",
+        "en": "Suggested Dishes"
+      },
+      "description": {
+        "es": "Cuadrícula de recetas generadas por Gemini con imagen, porcentaje de coincidencia y filtros activos.",
+        "en": "Grid of Gemini-generated recipes with image, match percentage and active filters."
+      }
+    },
+    {
+      "image": "./pasos.png",
+      "alt": "FridgeChef — Pasos de preparación",
+      "span": "narrow",
+      "title": {
+        "es": "Pasos de preparación",
+        "en": "Preparation Steps"
+      },
+      "description": {
+        "es": "Instrucciones paso a paso generadas por IA, con formato claro y progresivo.",
+        "en": "Step-by-step AI-generated instructions, rendered with clear and progressive formatting."
+      }
+    }
+  ]
+}

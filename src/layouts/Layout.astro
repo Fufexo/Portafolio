@@ -1,45 +1,108 @@
 ---
 import '../styles/global.css';
 import { ClientRouter } from 'astro:transitions';
+import { getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { ui } from '../i18n/ui';
+import defaultShareImage from '../assets/og-default.png';
 
 interface Props {
   title: string;
   description?: string;
+  /** Imagen al compartir el enlace (redes, WhatsApp). Se recorta a 1200×630. */
+  image?: ImageMetadata;
+  type?: 'website' | 'article';
 }
 
-const { title, description = 'Portfolio de Fabrizio — Desarrollador Full Stack' } = Astro.props;
+const {
+  title,
+  description = 'Portafolio de Fabrizio Fournier, desarrollador full stack especializado en Angular.',
+  image = defaultShareImage,
+  type = 'website',
+} = Astro.props;
+
+// La URL canónica y la imagen absoluta necesitan el dominio (`site` en astro.config,
+// tomado de la variable SITE_URL). Sin dominio se omiten en vez de generar URLs rotas.
+const site = Astro.site;
+const canonicalUrl = site ? new URL(Astro.url.pathname, site).href : undefined;
+const shareImage = await getImage({ src: image, width: 1200, height: 630, fit: 'cover', format: 'jpg' });
+const shareImageUrl = site ? new URL(shareImage.src, site).href : undefined;
+
+// Solo se descargan estos íconos de Material Symbols (orden alfabético obligatorio).
+// Si usas un ícono nuevo, agrégalo aquí o se verá su nombre en texto.
+const materialIcons = [
+  'admin_panel_settings', 'arrow_outward', 'auto_awesome', 'bolt', 'cached', 'chat',
+  'check_circle', 'cloud', 'code', 'contact_phone', 'credit_card', 'dark_mode',
+  'dashboard', 'database', 'download', 'error', 'expand_more', 'filter_list',
+  'format_list_numbered', 'grid_view', 'hourglass_empty', 'hub', 'image_search',
+  'inventory_2', 'layers', 'lightbulb', 'location_on', 'mail', 'mark_email_read',
+  'person', 'send', 'shopping_cart', 'speed', 'storage', 'terminal', 'undo', 'verified_user', 'work',
+].sort();
+const materialIconsHref =
+  'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1' +
+  `&icon_names=${materialIcons.join(',')}&display=block`;
 ---
 
 <!doctype html>
 <html lang="es" class="dark">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="description" content={description} />
+    {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+
+    <!-- Vista previa al compartir (Open Graph / Twitter) -->
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content="Fabrizio Fournier" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:locale" content="es_PE" />
+    <meta property="og:locale:alternate" content="en_US" />
+    {canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
+    {shareImageUrl && <meta property="og:image" content={shareImageUrl} />}
+    {shareImageUrl && <meta property="og:image:width" content="1200" />}
+    {shareImageUrl && <meta property="og:image:height" content="630" />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {shareImageUrl && <meta name="twitter:image" content={shareImageUrl} />}
+
+    <!-- Debe ser un valor literal: coincide con --color-background -->
+    <meta name="theme-color" content="#131315" />
+    <meta name="color-scheme" content="dark" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap"
       rel="stylesheet"
     />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-      rel="stylesheet"
-    />
+    <link href={materialIconsHref} rel="stylesheet" />
     <title>{title}</title>
     <ClientRouter />
 
     <!-- Aplica idioma antes del paint para evitar flash -->
     <script is:inline>
       (function () {
-        const lang = localStorage.getItem('fabrizio-lang') || 'es';
+        var lang = 'es';
+        try { lang = localStorage.getItem('fabrizio-lang') || 'es'; } catch (e) {}
         document.documentElement.setAttribute('data-lang', lang);
+        document.documentElement.setAttribute('lang', lang);
       })();
     </script>
   </head>
   <body class="bg-background text-on-surface selection:bg-primary/30 min-h-screen">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-100 focus:px-4 focus:py-3 focus:rounded-md focus:bg-primary focus:text-on-primary focus:font-bold"
+      data-i18n
+      data-es={ui.es['a11y.skip']}
+      data-en={ui.en['a11y.skip']}
+    >{ui.es['a11y.skip']}</a>
     <slot />
 
     <script is:inline src="/scripts/i18n.js"></script>
+    <script is:inline src="/scripts/site-shell.js"></script>
     <script is:inline src="/scripts/scroll-reveal.js"></script>
   </body>
 </html>

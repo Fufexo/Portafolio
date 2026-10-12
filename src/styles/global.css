@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+/* Dispositivos con mouse real: los efectos de hover solo se aplican aquí.
+   En táctil el contenido se muestra siempre. */
+@custom-variant can-hover (@media (hover: hover) and (pointer: fine));
+
 @theme {
   /* Colors */
   --color-background: #131315;
@@ -56,6 +60,24 @@
   --color-outline: #958da1;
   --color-outline-variant: #4a4455;
 
+  /* Colores puntuales (marcas y resaltado de sintaxis de la terminal de Contacto) */
+  --color-brand-typescript: #3178c6;
+  --color-syntax-string: #98c379;
+  --color-syntax-number: #e5c07b;
+  --color-window-close: #ff5f57;
+  --color-window-minimize: #febc2e;
+  --color-window-maximize: #28c840;
+
+  /* Sombras y brillos (generan utilidades shadow-*) */
+  --shadow-elevated: 0 20px 40px rgb(0 0 0 / 0.4);
+  --shadow-toast: 0 8px 32px rgb(0 0 0 / 0.5);
+  --shadow-glow-dot: 0 0 6px var(--color-primary);
+  --shadow-glow-point: 0 0 10px color-mix(in srgb, var(--color-primary) 60%, transparent);
+  --shadow-glow: 0 0 20px color-mix(in srgb, var(--color-primary) 20%, transparent);
+  --shadow-glow-soft: 0 0 30px color-mix(in srgb, var(--color-primary) 8%, transparent);
+  --shadow-glow-cta: 0 10px 30px color-mix(in srgb, var(--color-primary) 25%, transparent);
+  --shadow-glow-secondary: 0 0 16px color-mix(in srgb, var(--color-secondary) 25%, transparent);
+
   /* Border radius */
   --radius: 0.125rem;
   --radius-lg: 0.25rem;
@@ -66,15 +88,31 @@
   --font-sans: 'Inter', sans-serif;
 }
 
-body {
-  font-family: 'Inter', sans-serif;
-  background-color: #131315;
-  color: #e5e1e4;
+html {
+  scroll-padding-top: 6rem;
+  -webkit-tap-highlight-color: transparent;
 }
 
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-background);
+  color: var(--color-on-surface);
+  -webkit-font-smoothing: antialiased;
+}
 
 a {
   text-decoration: none;
+}
+
+/* Foco visible solo al navegar con teclado */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+main:focus,
+main:focus-visible {
   outline: none;
 }
 
@@ -88,7 +126,7 @@ a {
 }
 
 .primary-gradient-glow {
-  background: linear-gradient(135deg, #d2bbff 0%, #7c3aed 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-container) 100%);
 }
 
 .ghost-border {
@@ -110,9 +148,9 @@ a {
   background: linear-gradient(
     130deg,
     transparent 0% 33%,
-    rgba(210, 187, 255, 0.12) 66%,
-    rgba(124, 58, 237, 0.20) 83.5%,
-    rgba(137, 206, 255, 0.08) 100%
+    color-mix(in srgb, var(--color-primary) 12%, transparent) 66%,
+    color-mix(in srgb, var(--color-primary-container) 20%, transparent) 83.5%,
+    color-mix(in srgb, var(--color-secondary) 8%, transparent) 100%
   );
   background-size: 300% 300%;
   background-position: 0% 0%;
@@ -146,69 +184,68 @@ a {
 }
 
 .phil-card:hover .phil-icon {
-  color: rgba(210, 187, 255, 0.9);
+  color: color-mix(in srgb, var(--color-primary) 90%, transparent);
 }
 
 .phil-word {
   display: inline-block;
   margin: 0 1px;
-  opacity: 0;
-  transform: translateY(40%);
-  transition: none;
 }
 
-.phil-card:hover .phil-word {
-  opacity: 1;
-  transform: translateY(0%);
-  transition:
-    opacity 0ms var(--wd, 0ms),
-    transform 200ms cubic-bezier(0.9, 0.06, 0.15, 0.9) var(--wd, 0ms);
+/* Con mouse: el texto se revela palabra por palabra al hacer hover.
+   En táctil (o sin JS de hover) el texto queda siempre visible. */
+@media (hover: hover) and (pointer: fine) {
+  .phil-word {
+    opacity: 0;
+    transform: translateY(40%);
+    transition: none;
+  }
+
+  .phil-card:hover .phil-word,
+  .phil-card:focus-within .phil-word {
+    opacity: 1;
+    transform: translateY(0%);
+    transition:
+      opacity 0ms var(--wd, 0ms),
+      transform 200ms cubic-bezier(0.9, 0.06, 0.15, 0.9) var(--wd, 0ms);
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .phil-icon {
+    color: color-mix(in srgb, var(--color-primary) 70%, transparent);
+  }
 }
 
 /* Tech tags */
+/* Entrada: anima `translate`/`scale` (propiedades individuales) y el hover usa
+   `transform`, así no compiten. Con fill-mode `backwards` la animación no retiene
+   valores al terminar, y el hover nunca la reinicia al sacar el mouse. */
 @keyframes tagIn {
-  from { opacity: 0; transform: translateY(10px) scale(0.92); }
-  to   { opacity: 1; transform: translateY(0)    scale(1); }
-}
-
-@keyframes tagFloat {
-  0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(-4px); }
+  from { opacity: 0; translate: 0 10px; scale: 0.92; }
+  to   { opacity: 1; translate: 0 0;    scale: 1; }
 }
 
 .tech-tag {
-  animation: tagIn 0.4s ease both, tagFloat 3s ease-in-out infinite;
-  animation-delay: var(--delay, 0s), calc(var(--delay, 0s) + 0.4s);
+  animation: tagIn 0.4s ease backwards;
+  animation-delay: var(--delay, 0s);
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .tech-tag:hover {
-  background: rgba(210, 187, 255, 0.15);
-  color: #d2bbff;
-  box-shadow: 0 0 12px rgba(210, 187, 255, 0.2);
-  transform: scale(1.08) translateY(-2px);
-  transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s;
+  background: color-mix(in srgb, var(--color-primary) 15%, transparent);
+  color: var(--color-primary);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--color-primary) 20%, transparent);
+  transform: translateY(-2px) scale(1.06);
 }
 
-/* Hero title hover — secuencial:
-   entrada:  accent → blanco (0.5s), luego word → gradiente (0.5s con delay)
-   salida:   word   → blanco (0.4s), luego accent → gradiente (0.4s con delay) */
-.hero-word {
-  filter: saturate(0) brightness(6);
-  transition: filter 0.3s ease 0s;       /* salida: word vuelve a blanco rápido */
-}
-
-.hero-accent {
-  transition: filter 0.3s ease 0.26s;    /* salida: accent vuelve al gradiente con delay */
-}
-
-h1:has(.hero-word):hover .hero-accent {
-  filter: saturate(0) brightness(5);
-  transition: filter 0.35s ease 0s;      /* entrada: accent se pone blanco primero */
-}
-
-h1:has(.hero-word):hover .hero-word {
-  filter: none;
-  transition: filter 0.35s ease 0.32s;   /* entrada: word toma gradiente después */
+/* Titular rotativo: cursor tipo terminal */
+.rotating-caret {
+  animation: blink 1s step-end infinite;
 }
 
 /* Hide scrollbar for filter pills */
@@ -242,10 +279,10 @@ h1:has(.hero-word):hover .hero-word {
 /* Scroll reveal */
 .scroll-reveal {
   opacity: 0;
-  transform: translateY(28px);
+  transform: translateY(20px);
   transition:
-    opacity  0.7s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity  0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   transition-delay: var(--reveal-delay, 0ms);
 }
 .scroll-reveal.in-view {
@@ -259,8 +296,54 @@ h1:has(.hero-word):hover .hero-word {
 }
 
 .social-icon:hover {
-  color: #d2bbff;
-  background: rgba(210, 187, 255, 0.1);
+  color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
   transform: translateY(-4px) scale(1.12);
-  box-shadow: 0 8px 20px rgba(210, 187, 255, 0.2);
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--color-primary) 20%, transparent);
+}
+
+/* Captions de galería: con mouse aparecen al hover; en táctil siempre visibles */
+.gallery-caption {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.82) 0%, transparent 55%);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  transition: opacity 0.3s;
+}
+
+@media (min-width: 640px) {
+  .gallery-caption { padding: 2rem; }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .gallery-caption { opacity: 0; }
+  .gallery-item:hover .gallery-caption,
+  .gallery-item:focus-within .gallery-caption { opacity: 1; }
+}
+
+/* Respeta la preferencia del sistema de reducir movimiento */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .scroll-reveal {
+    opacity: 1;
+    transform: none;
+  }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
 }

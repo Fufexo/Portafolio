@@ -1,0 +1,63 @@
+---
+/**
+ * Caso de estudio de un proyecto. Se genera una página por cada entrada de la
+ * colección `projects` (src/content/projects/<slug>/data.json).
+ */
+import type { GetStaticPaths } from 'astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import TopNav from '../../components/TopNav.astro';
+import BottomNav from '../../components/BottomNav.astro';
+import Footer from '../../components/Footer.astro';
+import StackShowcase from '../../components/StackShowcase.astro';
+import ProjectHero from '../../components/project/ProjectHero.astro';
+import ProjectChallenges from '../../components/project/ProjectChallenges.astro';
+import ProjectGallery from '../../components/project/ProjectGallery.astro';
+import ProjectCta from '../../components/project/ProjectCta.astro';
+import SectionHeading from '../../components/project/SectionHeading.astro';
+import { ui, t } from '../../i18n/ui';
+
+export const getStaticPaths = (async () => {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+
+const { project } = Astro.props;
+const { data } = project;
+---
+
+<Layout
+  title={`${data.title} — ${ui.es['project.title.suffix']} | Fabrizio`}
+  description={data.seoDescription.es}
+  image={data.hero.image}
+  type="article"
+>
+  <TopNav />
+
+  <main id="main" tabindex="-1" class="overflow-x-hidden">
+    <ProjectHero project={data} />
+
+    <ProjectChallenges slug={project.id} challenge={data.challenge} />
+
+    <section class="bg-surface py-24 sm:py-32 px-4 sm:px-8">
+      <div class="max-w-7xl mx-auto">
+        <SectionHeading eyebrow={t('project.stack.label')} title={t('project.stack.title')} />
+        <StackShowcase id={`${project.id}-stack`} items={data.stack} liveUrl={data.liveUrl} />
+      </div>
+    </section>
+
+    <ProjectGallery items={data.gallery} />
+
+    <ProjectCta liveUrl={data.liveUrl} accent={data.accent} />
+  </main>
+
+  <BottomNav />
+  <Footer />
+</Layout>

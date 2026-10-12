@@ -1,0 +1,182 @@
+---
+/**
+ * Tarjeta de reto con dos caras: el problema (frente) y cómo se resolvió (reverso).
+ * - Cada cara tiene un <button> real para girar; toda la tarjeta también responde al clic.
+ * - La cara oculta queda `inert` (fuera del foco y del lector de pantalla) y el foco
+ *   pasa al botón de la cara visible al girar.
+ */
+import LocalizedText from './LocalizedText.astro';
+import { t } from '../i18n/ui';
+
+type Localized = { es: string; en: string };
+
+interface Props {
+  id: string;
+  tone?: 'primary' | 'secondary';
+  icon: string;
+  title: Localized;
+  description: Localized;
+  solutionIcon: string;
+  solution: Localized;
+  chips: string[];
+}
+
+const { id, tone = 'secondary', icon, title, description, solutionIcon, solution, chips } = Astro.props;
+const toneText = tone === 'secondary' ? 'text-secondary' : 'text-primary';
+---
+
+<div class={`flip-card flip-card--${tone}`} data-flip-card>
+  <div class="flip-card-inner">
+
+    <!-- Frente: el problema -->
+    <div class="flip-card-face flip-card-front" data-face="front">
+      <span class="material-symbols-outlined text-secondary mb-3 block" aria-hidden="true" style="font-variation-settings:'FILL' 1">{icon}</span>
+      <LocalizedText as="h3" text={title} class="font-bold text-sm uppercase tracking-widest mb-2 text-on-surface" />
+      <LocalizedText as="p" text={description} class="text-sm text-on-surface-variant flex-1 leading-relaxed" />
+      <button type="button" class="flip-toggle mt-4" data-flip-toggle aria-controls={`${id}-back`}>
+        <LocalizedText text={t('project.flip.hint')} />
+        <span class="material-symbols-outlined text-[16px]" aria-hidden="true">arrow_outward</span>
+      </button>
+    </div>
+
+    <!-- Reverso: la solución -->
+    <div class="flip-card-face flip-card-back" id={`${id}-back`} data-face="back" inert>
+      <span class={`material-symbols-outlined ${toneText} mb-3 block`} aria-hidden="true" style="font-variation-settings:'FILL' 1">{solutionIcon}</span>
+      <LocalizedText as="h4" text={t('project.flip.back.title')} class={`font-bold text-xs uppercase tracking-widest mb-3 ${toneText}`} />
+      <LocalizedText as="p" text={solution} class="text-sm text-on-surface-variant flex-1 leading-relaxed" />
+      <div class="flex flex-wrap gap-1.5 mt-4">
+        {chips.map((chip) => <span class="flip-chip">{chip}</span>)}
+      </div>
+      <button type="button" class="flip-toggle mt-4" data-flip-toggle>
+        <span class="material-symbols-outlined text-[16px]" aria-hidden="true">undo</span>
+        <LocalizedText text={t('project.flip.back.hint')} />
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<script is:inline>
+  (function () {
+    function flip(card) {
+      var flipped = card.classList.toggle('flipped');
+      var front = card.querySelector('[data-face="front"]');
+      var back = card.querySelector('[data-face="back"]');
+      if (flipped) { front.setAttribute('inert', ''); back.removeAttribute('inert'); }
+      else { back.setAttribute('inert', ''); front.removeAttribute('inert'); }
+      // Mueve el foco solo si ya estaba dentro de la tarjeta (navegación con teclado)
+      if (card.contains(document.activeElement)) {
+        var visible = flipped ? back : front;
+        var btn = visible.querySelector('[data-flip-toggle]');
+        if (btn) setTimeout(function () { btn.focus({ preventScroll: true }); }, 50);
+      }
+    }
+
+    function onClick(e) {
+      var card = e.target.closest('[data-flip-card]');
+      if (!card) return;
+      // Ignora clics en enlaces o selección de texto dentro de la tarjeta
+      if (e.target.closest('a')) return;
+      if (window.getSelection && String(window.getSelection()).length > 0) return;
+      flip(card);
+    }
+
+    if (!window.__flipCardBound) {
+      window.__flipCardBound = true;
+      document.addEventListener('click', onClick);
+    }
+  })();
+</script>
+
+<style>
+  .flip-card {
+    perspective: 1000px;
+    cursor: pointer;
+  }
+
+  .flip-card-inner {
+    display: grid;
+    transform-style: preserve-3d;
+    transition: transform 0.85s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .flip-card.flipped .flip-card-inner {
+    transform: rotateY(180deg);
+  }
+
+  .flip-card-face {
+    grid-area: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
+  .flip-card-front {
+    background: var(--color-surface-container);
+    outline: 1px solid color-mix(in srgb, var(--color-outline) 15%, transparent);
+    transition: box-shadow 0.6s ease, outline-color 0.6s ease;
+  }
+
+  .flip-card-back {
+    transform: rotateY(180deg);
+  }
+
+  .flip-card--secondary .flip-card-back {
+    background: color-mix(in srgb, var(--color-secondary) 5%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-secondary) 20%, transparent);
+  }
+
+  .flip-card--primary .flip-card-back {
+    background: color-mix(in srgb, var(--color-primary) 5%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-primary) 20%, transparent);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .flip-card--secondary:not(.flipped):hover .flip-card-front {
+      box-shadow: 0 0 28px color-mix(in srgb, var(--color-secondary) 18%, transparent);
+      outline-color: color-mix(in srgb, var(--color-secondary) 25%, transparent);
+    }
+
+    .flip-card--primary:not(.flipped):hover .flip-card-front {
+      box-shadow: 0 0 28px color-mix(in srgb, var(--color-primary) 18%, transparent);
+      outline-color: color-mix(in srgb, var(--color-primary) 25%, transparent);
+    }
+  }
+
+  .flip-toggle {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    min-height: 2.75rem;
+    padding: 0 0.25rem;
+    margin-left: -0.25rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--color-on-surface-variant);
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+
+  .flip-card:hover .flip-toggle,
+  .flip-toggle:focus-visible {
+    color: var(--color-primary);
+  }
+
+  .flip-chip {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--color-on-surface) 6%, transparent);
+    color: var(--color-on-surface-variant);
+    border: 1px solid color-mix(in srgb, var(--color-on-surface) 8%, transparent);
+  }
+</style>

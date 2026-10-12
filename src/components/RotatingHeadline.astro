@@ -1,0 +1,143 @@
+---
+/**
+ * Titular con una frase fija + una palabra que se escribe y borra en bucle.
+ * - Texto en color sólido: sin background-clip, así ninguna letra se recorta.
+ * - Todas las palabras se apilan invisibles en la misma celda de grid para
+ *   reservar la altura de la más larga (sin saltos de layout al cambiar).
+ * - Lectores de pantalla leen una frase estable (sr-only), no la animación.
+ */
+interface Props {
+  leadEs: string;
+  leadEn: string;
+  wordsEs: string[];
+  wordsEn: string[];
+  class?: string;
+}
+
+const { leadEs, leadEn, wordsEs, wordsEn, class: className = '' } = Astro.props;
+
+// Para lectores de pantalla: frase fija con la primera palabra (p. ej. "Construyamos algo juntos.")
+const srEs = `${leadEs} ${wordsEs[0]}`;
+const srEn = `${leadEn} ${wordsEn[0]}`;
+---
+
+<h1
+  data-rotating-headline
+  data-words-es={JSON.stringify(wordsEs)}
+  data-words-en={JSON.stringify(wordsEn)}
+  class:list={['font-black tracking-tight leading-[1.05] text-on-surface', className]}
+>
+  <span class="sr-only" data-i18n data-es={srEs} data-en={srEn}>{srEs}</span>
+
+  <span aria-hidden="true" class="block">
+    <span class="block" data-i18n data-es={leadEs} data-en={leadEn}>{leadEs}</span>
+
+    <span class="grid">
+      <!-- Reserva de altura: todas las palabras, invisibles, en la misma celda -->
+      {[...wordsEs, ...wordsEn].map((word) => (
+        <span class="invisible col-start-1 row-start-1 pr-[0.6em]">{word}</span>
+      ))}
+      <span class="col-start-1 row-start-1 text-primary">
+        <span data-rotating-word>{wordsEs[0]}</span><span
+          class="rotating-caret inline-block w-[0.08em] h-[0.85em] ml-[0.06em] -mb-[0.06em] bg-primary align-baseline"
+        ></span>
+      </span>
+    </span>
+  </span>
+</h1>
+
+<script is:inline>
+  (function () {
+    var TYPE_MS = 70;
+    var DELETE_MS = 35;
+    var HOLD_MS = 2200;
+    var GAP_MS = 350;
+
+    function getLang() {
+      try { return localStorage.getItem('fabrizio-lang') || 'es'; } catch (e) { return 'es'; }
+    }
+
+    function start(h1) {
+      if (h1._rotStop) h1._rotStop();
+
+      var target = h1.querySelector('[data-rotating-word]');
+      if (!target) return;
+      var lang = getLang();
+      var words;
+      try { words = JSON.parse(h1.getAttribute('data-words-' + lang) || '[]'); } catch (e) { words = []; }
+      if (!words.length) return;
+
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var index = 0;
+      var timer = null;
+      var stopped = false;
+
+      target.textContent = words[0];
+      h1._rotStop = function () { stopped = true; clearTimeout(timer); };
+
+      // Con movimiento reducido: cambio directo de palabra, sin tipeo
+      if (reduce) {
+        (function swap() {
+          timer = setTimeout(function () {
+            if (stopped) return;
+            index = (index + 1) % words.length;
+            target.textContent = words[index];
+            swap();
+          }, HOLD_MS + 1500);
+        })();
+        return;
+      }
+
+      function erase() {
+        if (stopped) return;
+        var text = target.textContent;
+        if (text.length > 0) {
+          target.textContent = text.slice(0, -1);
+          timer = setTimeout(erase, DELETE_MS);
+        } else {
+          index = (index + 1) % words.length;
+          timer = setTimeout(type, GAP_MS);
+        }
+      }
+
+      function type() {
+        if (stopped) return;
+        var word = words[index];
+        var current = target.textContent;
+        if (current.length < word.length) {
+          target.textContent = word.slice(0, current.length + 1);
+          timer = setTimeout(type, TYPE_MS);
+        } else {
+          timer = setTimeout(erase, HOLD_MS);
+        }
+      }
+
+      timer = setTimeout(erase, HOLD_MS);
+    }
+
+    function initAll() {
+      document.querySelectorAll('[data-rotating-headline]').forEach(start);
+    }
+
+    // Pausa cuando la pestaña no está visible (ahorra CPU/batería)
+    function onVisibility() {
+      document.querySelectorAll('[data-rotating-headline]').forEach(function (h1) {
+        if (document.hidden) { if (h1._rotStop) h1._rotStop(); }
+        else start(h1);
+      });
+    }
+
+    if (!window.__rotatingHeadlineBound) {
+      window.__rotatingHeadlineBound = true;
+      document.addEventListener('astro:page-load', initAll);
+      document.addEventListener('fabrizio:langchange', initAll);
+      document.addEventListener('visibilitychange', onVisibility);
+      document.addEventListener('astro:before-swap', function () {
+        document.querySelectorAll('[data-rotating-headline]').forEach(function (h1) {
+          if (h1._rotStop) h1._rotStop();
+        });
+      });
+    }
+    initAll();
+  })();
+</script>

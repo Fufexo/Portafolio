@@ -1,0 +1,18 @@
+---
+/** Encabezado de sección: etiqueta pequeña (eyebrow) + título. */
+import LocalizedText from '../LocalizedText.astro';
+
+type Localized = { es: string; en: string };
+
+interface Props {
+  eyebrow: Localized;
+  title: Localized;
+}
+
+const { eyebrow, title } = Astro.props;
+---
+
+<div class="mb-12 sm:mb-16">
+  <LocalizedText as="p" text={eyebrow} class="text-xs uppercase tracking-[0.3em] font-black text-secondary mb-3" />
+  <LocalizedText as="h2" text={title} class="text-4xl sm:text-5xl font-bold tracking-tighter" />
+</div>

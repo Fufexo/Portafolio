@@ -3,16 +3,50 @@ import Layout from '../layouts/Layout.astro';
 import TopNav from '../components/TopNav.astro';
 import BottomNav from '../components/BottomNav.astro';
 import Footer from '../components/Footer.astro';
-import { ui, gradientStyle } from '../i18n/ui';
+import SocialIconLink from '../components/SocialIconLink.astro';
+import FormField from '../components/form/FormField.astro';
+import ContactInfoItem from '../components/contact/ContactInfoItem.astro';
+import RotatingHeadline from '../components/RotatingHeadline.astro';
+import { ui, headlineWords } from '../i18n/ui';
 
 const es = ui.es;
 const en = ui.en;
+
+const socialLinks = [
+  { href: 'https://github.com/Fufexo', label: 'GitHub', icon: 'code' },
+  { href: 'https://www.linkedin.com/in/fabrizio-fournier/', label: 'LinkedIn', icon: 'work' },
+  { href: 'https://wa.me/51988998500', label: 'WhatsApp', icon: 'chat' },
+];
+
+// Opciones agrupadas del select "Tipo de proyecto" (el value es lo que llega por Formspree)
+const projectTypeGroups = [
+  {
+    labelKey: 'contact.form.type.group.web',
+    options: ['landing', 'corporate', 'ecommerce', 'webapp'],
+  },
+  {
+    labelKey: 'contact.form.type.group.special',
+    options: ['backend', 'redesign', 'uiux'],
+  },
+  {
+    labelKey: 'contact.form.type.group.other',
+    options: ['maintenance', 'consulting', 'other'],
+  },
+] as const;
+
+const t = (key: string) => ({
+  es: es[key as keyof typeof es],
+  en: en[key as keyof typeof en],
+});
 ---
 
-<Layout title="Contacto | Fabrizio">
+<Layout
+  title="Contacto | Fabrizio Fournier"
+  description="Contacta a Fabrizio Fournier para tu próximo proyecto web: páginas, tiendas online, aplicaciones a medida y más."
+>
   <TopNav />
 
-  <main class="min-h-screen pt-32 pb-24 px-6 md:px-8">
+  <main id="main" tabindex="-1" class="min-h-screen pt-28 md:pt-36 pb-36 md:pb-24 px-4 sm:px-8">
     <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
 
       <!-- Left: Editorial Content -->
@@ -27,11 +61,13 @@ const en = ui.en;
         </span>
 
         <!-- Headline -->
-        <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter leading-[0.9]">
-          <span class="hero-word" style={gradientStyle} data-i18n data-es={es['contact.title']} data-en={en['contact.title']}>{es['contact.title']}</span>
-          <br />
-          <span class="hero-accent" style={gradientStyle} data-i18n data-es={es['contact.title.accent']} data-en={en['contact.title.accent']}>{es['contact.title.accent']}</span>
-        </h1>
+        <RotatingHeadline
+          leadEs={es['contact.headline.lead']}
+          leadEn={en['contact.headline.lead']}
+          wordsEs={headlineWords.contact.es}
+          wordsEn={headlineWords.contact.en}
+          class="text-4xl sm:text-5xl xl:text-6xl"
+        />
 
         <!-- Subtitle -->
         <p
@@ -43,81 +79,43 @@ const en = ui.en;
 
         <!-- Contact info -->
         <div class="space-y-5 pt-2">
-          <a href="mailto:fabriziofournier2003@hotmail.com" class="flex items-center gap-4 group/info min-w-0">
-            <div class="w-12 h-12 rounded-xl bg-surface-container-high flex items-center justify-center text-primary flex-shrink-0 group-hover/info:bg-primary/20 transition-colors">
-              <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">mail</span>
-            </div>
-            <div class="min-w-0">
-              <p
-                class="text-xs text-on-surface-variant font-medium uppercase tracking-wider"
-                data-i18n data-es={es['contact.email.label']} data-en={en['contact.email.label']}
-              >
-                {es['contact.email.label']}
-              </p>
-              <p class="text-on-surface font-bold group-hover/info:text-primary transition-colors break-all">fabriziofournier2003@hotmail.com</p>
-            </div>
-          </a>
+          <ContactInfoItem
+            href="mailto:fabriziofournier2003@hotmail.com"
+            icon="mail"
+            iconColorClass="text-primary"
+            hoverBgClass="group-hover/info:bg-primary/20"
+            labelEs={es['contact.email.label']}
+            labelEn={en['contact.email.label']}
+            valueText="fabriziofournier2003@hotmail.com"
+            rootClass="flex items-center gap-4 group/info min-w-0"
+            valueClass="text-on-surface font-bold group-hover/info:text-primary transition-colors break-all"
+          />
 
-          <a href="https://wa.me/51988998500" target="_blank" rel="noopener noreferrer" class="flex items-center gap-4 group/info">
-            <div class="w-12 h-12 rounded-xl bg-surface-container-high flex items-center justify-center text-tertiary flex-shrink-0 group-hover/info:bg-tertiary/20 transition-colors">
-              <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">contact_phone</span>
-            </div>
-            <div>
-              <p class="text-xs text-on-surface-variant font-medium uppercase tracking-wider">WhatsApp</p>
-              <p class="text-on-surface font-bold group-hover/info:text-tertiary transition-colors">+51 988 998 500</p>
-            </div>
-          </a>
+          <ContactInfoItem
+            href="https://wa.me/51988998500"
+            icon="contact_phone"
+            iconColorClass="text-tertiary"
+            hoverBgClass="group-hover/info:bg-tertiary/20"
+            labelText="WhatsApp"
+            valueText="+51 988 998 500"
+            valueClass="text-on-surface font-bold group-hover/info:text-tertiary transition-colors"
+          />
 
-          <div class="flex items-center gap-4">
-            <div class="w-12 h-12 rounded-xl bg-surface-container-high flex items-center justify-center text-secondary flex-shrink-0">
-              <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">location_on</span>
-            </div>
-            <div>
-              <p
-                class="text-xs text-on-surface-variant font-medium uppercase tracking-wider"
-                data-i18n data-es={es['contact.location.label']} data-en={en['contact.location.label']}
-              >
-                {es['contact.location.label']}
-              </p>
-              <p
-                class="text-on-surface font-bold"
-                data-i18n data-es={es['contact.location.value']} data-en={en['contact.location.value']}
-              >
-                {es['contact.location.value']}
-              </p>
-            </div>
-          </div>
+          <ContactInfoItem
+            icon="location_on"
+            iconColorClass="text-secondary"
+            labelEs={es['contact.location.label']}
+            labelEn={en['contact.location.label']}
+            valueEs={es['contact.location.value']}
+            valueEn={en['contact.location.value']}
+          />
         </div>
 
         <!-- Social links -->
         <div class="flex gap-3 pt-4">
-          <a
-            href="https://github.com/Fufexo"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="GitHub"
-            class="social-icon w-11 h-11 flex items-center justify-center rounded-full bg-surface-container text-on-surface-variant ghost-border"
-          >
-            <span class="material-symbols-outlined text-[20px]">code</span>
-          </a>
-          <a
-            href="https://www.linkedin.com/in/fabrizio-fournier/"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="LinkedIn"
-            class="social-icon w-11 h-11 flex items-center justify-center rounded-full bg-surface-container text-on-surface-variant ghost-border"
-          >
-            <span class="material-symbols-outlined text-[20px]">work</span>
-          </a>
-          <a
-            href="https://wa.me/51988998500"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="WhatsApp"
-            class="social-icon w-11 h-11 flex items-center justify-center rounded-full bg-surface-container text-on-surface-variant ghost-border"
-          >
-            <span class="material-symbols-outlined text-[20px]">chat</span>
-          </a>
+          {socialLinks.map(({ href, label, icon }) => (
+            <SocialIconLink href={href} label={label} icon={icon} />
+          ))}
         </div>
 
       </div>
@@ -126,10 +124,10 @@ const en = ui.en;
       <div class="lg:col-span-7 space-y-8">
 
         <!-- Glass form -->
-        <div class="glass-effect rounded-xl ghost-border p-8 md:p-14 shadow-[0_20px_40px_rgba(0,0,0,0.4)]">
+        <div class="glass-effect rounded-xl ghost-border p-6 sm:p-8 md:p-14 shadow-elevated">
 
           <!-- Success state -->
-          <div id="form-success" class="hidden flex-col items-center justify-center text-center py-16 gap-6">
+          <div id="form-success" tabindex="-1" role="status" class="outline-none hidden flex-col items-center justify-center text-center py-16 gap-6">
             <span class="material-symbols-outlined text-primary text-6xl" style="font-variation-settings:'FILL' 1">check_circle</span>
             <div>
               <p
@@ -148,7 +146,7 @@ const en = ui.en;
           </div>
 
           <!-- Error state -->
-          <div id="form-error" class="hidden flex-col items-center justify-center text-center py-8 gap-4">
+          <div id="form-error" tabindex="-1" role="alert" class="outline-none hidden flex-col items-center justify-center text-center py-8 gap-4">
             <span class="material-symbols-outlined text-error text-4xl" style="font-variation-settings:'FILL' 1">error</span>
             <p
               class="text-on-surface font-bold"
@@ -161,109 +159,121 @@ const en = ui.en;
             <button
               type="button"
               id="error-retry"
-              class="text-primary text-sm font-bold underline underline-offset-4"
+              class="min-h-11 px-4 text-primary text-sm font-bold underline underline-offset-4"
               data-i18n
               data-es="Intentar de nuevo"
               data-en="Try again"
             >Intentar de nuevo</button>
           </div>
 
-          <form class="space-y-10" id="contact-form"
+          <form class="space-y-8" id="contact-form"
             action="https://formspree.io/f/mnjooovq"
             method="POST"
           >
 
             <!-- Name + Email row -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div class="flex flex-col gap-3 group">
-                <label
-                  class="text-xs font-bold uppercase tracking-wider text-on-surface-variant group-focus-within:text-primary transition-colors"
-                  for="name"
-                  data-i18n data-es={es['contact.form.name']} data-en={en['contact.form.name']}
-                >
-                  {es['contact.form.name']}
-                </label>
+              <FormField
+                id="name"
+                labelEs={es['contact.form.name']}
+                labelEn={en['contact.form.name']}
+              >
                 <input
                   id="name"
                   name="name"
                   type="text"
+                  autocomplete="name"
                   required
-                  class="w-full bg-surface-container-lowest rounded-md px-5 py-4 text-on-surface placeholder:text-outline-variant focus:ring-2 focus:ring-primary transition-all outline-none border-0"
+                  class="w-full bg-surface-container-lowest rounded-md px-5 py-4 text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary transition-all outline-none border-0"
                   data-placeholder-es={es['contact.form.name.placeholder']}
                   data-placeholder-en={en['contact.form.name.placeholder']}
                   placeholder={es['contact.form.name.placeholder']}
                 />
-              </div>
-              <div class="flex flex-col gap-3 group">
-                <label
-                  class="text-xs font-bold uppercase tracking-wider text-on-surface-variant group-focus-within:text-primary transition-colors"
-                  for="email"
-                  data-i18n data-es={es['contact.form.email']} data-en={en['contact.form.email']}
-                >
-                  {es['contact.form.email']}
-                </label>
+              </FormField>
+              <FormField
+                id="email"
+                labelEs={es['contact.form.email']}
+                labelEn={en['contact.form.email']}
+              >
                 <input
                   id="email"
                   name="email"
                   type="email"
+                  autocomplete="email"
+                  inputmode="email"
                   required
-                  class="w-full bg-surface-container-lowest rounded-md px-5 py-4 text-on-surface placeholder:text-outline-variant focus:ring-2 focus:ring-primary transition-all outline-none border-0"
+                  class="w-full bg-surface-container-lowest rounded-md px-5 py-4 text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary transition-all outline-none border-0"
                   data-placeholder-es={es['contact.form.email.placeholder']}
                   data-placeholder-en={en['contact.form.email.placeholder']}
                   placeholder={es['contact.form.email.placeholder']}
                 />
-              </div>
+              </FormField>
             </div>
 
             <!-- Project type -->
-            <div class="flex flex-col gap-3 group">
-              <label
-                class="text-xs font-bold uppercase tracking-wider text-on-surface-variant group-focus-within:text-primary transition-colors"
-                for="project-type"
-                data-i18n data-es={es['contact.form.type']} data-en={en['contact.form.type']}
-              >
-                {es['contact.form.type']}
-              </label>
+            <FormField
+              id="project-type"
+              labelEs={es['contact.form.type']}
+              labelEn={en['contact.form.type']}
+            >
               <div class="relative">
                 <select
                   id="project-type"
                   name="project-type"
-                  class="w-full bg-surface-container-lowest rounded-md px-5 py-4 text-on-surface focus:ring-2 focus:ring-primary transition-all outline-none border-0 appearance-none cursor-pointer"
+                  required
+                  class="w-full bg-surface-container-lowest rounded-md pl-5 pr-12 py-4 text-on-surface invalid:text-outline focus:ring-2 focus:ring-primary transition-all outline-none border-0 appearance-none cursor-pointer"
                 >
-                  <option value="ui" data-i18n data-es={es['contact.form.type.1']} data-en={en['contact.form.type.1']}>{es['contact.form.type.1']}</option>
-                  <option value="fullstack" data-i18n data-es={es['contact.form.type.2']} data-en={en['contact.form.type.2']}>{es['contact.form.type.2']}</option>
-                  <option value="strategy" data-i18n data-es={es['contact.form.type.3']} data-en={en['contact.form.type.3']}>{es['contact.form.type.3']}</option>
-                  <option value="other" data-i18n data-es={es['contact.form.type.4']} data-en={en['contact.form.type.4']}>{es['contact.form.type.4']}</option>
+                  <option
+                    value=""
+                    disabled
+                    selected
+                    hidden
+                    data-i18n
+                    data-es={es['contact.form.type.placeholder']}
+                    data-en={en['contact.form.type.placeholder']}
+                  >{es['contact.form.type.placeholder']}</option>
+                  {projectTypeGroups.map(({ labelKey, options }) => (
+                    <optgroup
+                      label={t(labelKey).es}
+                      data-label-es={t(labelKey).es}
+                      data-label-en={t(labelKey).en}
+                      class="bg-surface-container text-on-surface-variant"
+                    >
+                      {options.map((value) => {
+                        const label = t(`contact.form.type.${value}`);
+                        return (
+                          <option value={value} class="text-on-surface" data-i18n data-es={label.es} data-en={label.en}>{label.es}</option>
+                        );
+                      })}
+                    </optgroup>
+                  ))}
                 </select>
-                <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px] pointer-events-none">expand_more</span>
+                <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px] pointer-events-none" aria-hidden="true">expand_more</span>
               </div>
-            </div>
+            </FormField>
 
             <!-- Message -->
-            <div class="flex flex-col gap-3 group">
-              <label
-                class="text-xs font-bold uppercase tracking-wider text-on-surface-variant group-focus-within:text-primary transition-colors"
-                for="message"
-                data-i18n data-es={es['contact.form.message']} data-en={en['contact.form.message']}
-              >
-                {es['contact.form.message']}
-              </label>
+            <FormField
+              id="message"
+              labelEs={es['contact.form.message']}
+              labelEn={en['contact.form.message']}
+            >
               <textarea
                 id="message"
                 name="message"
                 rows="6"
                 required
-                class="w-full bg-surface-container-lowest rounded-md px-5 py-4 text-on-surface placeholder:text-outline-variant focus:ring-2 focus:ring-primary transition-all outline-none border-0 resize-none"
+                class="w-full bg-surface-container-lowest rounded-md px-5 py-4 text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary transition-all outline-none border-0 resize-none"
                 data-placeholder-es={es['contact.form.message.placeholder']}
                 data-placeholder-en={en['contact.form.message.placeholder']}
                 placeholder={es['contact.form.message.placeholder']}
               ></textarea>
-            </div>
+            </FormField>
 
             <!-- Footer row -->
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-2">
-              <div class="flex items-center gap-2 text-on-surface-variant/40">
-                <span class="material-symbols-outlined text-[18px]">verified_user</span>
+              <div class="flex items-center gap-2 text-on-surface-variant">
+                <span class="material-symbols-outlined text-[18px]" aria-hidden="true">verified_user</span>
                 <span
                   class="text-xs font-medium"
                   data-i18n data-es={es['contact.form.secure']} data-en={en['contact.form.secure']}
@@ -273,10 +283,10 @@ const en = ui.en;
               </div>
               <button
                 type="submit"
-                class="primary-gradient-glow text-on-primary px-8 py-3.5 rounded-md font-black tracking-tight text-base shadow-[0_10px_20px_rgba(210,187,255,0.2)] transition-all hover:scale-[1.02] active:scale-95 flex items-center gap-2"
+                class="w-full sm:w-auto justify-center primary-gradient-glow text-on-primary px-8 min-h-12 rounded-md font-black tracking-tight text-base shadow-glow-cta transition-all hover:scale-[1.02] active:scale-95 disabled:cursor-wait flex items-center gap-2"
               >
                 <span data-i18n data-es={es['contact.form.submit']} data-en={en['contact.form.submit']}>{es['contact.form.submit']}</span>
-                <span class="material-symbols-outlined text-[20px]">send</span>
+                <span class="material-symbols-outlined text-[20px]" aria-hidden="true">send</span>
               </button>
             </div>
 
@@ -284,53 +294,53 @@ const en = ui.en;
         </div>
 
         <!-- Terminal -->
-        <div class="rounded-xl ghost-border bg-surface-container-lowest overflow-hidden shadow-[0_20px_40px_rgba(0,0,0,0.4)]">
+        <div class="rounded-xl ghost-border bg-surface-container-lowest overflow-hidden shadow-elevated">
           <!-- Chrome bar -->
           <div class="flex items-center gap-2 px-4 py-3 bg-surface-container border-b border-outline-variant/20">
-            <span class="w-3 h-3 rounded-full bg-[#ff5f57]"></span>
-            <span class="w-3 h-3 rounded-full bg-[#febc2e]"></span>
-            <span class="w-3 h-3 rounded-full bg-[#28c840]"></span>
-            <span class="ml-auto text-[11px] text-on-surface-variant/40 font-mono">fabrizio.js</span>
+            <span class="w-3 h-3 rounded-full bg-window-close"></span>
+            <span class="w-3 h-3 rounded-full bg-window-minimize"></span>
+            <span class="w-3 h-3 rounded-full bg-window-maximize"></span>
+            <span class="ml-auto text-[11px] text-on-surface-variant font-mono">fabrizio.js</span>
           </div>
           <!-- Terminal body -->
-          <div class="p-6 font-mono text-sm leading-7 select-none">
+          <div class="p-6 font-mono text-sm leading-7 select-none overflow-x-auto" aria-hidden="true">
             <p>
-              <span class="text-on-surface/30">const</span>
+              <span class="text-on-surface/55">const</span>
               <span class="text-secondary"> dev</span>
-              <span class="text-on-surface/30"> = </span>
+              <span class="text-on-surface/55"> = </span>
               <span class="text-on-surface/50">{`{`}</span>
             </p>
             <p class="pl-6">
               <span class="text-primary/70">name</span>
-              <span class="text-on-surface/30">: </span>
-              <span class="text-[#98c379]">"Fabrizio Fournier"</span><span class="text-on-surface/30">,</span>
+              <span class="text-on-surface/55">: </span>
+              <span class="text-syntax-string">"Fabrizio Fournier"</span><span class="text-on-surface/55">,</span>
             </p>
             <p class="pl-6">
               <span class="text-primary/70">status</span>
-              <span class="text-on-surface/30">: </span>
-              <span class="text-[#98c379]" id="term-status">"disponible"</span><span class="text-on-surface/30">,</span>
+              <span class="text-on-surface/55">: </span>
+              <span class="text-syntax-string" id="term-status">"disponible"</span><span class="text-on-surface/55">,</span>
             </p>
             <p class="pl-6">
               <span class="text-primary/70">location</span>
-              <span class="text-on-surface/30">: </span>
-              <span class="text-[#98c379]">"Lima, Perú 🇵🇪"</span><span class="text-on-surface/30">,</span>
+              <span class="text-on-surface/55">: </span>
+              <span class="text-syntax-string">"Lima, Perú 🇵🇪"</span><span class="text-on-surface/55">,</span>
             </p>
             <p class="pl-6">
               <span class="text-primary/70">response</span>
-              <span class="text-on-surface/30">: </span>
-              <span class="text-[#e5c07b]" id="term-response">"&lt; 24h"</span><span class="text-on-surface/30">,</span>
+              <span class="text-on-surface/55">: </span>
+              <span class="text-syntax-number" id="term-response">"&lt; 24h"</span><span class="text-on-surface/55">,</span>
             </p>
             <p class="pl-6">
               <span class="text-primary/70">open_to</span>
-              <span class="text-on-surface/30">: </span>
-              <span class="text-[#e5c07b]" id="term-open">"freelance &amp; full-time"</span>
+              <span class="text-on-surface/55">: </span>
+              <span class="text-syntax-number" id="term-open">"freelance &amp; full-time"</span>
             </p>
             <p>
               <span class="text-on-surface/50">{`}`}</span>
             </p>
             <p class="mt-2">
-              <span class="text-on-surface/30">// </span>
-              <span class="text-on-surface/40 italic" id="term-comment">listo para tu próximo proyecto</span>
+              <span class="text-on-surface/55">// </span>
+              <span class="text-on-surface-variant italic" id="term-comment">listo para tu próximo proyecto</span>
               <span class="inline-block w-2 h-4 bg-primary ml-1 align-middle animate-[blink_1s_step-end_infinite]"></span>
             </p>
           </div>
@@ -351,6 +361,10 @@ const en = ui.en;
           var val = el.getAttribute('data-placeholder-' + lang);
           if (val) el.placeholder = val;
         });
+        document.querySelectorAll('optgroup[data-label-es]').forEach(function (el) {
+          var val = el.getAttribute('data-label-' + lang);
+          if (val) el.label = val;
+        });
       }
 
       // Formspree AJAX submit
@@ -360,6 +374,8 @@ const en = ui.en;
         var errorEl = document.getElementById('form-error');
         var retryBtn = document.getElementById('error-retry');
         if (!form || !successEl || !errorEl) return;
+        if (form.dataset.bound === '1') return;
+        form.dataset.bound = '1';
 
         function showError(isConnection) {
           var lang = localStorage.getItem('fabrizio-lang') || 'es';
@@ -371,6 +387,7 @@ const en = ui.en;
           form.classList.add('hidden');
           errorEl.classList.remove('hidden');
           errorEl.classList.add('flex');
+          errorEl.focus();
         }
 
         if (retryBtn) {
@@ -378,6 +395,8 @@ const en = ui.en;
             errorEl.classList.add('hidden');
             errorEl.classList.remove('flex');
             form.classList.remove('hidden');
+            var firstField = form.querySelector('input, textarea');
+            if (firstField) firstField.focus();
           });
         }
 
@@ -403,6 +422,7 @@ const en = ui.en;
               form.classList.add('hidden');
               successEl.classList.remove('hidden');
               successEl.classList.add('flex');
+              successEl.focus();
             } else {
               btn.disabled = false;
               btn.classList.remove('opacity-70');
@@ -421,6 +441,7 @@ const en = ui.en;
       function init() {
         var lang = localStorage.getItem('fabrizio-lang') || 'es';
         syncPlaceholders(lang);
+        syncTerminal(lang);
         initForm();
       }
 
@@ -433,22 +454,27 @@ const en = ui.en;
 
       // Sync terminal text with language
       function syncTerminal(lang) {
-        var status  = document.getElementById('term-status');
-        var resp    = document.getElementById('term-response');
-        var open    = document.getElementById('term-open');
-        var comment = document.getElementById('term-comment');
-        if (!status) return;
-        if (lang === 'en') {
-          status.textContent  = '"available"';
-          resp.textContent    = '"< 24h"';
-          open.textContent    = '"freelance & full-time"';
-          comment.textContent = 'ready for your next project';
-        } else {
-          status.textContent  = '"disponible"';
-          resp.textContent    = '"< 24h"';
-          open.textContent    = '"freelance & full-time"';
-          comment.textContent = 'listo para tu próximo proyecto';
-        }
+        var terminalTexts = {
+          es: {
+            'term-status': '"disponible"',
+            'term-response': '"< 24h"',
+            'term-open': '"freelance & full-time"',
+            'term-comment': 'listo para tu próximo proyecto',
+          },
+          en: {
+            'term-status': '"available"',
+            'term-response': '"< 24h"',
+            'term-open': '"freelance & full-time"',
+            'term-comment': 'ready for your next project',
+          },
+        };
+        var locale = terminalTexts[lang] ? lang : 'es';
+
+        Object.keys(terminalTexts[locale]).forEach(function (id) {
+          var el = document.getElementById(id);
+          if (!el) return;
+          el.textContent = terminalTexts[locale][id];
+        });
       }
     })();
   </script>

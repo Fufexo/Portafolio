@@ -1,0 +1,17 @@
+---
+/**
+ * Texto bilingüe: renderiza el español y deja el inglés en data-en para i18n.js.
+ * Centraliza el contrato data-i18n / data-es / data-en en un solo lugar.
+ *
+ *   <LocalizedText as="h2" text={{ es: 'Hola', en: 'Hello' }} class="text-2xl" />
+ */
+import type { HTMLTag, Polymorphic } from 'astro/types';
+
+type Props<Tag extends HTMLTag> = Polymorphic<{ as: Tag }> & {
+  text: { es: string; en: string };
+};
+
+const { as: Tag = 'span', text, ...attrs } = Astro.props;
+---
+
+<Tag {...attrs} data-i18n data-es={text.es} data-en={text.en}>{text.es}</Tag>
