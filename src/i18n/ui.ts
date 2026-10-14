@@ -35,7 +35,7 @@ export const ui = {
     'home.filter.empty': 'Aún no hay proyectos en esta categoría. Pronto habrá novedades.',
     'home.headline.lead': 'Construyo',
     'home.subtitle':
-      'Proyectos seleccionados, desde un e-commerce con pagos reales hasta apps con IA, construidos de punta a punta: del diseño al despliegue.',
+      'Proyectos seleccionados, desde un e-commerce con pagos reales hasta una billetera con API propia y apps con IA, construidos de punta a punta: del diseño al despliegue.',
     'home.filter.all': 'Todos',
     'home.filter.ecommerce': 'E-Commerce',
     'home.filter.saas': 'SaaS',
@@ -68,7 +68,7 @@ export const ui = {
     'about.label': 'Desarrollador Full Stack · Angular',
     'about.headline.lead': 'Diseño y desarrollo',
     'about.bio':
-      'Soy Fabrizio Fournier, desarrollador full stack especializado en Angular. En Sip, una fintech, desarrollo aplicaciones empresariales y participé en su modernización de Angular 11 a 20. En mis proyectos propios uso Next.js, y en el backend trabajo con Java y NestJS.',
+      'Soy Fabrizio Fournier, desarrollador full stack especializado en Angular. En Sip, una fintech, desarrollo aplicaciones empresariales y participé en su modernización de Angular 11 a 20. En mis proyectos propios combino Angular con APIs en Spring Boot y también construyo con Next.js; en el backend trabajo con Java y NestJS.',
 
     // Skills page
     'skills.label': 'Stack técnico',
@@ -172,7 +172,7 @@ export const ui = {
     'home.filter.empty': 'No projects in this category yet. More coming soon.',
     'home.headline.lead': 'I build',
     'home.subtitle':
-      'Selected projects, from an e-commerce store with real payments to AI-powered apps, built end to end: from design to deployment.',
+      'Selected projects, from an e-commerce store with real payments to a wallet with its own API and AI-powered apps, built end to end: from design to deployment.',
     'home.filter.all': 'All',
     'home.filter.ecommerce': 'E-Commerce',
     'home.filter.saas': 'SaaS',
@@ -205,7 +205,7 @@ export const ui = {
     'about.label': 'Full Stack Developer · Angular',
     'about.headline.lead': 'I design and build',
     'about.bio':
-      "I'm Fabrizio Fournier, a full stack developer specialized in Angular. At Sip, a fintech company, I build enterprise applications and took part in their modernization from Angular 11 to 20. In my own projects I use Next.js, and on the backend I work with Java and NestJS.",
+      "I'm Fabrizio Fournier, a full stack developer specialized in Angular. At Sip, a fintech company, I build enterprise applications and took part in their modernization from Angular 11 to 20. In my own projects I pair Angular with Spring Boot APIs and also build with Next.js; on the backend I work with Java and NestJS.",
 
     // Skills page
     'skills.label': 'Technical Stack',
