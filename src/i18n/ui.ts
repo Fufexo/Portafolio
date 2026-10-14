@@ -21,9 +21,9 @@ export const ui = {
     // Metadatos por página (título de pestaña y descripción para buscadores)
     'meta.default.description': 'Portafolio de Fabrizio Fournier, desarrollador full stack especializado en Angular.',
     'meta.home.title': 'Fabrizio Fournier — Desarrollador Full Stack',
-    'meta.home.description': 'Proyectos de Fabrizio Fournier, desarrollador full stack: e-commerce con pagos reales, apps con IA y productos web de punta a punta.',
+    'meta.home.description': 'Proyectos de Fabrizio Fournier, desarrollador full stack: e-commerce con pagos reales, apps con IA y productos fintech.',
     'meta.about.title': 'Sobre mí | Fabrizio Fournier',
-    'meta.about.description': 'Fabrizio Fournier, desarrollador full stack especializado en Angular, con experiencia construyendo productos en el sector financiero.',
+    'meta.about.description': 'Fabrizio Fournier, desarrollador full stack especializado en Angular, con experiencia en productos del sector financiero.',
     'meta.contact.title': 'Contacto | Fabrizio Fournier',
     'meta.contact.description': 'Contacta a Fabrizio Fournier para tu próximo proyecto web: páginas, tiendas online, aplicaciones a medida y más.',
     'stack.hint': 'Selecciona una tecnología para ver cómo la usé en este proyecto.',
@@ -158,9 +158,9 @@ export const ui = {
     // Page metadata (tab title and search description)
     'meta.default.description': 'Portfolio of Fabrizio Fournier, a full stack developer specialized in Angular.',
     'meta.home.title': 'Fabrizio Fournier — Full Stack Developer',
-    'meta.home.description': 'Projects by Fabrizio Fournier, full stack developer: e-commerce with real payments, AI-powered apps and end-to-end web products.',
+    'meta.home.description': 'Projects by Fabrizio Fournier, full stack developer: e-commerce with real payments, AI-powered apps and fintech products.',
     'meta.about.title': 'About | Fabrizio Fournier',
-    'meta.about.description': 'Fabrizio Fournier, a full stack developer specialized in Angular, with experience building products in the financial sector.',
+    'meta.about.description': 'Fabrizio Fournier, a full stack developer specialized in Angular, with experience building fintech products.',
     'meta.contact.title': 'Contact | Fabrizio Fournier',
     'meta.contact.description': 'Get in touch with Fabrizio Fournier for your next web project: websites, online stores, custom applications and more.',
     'stack.hint': 'Select a technology to see how I used it in this project.',

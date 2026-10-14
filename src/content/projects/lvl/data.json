@@ -28,8 +28,8 @@
     }
   ],
   "seoDescription": {
-    "es": "Caso de estudio de LVL: billetera digital para gamers construida con Angular 22, Spring Boot 4, Java 21 y PostgreSQL, con libro contable de partida doble y transferencias idempotentes.",
-    "en": "LVL case study: a digital wallet for gamers built with Angular 22, Spring Boot 4, Java 21 and PostgreSQL, with a double-entry ledger and idempotent transfers."
+    "es": "Billetera digital para gamers en Angular y Spring Boot: libro contable de partida doble y transferencias idempotentes.",
+    "en": "A digital wallet for gamers built with Angular and Spring Boot: double-entry ledger and idempotent transfers."
   },
   "card": {
     "description": {
