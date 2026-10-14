@@ -39,6 +39,8 @@ const projects = defineCollection({
       category: z.enum(['ecommerce', 'saas', 'ai', 'fintech']),
       accent: z.enum(['primary', 'secondary']).default('primary'),
       liveUrl: z.url(),
+      /** Enlaces extra junto a "Ver en vivo" (repositorio, documentación de la API...). Opcional. */
+      links: z.array(z.object({ label: localized, url: z.url() })).default([]),
       seoDescription: localized,
 
       card: z.object({

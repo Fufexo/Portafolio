@@ -5,9 +5,10 @@ import { t, getLang, localizePath } from '../../i18n/ui';
 interface Props {
   liveUrl: string;
   accent: 'primary' | 'secondary';
+  links?: { label: { es: string; en: string }; url: string }[];
 }
 
-const { liveUrl, accent } = Astro.props;
+const { liveUrl, accent, links = [] } = Astro.props;
 const glowClass = accent === 'secondary' ? 'bg-secondary/8' : 'bg-primary/8';
 const homeHref = localizePath('/', getLang(Astro.currentLocale));
 ---
@@ -38,6 +39,24 @@ const homeHref = localizePath('/', getLang(Astro.currentLocale));
         <LocalizedText text={t('project.cta.back')} />
       </a>
     </div>
+
+    {links.length > 0 && (
+      <ul class="mt-8 flex flex-wrap justify-center gap-x-6 gap-y-1">
+        {links.map(({ label, url }) => (
+          <li>
+            <a
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-1 min-h-11 text-sm font-bold text-on-surface-variant hover:text-primary transition-colors"
+            >
+              <LocalizedText text={label} />
+              <span class="material-symbols-outlined text-[18px]" aria-hidden="true">arrow_outward</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
   </div>
 </section>
 

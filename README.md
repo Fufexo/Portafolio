@@ -73,7 +73,8 @@ With `SITE_URL` set, the build adds canonical URLs, absolute share images (`og:i
 
 1. Create `src/content/projects/<slug>/data.json` (copy an existing one as a template).
 2. Put its screenshots in the same folder and reference them with relative paths (`"./hero.png"`).
-3. Run `npm run check`: the schema in `src/content.config.ts` reports any missing or invalid field.
+3. Optional: add `links` (label + URL) to show extra buttons next to "View live", such as the source code or API docs.
+4. Run `npm run check`: the schema in `src/content.config.ts` reports any missing or invalid field.
 
 The project automatically appears on the home page (sorted by `order`) and gets its page at `/proyectos/<slug>/`. If you use a new Material icon, add its name to the list in `src/layouts/Layout.astro`.
 

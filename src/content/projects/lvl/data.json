@@ -1,0 +1,414 @@
+{
+  "title": "LVL",
+  "order": 3,
+  "category": "fintech",
+  "accent": "primary",
+  "liveUrl": "https://lvl-wallet.vercel.app/",
+  "links": [
+    {
+      "label": {
+        "es": "API en Swagger",
+        "en": "API on Swagger"
+      },
+      "url": "https://lvl-api.onrender.com/swagger-ui.html"
+    },
+    {
+      "label": {
+        "es": "Código del front",
+        "en": "Frontend code"
+      },
+      "url": "https://github.com/Fufexo/lvl-wallet"
+    },
+    {
+      "label": {
+        "es": "Código de la API",
+        "en": "API code"
+      },
+      "url": "https://github.com/Fufexo/lvl-api"
+    }
+  ],
+  "seoDescription": {
+    "es": "Caso de estudio de LVL: billetera digital para gamers construida con Angular 22, Spring Boot 4, Java 21 y PostgreSQL, con libro contable de partida doble y transferencias idempotentes.",
+    "en": "LVL case study: a digital wallet for gamers built with Angular 22, Spring Boot 4, Java 21 and PostgreSQL, with a double-entry ledger and idempotent transfers."
+  },
+  "card": {
+    "description": {
+      "es": "Billetera digital para gamers con cuentas en soles y dólares, transferencias con tipo de cambio en vivo y una API propia en Spring Boot.",
+      "en": "Digital wallet for gamers with PEN and USD accounts, live-rate transfers and its own Spring Boot API."
+    },
+    "tags": [
+      "Angular",
+      "Spring Boot",
+      "Java",
+      "PostgreSQL",
+      "Tailwind"
+    ],
+    "image": "./hero.png",
+    "imageAlt": {
+      "es": "LVL — Billetera digital para gamers",
+      "en": "LVL — Digital wallet for gamers"
+    },
+    "imagePosition": "object-left-top",
+    "size": "small"
+  },
+  "hero": {
+    "badge": {
+      "es": "FinTech",
+      "en": "FinTech"
+    },
+    "subtitle": {
+      "es": "Billetera digital para gamers: cuentas en soles y dólares, transferencias entre jugadores con tipo de cambio en vivo y un libro contable de partida doble detrás. Se prueba como demo o con una cuenta real.",
+      "en": "Digital wallet for gamers: PEN and USD accounts, player-to-player transfers at the live exchange rate and a double-entry ledger behind it. Try it as a demo or with a real account."
+    },
+    "image": "./resumen.png",
+    "imageAlt": {
+      "es": "LVL — Panel de la billetera",
+      "en": "LVL — Wallet dashboard"
+    },
+    "role": {
+      "es": "Full Stack Developer",
+      "en": "Full Stack Developer"
+    },
+    "year": "2026",
+    "platform": {
+      "es": "Web + API REST",
+      "en": "Web + REST API"
+    }
+  },
+  "challenge": {
+    "body": {
+      "es": "Construir una billetera que se comporte como un banco de verdad: saldos en dos monedas que siempre cuadran, transferencias que no se duplican aunque falle la red y sesiones seguras en una SPA. Todo desplegado sin costo y con un modo demo para probarla sin registrarse.",
+      "en": "Build a wallet that behaves like a real bank: balances in two currencies that always add up, transfers that never run twice even when the network fails, and secure sessions in a SPA. All deployed at no cost, with a demo mode to try it without signing up."
+    },
+    "items": [
+      {
+        "icon": "account_balance",
+        "title": {
+          "es": "Saldos que siempre cuadran",
+          "en": "Balances that always add up"
+        },
+        "description": {
+          "es": "Dos personas pueden transferirse dinero al mismo tiempo. El saldo nunca debe quedar negativo ni el dinero aparecer o desaparecer.",
+          "en": "Two people can send each other money at the same time. A balance must never go negative, and money must never appear or vanish."
+        },
+        "solutionIcon": "balance",
+        "solution": {
+          "es": "Libro contable de partida doble: cada transferencia son asientos que suman cero, en céntimos enteros. Las cuentas se bloquean siempre en el mismo orden (sin deadlocks) y Postgres rechaza cualquier saldo negativo con un CHECK.",
+          "en": "Double-entry ledger: every transfer is a set of entries that sum to zero, stored as integer cents. Accounts are always locked in the same order (no deadlocks) and Postgres rejects any negative balance with a CHECK."
+        },
+        "chips": [
+          {
+            "es": "Partida doble",
+            "en": "Double entry"
+          },
+          {
+            "es": "Bloqueo ordenado",
+            "en": "Ordered locking"
+          },
+          "CHECK ≥ 0"
+        ]
+      },
+      {
+        "icon": "replay",
+        "title": {
+          "es": "Sin cobros duplicados",
+          "en": "No double charges"
+        },
+        "description": {
+          "es": "Si la conexión se corta después de enviar una transferencia, reintentar no puede mover el dinero dos veces.",
+          "en": "If the connection drops after a transfer is sent, retrying must never move the money twice."
+        },
+        "solutionIcon": "verified_user",
+        "solution": {
+          "es": "El front genera un Idempotency-Key por intento. La API lo guarda con un índice único y el hash del pedido: un reintento devuelve el mismo comprobante, y la misma clave con otros datos se rechaza.",
+          "en": "The frontend creates an Idempotency-Key per attempt. The API stores it with a unique index and the request hash: a retry returns the same receipt, and the same key with different data is rejected."
+        },
+        "chips": [
+          "Idempotency-Key",
+          {
+            "es": "Índice único",
+            "en": "Unique index"
+          },
+          {
+            "es": "Hash del pedido",
+            "en": "Request hash"
+          }
+        ]
+      },
+      {
+        "icon": "currency_exchange",
+        "title": {
+          "es": "Tipo de cambio honesto",
+          "en": "An honest exchange rate"
+        },
+        "description": {
+          "es": "Cambiar soles a dólares con una tasa inventada o desactualizada sería cobrar de más sin que el usuario lo sepa.",
+          "en": "Exchanging soles for dollars at a made-up or stale rate would mean overcharging without the user knowing."
+        },
+        "solutionIcon": "check_circle",
+        "solution": {
+          "es": "La tasa viene de una API pública, con caché de una hora. Si el proveedor falla, la API se niega a cambiar moneda (503) en lugar de usar una tasa de respaldo. El cambio pasa por cuentas puente y se redondea con HALF_EVEN.",
+          "en": "The rate comes from a public API, cached for an hour. If the provider fails, the API refuses to exchange (503) instead of using a fallback rate. The exchange goes through clearing accounts and rounds with HALF_EVEN."
+        },
+        "chips": [
+          {
+            "es": "Caché 1 h",
+            "en": "1 h cache"
+          },
+          "503 FX_UNAVAILABLE",
+          "HALF_EVEN"
+        ]
+      },
+      {
+        "icon": "lock",
+        "title": {
+          "es": "Sesiones seguras en una SPA",
+          "en": "Secure sessions in a SPA"
+        },
+        "description": {
+          "es": "Guardar tokens en localStorage los expone a XSS, y con varias pestañas abiertas cada una intenta renovar la sesión a la vez.",
+          "en": "Storing tokens in localStorage exposes them to XSS, and with several tabs open each one tries to renew the session at once."
+        },
+        "solutionIcon": "key",
+        "solution": {
+          "es": "Access token de 15 minutos solo en memoria y refresh token en una cookie HttpOnly que rota en cada uso; si se reutiliza uno viejo, se revoca toda la familia. Las pestañas renuevan de a una con Web Locks.",
+          "en": "A 15-minute access token kept only in memory and a refresh token in an HttpOnly cookie that rotates on every use; reusing an old one revokes the whole family. Tabs renew one at a time with Web Locks."
+        },
+        "chips": [
+          "JWT",
+          "HttpOnly cookie",
+          "Web Locks"
+        ]
+      }
+    ]
+  },
+  "stack": [
+    {
+      "name": "Angular 22",
+      "tagline": "Signals · Zoneless · SSR",
+      "icon": {
+        "kind": "badge",
+        "value": "NG"
+      },
+      "description": {
+        "es": "Componentes standalone, signals y zoneless. La landing se prerenderiza y el panel carga cada sección bajo demanda.",
+        "en": "Standalone components, signals and zoneless change detection. The landing is prerendered and the dashboard lazy-loads each section."
+      },
+      "note": {
+        "es": "Un mismo store sirve los dos modos: demo (datos en el navegador) y cuenta real (API). Interceptor funcional que renueva el token una sola vez aunque fallen varias llamadas, Signal Forms con errores del servidor por campo y guards que ocultan lo que aún no está en la API.",
+        "en": "One store serves both modes: demo (data in the browser) and real account (API). A functional interceptor renews the token once even when several calls fail, Signal Forms show server errors per field, and guards hide what is not on the API yet."
+      },
+      "chips": [
+        "Signals",
+        "Signal Forms",
+        "Interceptors",
+        "Lazy loading"
+      ]
+    },
+    {
+      "name": "Spring Boot 4",
+      "tagline": "Java 21 · Modulith · Security",
+      "icon": {
+        "kind": "material",
+        "value": "eco",
+        "tone": "secondary"
+      },
+      "description": {
+        "es": "Monolito modular con Spring Modulith: auth, cuentas y tipo de cambio son módulos separados, y un test verifica que no se crucen.",
+        "en": "Modular monolith with Spring Modulith: auth, accounts and exchange rates are separate modules, and a test checks they stay apart."
+      },
+      "note": {
+        "es": "JWT firmados con Spring Security, contraseñas con BCrypt, límite de intentos de ingreso, errores en formato RFC 9457 y documentación OpenAPI con los códigos reales de cada endpoint. Corre sobre hilos virtuales.",
+        "en": "JWTs signed with Spring Security, BCrypt passwords, login attempt limits, RFC 9457 error responses and OpenAPI docs with each endpoint's real status codes. Runs on virtual threads."
+      },
+      "chips": [
+        "Spring Modulith",
+        "Spring Security",
+        "RFC 9457",
+        "OpenAPI"
+      ]
+    },
+    {
+      "name": "PostgreSQL",
+      "tagline": "Neon · Flyway · Constraints",
+      "icon": {
+        "kind": "material",
+        "value": "database",
+        "tone": "primary"
+      },
+      "description": {
+        "es": "Postgres 18 en Neon. El esquema se versiona con Flyway y las reglas de dinero viven también en la base, no solo en el código.",
+        "en": "Postgres 18 on Neon. The schema is versioned with Flyway, and money rules live in the database too, not only in code."
+      },
+      "note": {
+        "es": "Montos en céntimos enteros (bigint), CHECK contra saldos negativos, índice único para idempotencia, índices para paginar movimientos por cursor y bloqueos pesimistas en las transferencias.",
+        "en": "Amounts as integer cents (bigint), a CHECK against negative balances, a unique index for idempotency, indexes for cursor-paginated movements and pessimistic locks on transfers."
+      },
+      "chips": [
+        "Flyway",
+        {
+          "es": "Paginación por cursor",
+          "en": "Cursor pagination"
+        },
+        {
+          "es": "Bloqueo pesimista",
+          "en": "Pessimistic locking"
+        }
+      ]
+    },
+    {
+      "name": "Tailwind + GSAP",
+      "tagline": "v4 · ScrollTrigger · Lenis",
+      "icon": {
+        "kind": "text",
+        "value": "🌊"
+      },
+      "description": {
+        "es": "Tailwind v4 con tokens propios y animaciones de scroll con GSAP y Lenis en la landing.",
+        "en": "Tailwind v4 with custom tokens, plus GSAP and Lenis scroll animations on the landing."
+      },
+      "note": {
+        "es": "Las animaciones solo corren en el navegador, usan transform y opacity, y se desactivan si el sistema pide menos movimiento. Diseño accesible: pasa axe sin violaciones en todas las páginas.",
+        "en": "Animations run only in the browser, use transform and opacity, and turn off when the system asks for reduced motion. Accessible design: axe reports zero violations on every page."
+      },
+      "chips": [
+        "ScrollTrigger",
+        "Reduced motion",
+        "WCAG AA"
+      ]
+    },
+    {
+      "name": "Testing",
+      "tagline": "Vitest · Playwright · Testcontainers",
+      "icon": {
+        "kind": "material",
+        "value": "science",
+        "tone": "tertiary"
+      },
+      "description": {
+        "es": "114 tests en total: 60 unitarios y 14 e2e en el front, y 40 en la API contra un Postgres real.",
+        "en": "114 tests in total: 60 unit and 14 e2e on the frontend, and 40 on the API against a real Postgres."
+      },
+      "note": {
+        "es": "La API se prueba con Testcontainers, incluida una prueba de transferencias concurrentes que verifica que el libro siga cuadrando. Los e2e corren con Playwright y axe. Todo se ejecuta en GitHub Actions en cada push.",
+        "en": "The API is tested with Testcontainers, including a concurrent-transfer test that checks the ledger still adds up. The e2e tests run with Playwright and axe. Everything runs on GitHub Actions on every push."
+      },
+      "chips": [
+        "Testcontainers",
+        "Playwright",
+        "axe-core",
+        "GitHub Actions"
+      ]
+    },
+    {
+      "name": "Vercel + Render",
+      "tagline": "Deploy · Docker · Neon",
+      "icon": {
+        "kind": "text",
+        "value": "▼"
+      },
+      "description": {
+        "es": "Front en Vercel, API en un contenedor Docker en Render y base de datos en Neon. Todo en planes gratuitos.",
+        "en": "Frontend on Vercel, API in a Docker container on Render and the database on Neon. All on free plans."
+      },
+      "note": {
+        "es": "Vercel reenvía /api a Render, así que front y API comparten origen y no hace falta CORS. Render despliega solo si pasa el CI. Como el plan gratuito se duerme, el front avisa mientras el servidor despierta.",
+        "en": "Vercel forwards /api to Render, so frontend and API share an origin and no CORS is needed. Render deploys only when CI passes. Since the free plan sleeps, the frontend tells the user while the server wakes up."
+      },
+      "chips": [
+        "Docker",
+        {
+          "es": "Mismo origen",
+          "en": "Same origin"
+        },
+        {
+          "es": "Deploy tras CI",
+          "en": "Deploy after CI"
+        }
+      ],
+      "showLiveLink": true
+    }
+  ],
+  "gallery": [
+    {
+      "image": "./resumen.png",
+      "alt": {
+        "es": "LVL — Resumen del panel",
+        "en": "LVL — Dashboard overview"
+      },
+      "span": "full",
+      "title": {
+        "es": "Panel — Resumen",
+        "en": "Dashboard — Overview"
+      },
+      "description": {
+        "es": "Saldo total en soles con los dólares valorizados al tipo de cambio del día, nivel del jugador y últimos movimientos.",
+        "en": "Total balance in soles with dollars valued at today's rate, player level and latest movements."
+      }
+    },
+    {
+      "image": "./transferir.png",
+      "alt": {
+        "es": "LVL — Transferencia a otro jugador",
+        "en": "LVL — Transfer to another player"
+      },
+      "span": "wide",
+      "title": {
+        "es": "Transferir con cuenta real",
+        "en": "Transfers with a real account"
+      },
+      "description": {
+        "es": "Envía dinero a otro jugador por su gamertag. El saldo y el comprobante vienen de la API.",
+        "en": "Send money to another player by gamertag. The balance and the receipt come from the API."
+      }
+    },
+    {
+      "image": "./movil.png",
+      "alt": {
+        "es": "LVL — Panel en el celular",
+        "en": "LVL — Dashboard on mobile"
+      },
+      "span": "narrow",
+      "title": {
+        "es": "En el celular",
+        "en": "On mobile"
+      },
+      "description": {
+        "es": "El panel completo adaptado a pantallas pequeñas.",
+        "en": "The full dashboard adapted to small screens."
+      }
+    },
+    {
+      "image": "./ingreso.png",
+      "alt": {
+        "es": "LVL — Ingreso con demo o cuenta real",
+        "en": "LVL — Sign in with demo or real account"
+      },
+      "span": "half",
+      "title": {
+        "es": "Dos modos de entrar",
+        "en": "Two ways in"
+      },
+      "description": {
+        "es": "Demo sin registro con datos en el navegador, o una cuenta real guardada en el servidor.",
+        "en": "A no-signup demo with data in the browser, or a real account stored on the server."
+      }
+    },
+    {
+      "image": "./prestamos.png",
+      "alt": {
+        "es": "LVL — Simulador de préstamos",
+        "en": "LVL — Loan simulator"
+      },
+      "span": "half",
+      "title": {
+        "es": "Simulador de préstamos",
+        "en": "Loan simulator"
+      },
+      "description": {
+        "es": "Cuota fija por sistema francés con una tasa que baja según el nivel del jugador.",
+        "en": "Fixed monthly payment (French amortization) with a rate that drops as the player levels up."
+      }
+    }
+  ]
+}
