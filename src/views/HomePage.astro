@@ -35,20 +35,20 @@ const placeholderCount = Math.max(0, 5 - projects.length);
 
     <!-- Header -->
     <section class="mb-8 md:mb-16">
-      <div class="flex flex-col xl:flex-row xl:items-end justify-between gap-6 xl:gap-8">
-        <div class="max-w-2xl">
-          <p class="text-secondary font-semibold text-xs sm:text-sm tracking-[0.2em] uppercase mb-4 md:mb-6">
-            {tr('home.eyebrow')}
-          </p>
-          <RotatingHeadline
-            lead={t('home.headline.lead')}
-            words={headlineWords.home}
-            class="text-4xl sm:text-5xl md:text-6xl xl:text-7xl"
-          />
-          <p class="text-on-surface-variant text-base mt-4 md:mt-6 leading-relaxed">
-            {tr('home.subtitle')}
-          </p>
-        </div>
+      <p class="text-secondary font-semibold text-xs sm:text-sm tracking-[0.2em] uppercase mb-4 md:mb-6">
+        {tr('home.eyebrow')}
+      </p>
+      <!-- El titular va fuera de la fila de filtros: si compartieran ancho, cada filtro
+           nuevo angostaría la columna y la palabra más larga partiría en dos líneas -->
+      <RotatingHeadline
+        lead={t('home.headline.lead')}
+        words={headlineWords.home}
+        class="text-4xl sm:text-5xl md:text-6xl xl:text-7xl"
+      />
+      <div class="flex flex-col xl:flex-row xl:items-end justify-between gap-6 xl:gap-8 mt-4 md:mt-6">
+        <p class="max-w-2xl text-on-surface-variant text-base leading-relaxed">
+          {tr('home.subtitle')}
+        </p>
 
         <!-- Filtros: pills con scroll horizontal en móvil, texto en desktop -->
         <div
