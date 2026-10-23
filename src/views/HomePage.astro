@@ -116,34 +116,67 @@ const placeholderCount = Math.max(0, 5 - projects.length);
 
 <script>
   import { onPageLoad } from '../scripts/lifecycle';
+
+  // Duración de la salida (.filter-out en global.css)
+  const EXIT_MS = 180;
+
+  /** Reinicia la animación de entrada; `index` escalona las tarjetas de una misma cuadrícula. */
+  function animateIn(el: HTMLElement, index: number) {
+    el.classList.remove('filter-in');
+    void el.offsetWidth; // fuerza un reflow para que la animación vuelva a empezar
+    el.style.setProperty('--i', String(index));
+    el.classList.add('filter-in');
+  }
+
+  function applyFilter(value: string | undefined) {
+    const items = document.querySelectorAll<HTMLElement>('[data-project-card], [data-coming-soon]');
+    const indexByGrid = new Map<Element | null, number>();
+    let visible = 0;
+
+    items.forEach((el) => {
+      el.classList.remove('filter-out');
+      const show =
+        'comingSoon' in el.dataset ? value === 'all' : value === 'all' || el.dataset.category === value;
+      el.hidden = !show;
+      if (!show) return;
+
+      const index = indexByGrid.get(el.parentElement) ?? 0;
+      indexByGrid.set(el.parentElement, index + 1);
+      animateIn(el, index);
+      // Cuenta solo la variante (mobile/desktop) que está en pantalla
+      if ('projectCard' in el.dataset && el.offsetParent !== null) visible++;
+    });
+
+    const empty = document.getElementById('filter-empty');
+    if (empty) {
+      empty.hidden = visible > 0;
+      if (!empty.hidden) animateIn(empty, 0);
+    }
+  }
+
   function initFilters() {
     const group = document.getElementById('project-filters');
     if (!group || group.dataset.bound) return;
     group.dataset.bound = 'true';
 
+    let pending: number | undefined;
+
     group.addEventListener('click', (e) => {
       const btn = (e.target as Element).closest<HTMLElement>('[data-filter]');
-      if (!btn) return;
+      if (!btn || btn.getAttribute('aria-pressed') === 'true') return;
       const value = btn.dataset.filter;
 
       group.querySelectorAll<HTMLElement>('[data-filter]').forEach((b) => {
         b.setAttribute('aria-pressed', String(b === btn));
       });
 
-      let visible = 0;
-      document.querySelectorAll<HTMLElement>('[data-project-card]').forEach((card) => {
-        const show = value === 'all' || card.dataset.category === value;
-        card.hidden = !show;
-        // Cuenta solo la variante (mobile/desktop) que está en pantalla
-        if (show && card.offsetParent !== null) visible++;
-      });
-
-      document.querySelectorAll<HTMLElement>('[data-coming-soon]').forEach((el) => {
-        el.hidden = value !== 'all';
-      });
-
-      const empty = document.getElementById('filter-empty');
-      if (empty) empty.hidden = visible > 0;
+      // Primero se desvanece lo que está a la vista y luego entra lo nuevo
+      window.clearTimeout(pending);
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      document
+        .querySelectorAll<HTMLElement>('[data-project-card]:not([hidden]), [data-coming-soon]:not([hidden]), #filter-empty:not([hidden])')
+        .forEach((el) => el.classList.add('filter-out'));
+      pending = window.setTimeout(() => applyFilter(value), reduceMotion ? 0 : EXIT_MS);
     });
   }
 
