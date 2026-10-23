@@ -41,6 +41,7 @@ export const ui = {
     'home.filter.saas': 'SaaS',
     'home.filter.ai': 'IA & ML',
     'home.filter.fintech': 'FinTech',
+    'home.filter.web': 'Sitios web',
 
     // Home
     'home.project.view': 'Ver proyecto',
@@ -178,6 +179,7 @@ export const ui = {
     'home.filter.saas': 'SaaS',
     'home.filter.ai': 'AI & ML',
     'home.filter.fintech': 'FinTech',
+    'home.filter.web': 'Websites',
 
     // Home
     'home.project.view': 'View Project',

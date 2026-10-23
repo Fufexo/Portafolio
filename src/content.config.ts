@@ -36,7 +36,7 @@ const projects = defineCollection({
     z.object({
       title: z.string(),
       order: z.number().int(),
-      category: z.enum(['ecommerce', 'saas', 'ai', 'fintech']),
+      category: z.enum(['ecommerce', 'saas', 'ai', 'fintech', 'web']),
       accent: z.enum(['primary', 'secondary']).default('primary'),
       liveUrl: z.url(),
       /** Enlaces extra junto a "Ver en vivo" (repositorio, documentación de la API...). Opcional. */

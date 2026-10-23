@@ -1,0 +1,371 @@
+{
+  "title": "Millionhair",
+  "order": 4,
+  "category": "web",
+  "accent": "secondary",
+  "liveUrl": "https://millionhair.vercel.app/",
+  "links": [
+    {
+      "label": {
+        "es": "Código fuente",
+        "en": "Source code"
+      },
+      "url": "https://github.com/Fufexo/millionhair"
+    }
+  ],
+  "seoDescription": {
+    "es": "Caso de estudio de Millionhair: sitio de una barbería en Miraflores hecho con Astro y SCSS, con reservas en Fresha y SEO local.",
+    "en": "Millionhair case study: a Miraflores barbershop website built with Astro and SCSS, with Fresha bookings and local SEO."
+  },
+  "card": {
+    "description": {
+      "es": "Sitio de una barbería en Miraflores: servicios, barberos y lookbook, con reserva en un clic y horario en vivo.",
+      "en": "Website for a barbershop in Miraflores: services, barbers and lookbook, with one-click booking and live opening hours."
+    },
+    "tags": [
+      "Astro",
+      "SCSS",
+      "TypeScript",
+      "Vitest"
+    ],
+    "image": "./hero.png",
+    "imageAlt": {
+      "es": "Millionhair — Sitio web de barbería",
+      "en": "Millionhair — Barbershop website"
+    },
+    "imagePosition": "object-left-top",
+    "size": "small"
+  },
+  "hero": {
+    "badge": {
+      "es": "Sitio web",
+      "en": "Website"
+    },
+    "subtitle": {
+      "es": "Sitio de una sola página para una barbería real en Miraflores, Lima. Muestra servicios, equipo, lookbook, reseñas y ubicación, y lleva cada reserva a Fresha con el servicio o el barbero ya elegido.",
+      "en": "Single-page website for a real barbershop in Miraflores, Lima. It shows services, team, lookbook, reviews and location, and sends every booking to Fresha with the service or barber already selected."
+    },
+    "image": "./hero.png",
+    "imageAlt": {
+      "es": "Millionhair — Portada con video en blanco y negro",
+      "en": "Millionhair — Hero with black-and-white video"
+    },
+    "role": {
+      "es": "Frontend Developer",
+      "en": "Frontend Developer"
+    },
+    "year": "2026",
+    "platform": {
+      "es": "Web",
+      "en": "Web"
+    }
+  },
+  "challenge": {
+    "body": {
+      "es": "La barbería ya gestionaba sus citas en Fresha y tenía 219 reseñas con nota 5,0, pero no tenía un sitio propio. Hacía falta una web rápida, que transmitiera la estética del local y convirtiera visitas en reservas sin montar un backend ni duplicar la agenda.",
+      "en": "The barbershop already managed appointments on Fresha and had 219 reviews rated 5.0, but no website of its own. It needed a fast site that conveyed the shop's look and turned visits into bookings, without building a backend or duplicating the calendar."
+    },
+    "items": [
+      {
+        "icon": "event_available",
+        "title": {
+          "es": "Reservar sin fricción",
+          "en": "Frictionless booking"
+        },
+        "description": {
+          "es": "Las citas ya vivían en Fresha. Mandar al cliente a la ficha general y pedirle que busque otra vez el servicio o el barbero perdía reservas.",
+          "en": "Appointments already lived on Fresha. Sending customers to the generic listing and making them search for the service or barber again lost bookings."
+        },
+        "solutionIcon": "bolt",
+        "solution": {
+          "es": "Dos helpers, bookService(id) y bookWith(id), arman enlaces profundos a Fresha. Cada servicio y cada barbero abre la reserva con esa opción ya elegida, y en móvil una barra fija deja el botón siempre a mano.",
+          "en": "Two helpers, bookService(id) and bookWith(id), build deep links into Fresha. Every service and every barber opens the booking with that option preselected, and on mobile a sticky bar keeps the button within reach."
+        },
+        "chips": [
+          {
+            "es": "Enlaces profundos",
+            "en": "Deep links"
+          },
+          "Fresha",
+          {
+            "es": "Barra fija en móvil",
+            "en": "Sticky mobile bar"
+          }
+        ]
+      },
+      {
+        "icon": "schedule",
+        "title": {
+          "es": "Horario en vivo",
+          "en": "Live opening hours"
+        },
+        "description": {
+          "es": "\"Abierto hoy hasta las 21:00\" tenía que ser correcto aunque el visitante estuviera en otra zona horaria, y el sitio es estático: no hay servidor que calcule la hora.",
+          "en": "\"Open today until 21:00\" had to be right even when the visitor is in another time zone, and the site is static: there is no server to compute the time."
+        },
+        "solutionIcon": "science",
+        "solution": {
+          "es": "Intl.DateTimeFormat con America/Lima obtiene la hora del local en el navegador y se refresca cada minuto. Sin JS se muestra el horario resumido. La lógica está cubierta con tests de Vitest.",
+          "en": "Intl.DateTimeFormat with America/Lima gets the shop's local time in the browser and refreshes every minute. Without JS, a summary of the hours is shown. The logic is covered by Vitest tests."
+        },
+        "chips": [
+          "Intl API",
+          "America/Lima",
+          "Vitest"
+        ]
+      },
+      {
+        "icon": "play_circle",
+        "title": {
+          "es": "Videos sin peso",
+          "en": "Lightweight video"
+        },
+        "description": {
+          "es": "La estética del local se transmite con videos en loop, pero diez videos cargando a la vez arruinarían el tiempo de carga en datos móviles.",
+          "en": "The shop's look comes across through looping videos, but ten videos loading at once would ruin load times on mobile data."
+        },
+        "solutionIcon": "speed",
+        "solution": {
+          "es": "Cada video arranca con preload=\"none\" y un IntersectionObserver lo reproduce solo cuando entra en pantalla y lo pausa al salir. Se sirve en WebM y MP4, y con prefers-reduced-motion se queda en el póster.",
+          "en": "Each video starts with preload=\"none\" and an IntersectionObserver plays it only when it enters the viewport and pauses it when it leaves. It is served as WebM and MP4, and with prefers-reduced-motion it stays on the poster."
+        },
+        "chips": [
+          "IntersectionObserver",
+          "WebM + MP4",
+          "Reduced motion"
+        ]
+      },
+      {
+        "icon": "location_on",
+        "title": {
+          "es": "SEO local",
+          "en": "Local SEO"
+        },
+        "description": {
+          "es": "Un negocio de barrio vive de aparecer cuando alguien busca \"barbería en Miraflores\", con horario, precios y botón de reserva.",
+          "en": "A neighborhood business lives off showing up when someone searches \"barbershop in Miraflores\", with hours, prices and a booking button."
+        },
+        "solutionIcon": "travel_explore",
+        "solution": {
+          "es": "JSON-LD BarberShop generado desde los mismos datos del sitio: dirección, coordenadas, horario, rango de precios, cada servicio como Offer y una ReserveAction hacia Fresha. Además Open Graph, sitemap y robots.txt.",
+          "en": "BarberShop JSON-LD generated from the site's own data: address, coordinates, hours, price range, each service as an Offer and a ReserveAction pointing to Fresha. Plus Open Graph, sitemap and robots.txt."
+        },
+        "chips": [
+          "JSON-LD",
+          "schema.org",
+          "Open Graph"
+        ]
+      }
+    ]
+  },
+  "stack": [
+    {
+      "name": "Astro 7",
+      "tagline": {
+        "es": "Estático · Cero JS de framework",
+        "en": "Static · Zero framework JS"
+      },
+      "icon": {
+        "kind": "text",
+        "value": "🚀"
+      },
+      "description": {
+        "es": "Sitio 100% estático sin framework en el cliente: solo se envían los scripts pequeños que cada sección necesita.",
+        "en": "Fully static site with no client-side framework: only the small scripts each section needs are shipped."
+      },
+      "note": {
+        "es": "astro:assets genera las fotos en WebP con srcset en el build. Las fuentes se sirven locales con Fontsource y el sitemap sale de @astrojs/sitemap. El contenido vive en src/data, así que cambiar precios u horario no toca los componentes.",
+        "en": "astro:assets generates the photos as WebP with srcset at build time. Fonts are self-hosted with Fontsource and the sitemap comes from @astrojs/sitemap. Content lives in src/data, so changing prices or hours never touches the components."
+      },
+      "chips": [
+        "astro:assets",
+        "WebP + srcset",
+        {
+          "es": "Fuentes locales",
+          "en": "Self-hosted fonts"
+        }
+      ]
+    },
+    {
+      "name": "SCSS",
+      "tagline": {
+        "es": "Tokens · Mixins · Temas",
+        "en": "Tokens · Mixins · Themes"
+      },
+      "icon": {
+        "kind": "material",
+        "value": "palette",
+        "tone": "secondary"
+      },
+      "description": {
+        "es": "Estilos por componente sobre un sistema de tokens expuestos como variables CSS.",
+        "en": "Component-scoped styles on top of a token system exposed as CSS variables."
+      },
+      "note": {
+        "es": "Colores, espacios, área táctil de 44 px y breakpoints viven en _tokens.scss; en los componentes no hay colores hex sueltos. Los mixins cubren lo repetido (velos, fotos en blanco y negro, títulos) y .theme-dark redefine las variables en las secciones oscuras.",
+        "en": "Colors, spacing, the 44 px touch target and breakpoints live in _tokens.scss; components never use raw hex colors. Mixins cover what repeats (overlays, black-and-white media, headings) and .theme-dark redefines the variables in dark sections."
+      },
+      "chips": [
+        "Design tokens",
+        "Mixins",
+        "Dark sections"
+      ]
+    },
+    {
+      "name": "TypeScript",
+      "tagline": {
+        "es": "Strict · Datos tipados",
+        "en": "Strict · Typed data"
+      },
+      "icon": {
+        "kind": "badge",
+        "value": "TS"
+      },
+      "description": {
+        "es": "Modo estricto en los datos del negocio, la lógica de horario y los scripts del navegador.",
+        "en": "Strict mode across business data, the opening-hours logic and browser scripts."
+      },
+      "note": {
+        "es": "Servicios, barberos y horario están tipados (satisfies OpeningDay[]), así que un dato mal escrito falla en el build. astro check revisa los tipos antes de cada despliegue.",
+        "en": "Services, barbers and hours are typed (satisfies OpeningDay[]), so a malformed entry fails the build. astro check validates types before every deploy."
+      },
+      "chips": [
+        "Strict mode",
+        "satisfies",
+        "astro check"
+      ]
+    },
+    {
+      "name": "Vitest",
+      "tagline": "Tests · src/lib",
+      "icon": {
+        "kind": "material",
+        "value": "science",
+        "tone": "tertiary"
+      },
+      "description": {
+        "es": "Tests de la lógica pura: cálculo de horario, JSON-LD y formatos.",
+        "en": "Tests for the pure logic: opening-hours calculation, JSON-LD and formatting."
+      },
+      "note": {
+        "es": "Los casos borde del horario (antes de abrir, después de cerrar, domingo cerrado, visitante en otra zona horaria) se prueban pasando una hora fija, sin depender del reloj de la máquina.",
+        "en": "Opening-hours edge cases (before opening, after closing, closed Sunday, visitor in another time zone) are tested by passing a fixed time, without depending on the machine's clock."
+      },
+      "chips": [
+        {
+          "es": "Casos borde",
+          "en": "Edge cases"
+        },
+        "JSON-LD",
+        {
+          "es": "Zona horaria",
+          "en": "Time zones"
+        }
+      ]
+    },
+    {
+      "name": "Vercel",
+      "tagline": "Deploy · Edge · Previews",
+      "icon": {
+        "kind": "text",
+        "value": "▼"
+      },
+      "description": {
+        "es": "Despliegue automático del build estático en cada push.",
+        "en": "Automatic deployment of the static build on every push."
+      },
+      "note": {
+        "es": "Vercel detecta Astro sin configuración. El dominio se define con SITE_URL, que usan el canonical, Open Graph, el JSON-LD y el sitemap, así que pasar al dominio final es cambiar una variable.",
+        "en": "Vercel detects Astro with zero config. The domain is set with SITE_URL, which the canonical, Open Graph, JSON-LD and sitemap all use, so moving to the final domain means changing one variable."
+      },
+      "chips": [
+        "Auto deploy",
+        "SITE_URL",
+        "Edge network"
+      ],
+      "showLiveLink": true
+    }
+  ],
+  "gallery": [
+    {
+      "image": "./servicios.png",
+      "alt": {
+        "es": "Millionhair — Lista de servicios con precios",
+        "en": "Millionhair — Service list with prices"
+      },
+      "span": "full",
+      "title": {
+        "es": "Servicios — Precio y reserva directa",
+        "en": "Services — Price and direct booking"
+      },
+      "description": {
+        "es": "Cada servicio muestra duración y precio en soles, y abre Fresha con ese servicio ya elegido.",
+        "en": "Each service shows its duration and price in soles, and opens Fresha with that service preselected."
+      }
+    },
+    {
+      "image": "./visitanos.png",
+      "alt": {
+        "es": "Millionhair — Dirección, horario y mapa",
+        "en": "Millionhair — Address, hours and map"
+      },
+      "span": "wide",
+      "title": {
+        "es": "Visítanos — Horario en vivo",
+        "en": "Visit us — Live hours"
+      },
+      "description": {
+        "es": "El estado abierto o cerrado se calcula con la hora de Lima, junto al horario completo y el mapa.",
+        "en": "The open or closed status is computed with Lima time, next to the full schedule and the map."
+      }
+    },
+    {
+      "image": "./movil.png",
+      "alt": {
+        "es": "Millionhair — Portada en móvil con barra de reserva",
+        "en": "Millionhair — Mobile hero with booking bar"
+      },
+      "span": "narrow",
+      "title": {
+        "es": "Móvil — Reserva siempre a mano",
+        "en": "Mobile — Booking always in reach"
+      },
+      "description": {
+        "es": "Una barra fija muestra el horario y el botón de reserva.",
+        "en": "A sticky bar shows the hours and the booking button."
+      }
+    },
+    {
+      "image": "./equipo.png",
+      "alt": {
+        "es": "Millionhair — Equipo de barberos",
+        "en": "Millionhair — Barber team"
+      },
+      "span": "half",
+      "title": {
+        "es": "Equipo — Elige a tu barbero",
+        "en": "Team — Pick your barber"
+      },
+      "description": {
+        "es": "Cada barbero tiene su enlace de reserva y su Instagram.",
+        "en": "Each barber has their own booking link and Instagram."
+      }
+    },
+    {
+      "image": "./lookbook.png",
+      "alt": {
+        "es": "Millionhair — Lookbook de cortes",
+        "en": "Millionhair — Haircut lookbook"
+      },
+      "span": "half",
+      "title": {
+        "es": "Lookbook — Carrusel de cortes",
+        "en": "Lookbook — Haircut carousel"
+      },
+      "description": {
+        "es": "Carrusel con scroll nativo y flechas que vuelven al inicio al llegar al final.",
+        "en": "Native-scroll carousel with arrows that wrap around at the end."
+      }
+    }
+  ]
+}
