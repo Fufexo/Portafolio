@@ -19,7 +19,7 @@ Each project has its own case study: the problem, the challenges and how they we
 
 <table>
   <tr>
-    <td width="68%"><img src="docs/projects.png" alt="Project grid with Atelier, FridgeChef and LVL" /></td>
+    <td width="68%"><img src="docs/projects.png" alt="Project grid with Atelier, FridgeChef, LVL and Millionhair" /></td>
     <td width="32%"><img src="docs/mobile.png" alt="Home page on mobile" /></td>
   </tr>
 </table>
